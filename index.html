@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#B42318">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="急救卡">
+<meta name="description" content="急救卡 Emergency Card — 按所在国家自动切换急救电话与急救步骤（中文 / English）">
+<title>急救卡 Emergency Card</title>
+<style>
+:root{
+  --bg:#F6F5F2; --card:#FFFFFF; --ink:#16181D; --sub:#555B67; --line:#E4E2DC;
+  --red:#C8281C; --red-d:#9E1B12; --red-soft:#FDECEA; --ok:#0B7A53; --ok-soft:#E6F4EE;
+  --warn:#7A4F00; --warn-soft:#FFF4D6; --blue:#1F4FD8; --r:18px;
+  --shadow:0 1px 2px rgba(20,20,20,.05),0 8px 24px rgba(20,20,20,.06);
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0F1114; --card:#1A1D22; --ink:#F3F4F6; --sub:#A9AFBA; --line:#2B3038;
+  --red:#F0483B; --red-d:#D63A2E; --red-soft:#3A1614; --ok:#4AD19B; --ok-soft:#10301F;
+  --warn:#F5C451; --warn-soft:#33290C; --blue:#8FB0FF; --shadow:none;
+}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:17px/1.55 -apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC","Noto Sans CJK SC","Segoe UI",Roboto,sans-serif;
+  padding-bottom:calc(124px + env(safe-area-inset-bottom))}
+.wrap{max-width:560px;margin:0 auto;padding:0 16px}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+a{color:var(--blue)}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px;border-radius:8px}
+[hidden]{display:none!important}
+h1:focus{outline:none}
+
+header{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);
+  backdrop-filter:saturate(1.4) blur(10px);-webkit-backdrop-filter:saturate(1.4) blur(10px);
+  padding-top:env(safe-area-inset-top)}
+.bar{display:flex;align-items:center;gap:10px;height:56px}
+.logo{width:30px;height:30px;border-radius:9px;background:var(--red);display:grid;place-items:center;flex:none}
+.logo:before{content:"";width:16px;height:16px;background:
+  linear-gradient(#fff,#fff) center/100% 5px no-repeat,linear-gradient(#fff,#fff) center/5px 100% no-repeat}
+.brand{font-weight:700;letter-spacing:.2px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pill{min-height:44px;padding:0 14px;border-radius:999px;background:var(--card);border:1px solid var(--line);
+  display:inline-flex;align-items:center;gap:6px;font-weight:600;font-size:17px;white-space:nowrap;flex:none}
+.beta{font-size:17px;line-height:1.45;color:var(--warn);background:var(--warn-soft);border-radius:14px;padding:12px 14px;margin:14px 0 0}
+
+/* 所在国家 */
+.where{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:4px 0 12px}
+.where b{font-size:19px}
+.where small{display:block;color:var(--sub);font-size:17px;line-height:1.3}
+.lvl{font-size:17px;font-weight:700;border-radius:8px;padding:1px 8px;margin-left:8px;white-space:nowrap}
+.lvl.A{background:var(--ok-soft);color:var(--ok)} .lvl.B{background:var(--warn-soft);color:var(--warn)} .lvl.C{background:var(--red-soft);color:var(--red)}
+
+/* 两问分诊 */
+.tri{background:var(--card);border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);padding:18px}
+.tri-k{font-size:17px;font-weight:700;color:var(--red)}
+.tri h1{font-size:30px;line-height:1.2;margin:4px 0 6px}
+.tri p{margin:0 0 14px;color:var(--sub)}
+.tri-b{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.big{min-height:92px;border-radius:18px;padding:12px;font-size:22px;font-weight:800;line-height:1.2;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-align:center}
+.big small{font-size:17px;font-weight:600;opacity:.92}
+.big.no{background:var(--red);color:#fff;box-shadow:0 8px 20px rgba(200,40,28,.28)}
+.big.no:active{background:var(--red-d)}
+.big.yes{background:var(--bg);border:2px solid var(--ink)}
+.big:active{transform:scale(.98)}
+.link{color:var(--blue);font-weight:600;min-height:48px;padding:0 4px;text-decoration:underline}
+
+/* 呼叫按钮 */
+.call{display:flex;align-items:center;justify-content:space-between;gap:12px;text-decoration:none;
+  background:var(--red);color:#fff;border-radius:20px;padding:10px 20px;min-height:76px;
+  box-shadow:0 10px 24px rgba(200,40,28,.32)}
+.call:active{background:var(--red-d);transform:scale(.99)}
+.call .lbl{font-size:17px;font-weight:600;line-height:1.25;display:block}
+.call .num{font-size:38px;font-weight:800;letter-spacing:1px;line-height:1.05;font-variant-numeric:tabular-nums;display:block}
+.call .ico{width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.18);display:grid;place-items:center;flex:none}
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:21;padding:14px 16px calc(10px + env(safe-area-inset-bottom));
+  background:linear-gradient(transparent,var(--bg) 14px)}
+.dock>*{max-width:528px;margin-left:auto;margin-right:auto}
+.snav{display:grid;grid-template-columns:1fr 1.6fr;gap:10px;margin-bottom:10px}
+.snav button{min-height:60px;border-radius:16px;font-size:20px;font-weight:800}
+.snav .pv{background:var(--card);border:1.5px solid var(--line)}
+.snav .pv:disabled{opacity:.4}
+.snav .nx{background:var(--ink);color:var(--bg)}
+
+.hero{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);padding:16px;border:1px solid var(--line)}
+.nums{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}
+.n{display:flex;justify-content:space-between;align-items:center;gap:8px;text-decoration:none;color:var(--ink);
+  border:1px solid var(--line);border-radius:14px;padding:10px 12px;min-height:56px;background:var(--bg)}
+.n span{font-size:17px;color:var(--sub);line-height:1.25}
+.n b{font-size:20px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.notes{margin:12px 0 0;padding:0;list-style:none;font-size:17px;color:var(--sub)}
+.notes li{padding-left:16px;position:relative;margin-top:6px}
+.notes li:before{content:"";position:absolute;left:3px;top:.62em;width:6px;height:6px;border-radius:50%;background:var(--red)}
+
+h2{font-size:17px;letter-spacing:.04em;color:var(--sub);margin:28px 4px 10px;font-weight:700}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;box-shadow:var(--shadow)}
+.say{margin:0;padding:0;list-style:none;counter-reset:s}
+.say li{counter-increment:s;display:flex;gap:10px;padding:7px 0;font-size:17px}
+.say li:before{content:counter(s);flex:none;width:26px;height:26px;border-radius:50%;background:var(--red-soft);color:var(--red);
+  font-weight:700;font-size:17px;display:grid;place-items:center;margin-top:1px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:52px;padding:0 16px;border-radius:14px;
+  background:var(--ink);color:var(--bg);font-weight:700;width:100%;margin-top:10px;text-decoration:none;text-align:center}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.loc{font-size:22px;font-weight:800;font-variant-numeric:tabular-nums;margin:10px 0 2px;word-break:break-all}
+.muted{color:var(--sub);font-size:17px}
+.tip{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-top:12px}
+.tip b{display:block;margin-bottom:4px}
+.tip p{margin:6px 0 0}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px;text-align:left;min-height:120px;
+  display:flex;flex-direction:column;justify-content:space-between;box-shadow:var(--shadow)}
+.tile:active{transform:scale(.98)}
+.tile i{font-style:normal;font-size:28px;line-height:1}
+.tile b{font-size:18px;line-height:1.25;display:block;margin-top:10px}
+.tile small{color:var(--sub);font-size:17px;line-height:1.3;display:block;margin-top:2px}
+.tile.top{grid-column:1/-1;background:var(--red-soft);border-color:transparent;flex-direction:row;justify-content:flex-start;align-items:center;min-height:84px;gap:14px}
+.tile.top b{margin:0;font-size:19px}
+
+/* 全屏层：卡片 / 选国家 / 确认国家 */
+.sheet{position:fixed;inset:0;z-index:20;background:var(--bg);overflow:auto;display:none;
+  padding-bottom:calc(200px + env(safe-area-inset-bottom))}
+.sheet.on{display:block}
+.shead{position:sticky;top:0;background:var(--bg);padding:calc(10px + env(safe-area-inset-top)) 0 10px;z-index:2;
+  border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px}
+.shead .sp{flex:1}
+.back,.chip{min-height:48px;padding:0 14px;border-radius:999px;background:var(--card);border:1px solid var(--line);font-weight:700;font-size:17px;white-space:nowrap}
+.back{padding-left:10px}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.sheet h1{font-size:26px;line-height:1.2;margin:16px 0 8px}
+.when{background:var(--warn-soft);color:var(--warn);border-radius:14px;padding:10px 12px;font-size:17px;font-weight:600}
+.status{display:flex;flex-wrap:wrap;gap:6px 14px;color:var(--sub);font-size:17px;margin-top:8px}
+
+/* 执行模式：一屏一步 */
+.prog{display:flex;gap:5px;margin:14px 0 10px}
+.prog i{flex:1;height:6px;border-radius:3px;background:var(--line)}
+.prog i.d{background:var(--red)}
+.stepK{font-size:17px;font-weight:800;color:var(--red);letter-spacing:.02em}
+.stepTxt{font-size:27px;line-height:1.38;font-weight:700;margin:6px 0 0}
+.stepTxt b{color:var(--red);font-size:1.15em;font-variant-numeric:tabular-nums}
+.fig{display:block;width:100%;max-width:340px;height:auto;margin:10px auto 2px;background:var(--card);border:1px solid var(--line);border-radius:16px}
+.fig{background:#F5F2EC;border-color:transparent}
+details.dd{margin-top:16px;background:var(--red-soft);border-radius:16px}
+details.dd summary{min-height:52px;padding:12px 14px;font-weight:800;color:var(--red);cursor:pointer}
+details.dd ul{margin:0;padding:0 14px 14px 34px}
+
+.steps{list-style:none;margin:16px 0 0;padding:0;counter-reset:st}
+.steps li{counter-increment:st;display:flex;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:16px;
+  padding:14px;margin-bottom:8px;font-size:18px;line-height:1.45;font-weight:500}
+.steps li:before{content:counter(st);flex:none;width:36px;height:36px;border-radius:12px;background:var(--red);color:#fff;
+  font-weight:800;font-size:19px;display:grid;place-items:center}
+.steps li>span{flex:1;min-width:0}
+.dont{background:var(--red-soft);border-radius:16px;padding:14px;margin-top:12px}
+.dont b{color:var(--red);display:block;margin-bottom:4px}
+.dont ul{margin:0;padding-left:20px}
+.extra{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-top:12px;font-size:17px}
+.src{font-size:17px;color:var(--sub);margin-top:14px;word-break:break-word}
+
+.metro{display:flex;align-items:center;gap:12px;margin-top:10px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:10px 12px}
+.metro .ml{flex:1;font-weight:700;line-height:1.25}
+.dot{width:44px;height:44px;border-radius:50%;background:var(--red);flex:none;opacity:.25}
+.dot.beat{animation:beat .12s ease-out}
+@keyframes beat{from{opacity:1;transform:scale(1.25)}to{opacity:.25;transform:scale(1)}}
+
+/* 确认国家 */
+.cf{text-align:center;padding-top:8px}
+.cf .flag{font-size:64px;line-height:1.1;margin-top:18px}
+.cf .cn{font-size:30px;font-weight:800;line-height:1.2;margin:6px 0}
+.cf .an{font-size:20px;font-weight:700}
+.cf .an b{color:var(--red);font-size:30px;font-variant-numeric:tabular-nums}
+.cf .btn{min-height:64px;font-size:20px}
+
+.list{margin-top:8px}
+.opt{display:flex;justify-content:space-between;align-items:center;width:100%;min-height:56px;padding:12px 6px;border-bottom:1px solid var(--line);text-align:left;font-size:18px;gap:10px}
+.opt b{font-variant-numeric:tabular-nums;color:var(--red)}
+label{display:block;font-size:17px;color:var(--sub);margin-top:10px}
+input,textarea,select{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:4px;min-height:48px}
+.idv{font-size:17px}.idv div{padding:6px 0;border-bottom:1px dashed var(--line)}.idv span{color:var(--sub);font-size:17px;display:block}
+details.sl summary{min-height:48px;font-weight:700;cursor:pointer;display:flex;align-items:center}
+.srcs{font-size:17px;color:var(--sub);padding-left:26px;margin:8px 0 0}
+.srcs li{margin-top:6px;word-break:break-word}
+footer{font-size:17px;color:var(--sub);margin:22px 4px 0}
+@media (max-width:350px){.tri h1{font-size:26px}.big{font-size:20px}.stepTxt{font-size:24px}.call .num{font-size:34px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media print{header,.dock,.btn,.pill,.shead,#fb{display:none!important}body{background:#fff}}
+</style>
+</head>
+<body>
+<header><div class="wrap bar">
+  <div class="logo" aria-hidden="true"></div>
+  <div class="brand" id="brand"></div>
+  <button class="pill" id="langBtn" aria-label="Switch language / 切换语言"></button>
+</div></header>
+
+<main class="wrap" id="app"></main>
+
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetT"><div class="wrap" id="sheetBody"></div></div>
+<div class="dock" id="dock"></div>
+
+<script>
+/* ===================== 配置 CONFIG ===================== */
+// 反馈表单：两个都可以填。中国大陆访问不了 Google，所以大陆用户优先显示腾讯问卷，其他地区优先显示 Google 表单。
+// 两个都留空时，页面使用"复制/分享反馈文字"。
+var FEEDBACK_GOOGLE = "";    // Google 表单链接，例如 https://docs.google.com/forms/d/e/xxxx/viewform
+var FEEDBACK_TENCENT = "";   // 腾讯问卷链接，例如 https://wj.qq.com/s2/xxxx/xxxx/
+// 可选：Google 表单里"版本/国家/语言"那道简答题的编号（形如 entry.123456789）。填了以后会自动带入，留空也能用。
+var GOOGLE_PREFILL_ENTRY = "";
+var VERSION = "MVP v0.3.1";
+var VERIFIED_ON = "2026-11-17";
+
+/* ===================== 国家数据 COUNTRY DATA =====================
+   lvl: A = 急救号码有官方/政府或卫生主管部门来源；B = 多个一致的二手来源；C = 未核实 */
+var C = {
+CN:{f:"🇨🇳",zh:"中国大陆",en:"Mainland China",lvl:"A",amb:"120",
+  nums:[["110","报警","Police"],["119","火警","Fire"],["122","交通事故","Traffic accident"]],
+  notes:[["120、110、119 均为免费电话。","120, 110 and 119 are free calls."],
+         ["没有 911 / 112 统一号码，请直接拨对应号码。","There is no single 911/112-style number; dial the specific service."],
+         ["接线员以中文为主，英语支持有限；请身边的人帮忙说明地址。","Operators mainly speak Chinese; English support is limited — ask someone nearby to give the address."]],
+  src:[1,2]},
+HK:{f:"🇭🇰",zh:"中国香港",en:"Hong Kong",lvl:"A",amb:"999",
+  nums:[["999","报警 / 消防","Police / Fire"],["27353355","消防通讯中心","Fire Services centre"]],
+  notes:[["需要紧急救护车：拨 999，或拨消防通讯中心 2735 3355。","For an emergency ambulance call 999, or the Fire Services Communication Centre on 2735 3355."],
+         ["紧急救护服务由香港消防处提供。","The emergency ambulance service is run by the Fire Services Department."]],src:[28]},
+MO:{f:"🇲🇴",zh:"中国澳门",en:"Macao",lvl:"A",amb:"999",
+  nums:[["119","消防局紧急报案","Fire Services emergency line"],["120","消防局紧急报案","Fire Services emergency line"],["28572222","消防局固话","Fire Services"]],
+  notes:[["需要救护车可拨治安警察局紧急电话 999。","For an ambulance call the Public Security Police emergency line, 999."],
+         ["也可直接拨消防局紧急报案热线 119、120 或 2857 2222。","You can also call the Fire Services emergency lines: 119, 120 or 2857 2222."]],src:[30,29]},
+TW:{f:"🇹🇼",zh:"中国台湾",en:"Taiwan",lvl:"A",amb:"119",nums:[["110","报警","Police"],["112","无 SIM 卡 / 讯号差时","No SIM / poor signal"]],
+  notes:[["119 为消防与紧急救护报案电话；接通后说明需要救护车。","119 is the fire and emergency ambulance line; say you need an ambulance."],
+         ["手机讯号正常时优先拨 119 或 110；112 需按语音提示转接（0 警察、9 消防），会多花时间。","With normal signal call 119 or 110 first; 112 goes through a voice menu (0 police, 9 fire) and takes longer."]],src:[31,32]},
+JP:{f:"🇯🇵",zh:"日本",en:"Japan",lvl:"A",amb:"119",
+  nums:[["110","报警","Police"],["119","火警","Fire"],["#7119","急救咨询（部分地区）","Medical advice line (some areas)"],["118","海上保安","Coast guard"]],
+  notes:[["接通 119 后先说明是「急救」而不是「火灾」：「救急です」(kyūkyū desu)。","On 119, first say it is a medical emergency, not a fire: “Kyūkyū desu”."],
+         ["依次说明：发生了什么 → 地址或附近地标 → 自己的姓名。","Then give: what happened → address or nearby landmark → your name."],
+         ["不确定是否需要救护车，可拨 #7119 咨询；明显危及生命时直接拨 119。","Unsure if you need an ambulance? Call #7119. If clearly life-threatening, call 119 directly."]],
+  src:[3,4]},
+KR:{f:"🇰🇷",zh:"韩国",en:"South Korea",lvl:"A",amb:"119",
+  nums:[["112","报警","Police"],["119","火警","Fire"],["1330","旅游热线 / 口译","Travel helpline / interpretation"]],
+  notes:[["119 为火灾、急救、救援统一号码；说不了话时可向 119 发短信（可附照片）。","119 covers fire, ambulance and rescue; if you cannot speak you can text 119 (photos can be attached)."],
+         ["不会韩语可直接说英语，多地消防本部为 119 提供三方口译。","If you do not speak Korean, speak English — many fire headquarters connect 119 callers to a three-way interpreter."],
+         ["1339 现为疾病管理厅传染病咨询热线，急救请拨 119。","1339 is now an infectious-disease helpline; for emergencies call 119."]],src:[33,34,5,6]},
+TH:{f:"🇹🇭",zh:"泰国",en:"Thailand",lvl:"A",amb:"1669",
+  nums:[["191","报警","Police"],["199","火警 / 救援","Fire / rescue"],["1155","旅游警察（英语）","Tourist Police (English)"]],
+  notes:[["医疗急救全国统一拨 1669。","Call 1669 nationwide for medical emergencies."],
+         ["1155 旅游警察可讲英语，但不能派救护车——需要救护车请直接拨 1669。","Tourist Police (1155) speak English but cannot dispatch an ambulance — call 1669 directly."],
+         ["191 接线员不一定会英语；沟通困难时请身边的泰国人或酒店前台协助。","191 operators may not speak English; ask a local or hotel staff to help."]],
+  src:[7,8]},
+SG:{f:"🇸🇬",zh:"新加坡",en:"Singapore",lvl:"A",amb:"995",
+  nums:[["999","报警","Police"],["995","火警","Fire"],["70995","紧急短信（无法通话时）","Emergency SMS (if unable to call)"]],
+  notes:[["995 仅用于危及生命的紧急情况；紧急个案送院不收费。","995 is for life-threatening emergencies only; SCDF does not charge for emergency cases."],
+         ["非紧急救护热线 1777 将于 2027-01-01 停用。","The 1777 non-emergency ambulance hotline ceases on 1 Jan 2027."]],src:[9,10]},
+MY:{f:"🇲🇾",zh:"马来西亚",en:"Malaysia",lvl:"A",amb:"999",nums:[["999","报警 / 消防","Police / Fire"]],
+  notes:[["999 为全国统一紧急号码（MERS 999），连接警察、消防、医疗和民防；免费。","999 is the single national emergency number (MERS 999) for police, fire, medical and civil defence; calls are free."]],src:[35,36]},
+VN:{f:"🇻🇳",zh:"越南",en:"Vietnam",lvl:"B",amb:"115",nums:[["113","报警","Police"],["114","火警","Fire"]],
+  notes:[["越南为三个独立号码：113 警察、114 消防、115 医疗急救。","Vietnam uses three separate numbers: 113 police, 114 fire, 115 medical emergency."],
+         ["112 在越南用于灾害、事故与搜救信息，不是通用急救号码；医疗急救请拨 115。","In Vietnam 112 is for disaster, incident and search-and-rescue reports, not a general emergency number; for medical emergencies call 115."]],src:[37,47,11]},
+ID:{f:"🇮🇩",zh:"印度尼西亚",en:"Indonesia",lvl:"A",amb:"112",
+  nums:[["119","卫生部医疗急救","Medical emergency (Ministry of Health)"],["118","救护车","Ambulance"],["110","报警","Police"],["113","火警","Fire"]],
+  notes:[["112 为法定统一紧急号码，但由各地方政府分别实施，并非所有地区可用；打不通时改拨 119。","112 is the statutory single emergency number but is run by local governments and is not available everywhere; if it fails, call 119."],
+         ["119 为卫生部的医疗急救号码，手机和固话均可拨打，免费。","119 is the Ministry of Health medical emergency number, free from mobiles and landlines."]],src:[39,38]},
+PH:{f:"🇵🇭",zh:"菲律宾",en:"Philippines",lvl:"A",amb:"911",nums:[],
+  notes:[["911 为全国统一紧急热线（2025 年 9 月 11 日起全国推行），连接警察、消防、医疗和灾害救援。","911 is the unified national emergency hotline (rolled out nationwide from 11 Sept 2025) for police, fire, medical and disaster response."]],src:[40]},
+IN:{f:"🇮🇳",zh:"印度",en:"India",lvl:"A",amb:"112",nums:[["108","救护车（多数邦）","Ambulance (most states)"],["100","报警","Police"],["101","火警","Fire"]],
+  notes:[["112 为全国统一紧急号码（ERSS）；不少地区仍使用 108 / 102 叫救护车。","112 is the national single emergency number (ERSS); 108/102 are still widely used for ambulances."]],src:[41,21]},
+AE:{f:"🇦🇪",zh:"阿联酋",en:"United Arab Emirates",lvl:"A",amb:"998",nums:[["999","报警","Police"],["997","火警（民防）","Fire (Civil Defence)"]],
+  notes:[["998 救护车，999 警察，997 消防；全国通用。","998 ambulance, 999 police, 997 fire — from anywhere in the UAE."]],src:[42]},
+GB:{f:"🇬🇧",zh:"英国",en:"United Kingdom",lvl:"A",amb:"999",nums:[["112","同样有效","Also works"],["111","非紧急医疗咨询 NHS","NHS non-emergency advice"]],
+  notes:[["999 与 112 均可接通警察、消防、救护和海岸警卫。","999 and 112 both reach police, fire, ambulance and coastguard."],
+         ["急需医疗帮助但不危及生命：拨 111。","Need medical help fast but it is not life-threatening: call 111."]],src:[12,13]},
+IE:{f:"🇮🇪",zh:"爱尔兰",en:"Ireland",lvl:"A",amb:"112",nums:[["999","同样有效","Also works"]],
+  notes:[["112 与 999 均可使用。","112 and 999 both work."]],src:[14]},
+FR:{f:"🇫🇷",zh:"法国",en:"France",lvl:"A",amb:"15",nums:[["112","欧盟统一号码","EU emergency number"],["17","报警","Police"],["18","消防","Fire brigade"]],
+  notes:[["15 为 SAMU 医疗急救；记不住就拨 112。","15 is SAMU (medical). If in doubt, dial 112."]],src:[15]},
+DE:{f:"🇩🇪",zh:"德国",en:"Germany",lvl:"A",amb:"112",nums:[["110","报警","Police"]],
+  notes:[["112 为消防与急救；110 为警察。","112 is fire and ambulance; 110 is police."]],src:[43,15]},
+IT:{f:"🇮🇹",zh:"意大利",en:"Italy",lvl:"A",amb:"112",nums:[["118","医疗急救（未启用统一 112 的大区）","Medical (regions without unified 112)"]],
+  notes:[["统一紧急号码 112（NUE）已在多个大区启用，由同一中心接听 112、113、115、118。","The single emergency number 112 (NUE) is active in many regions, where one centre answers 112, 113, 115 and 118."],
+         ["其余大区医疗急救仍拨 118。","Elsewhere, call 118 for medical emergencies."]],src:[44,15]},
+ES:{f:"🇪🇸",zh:"西班牙",en:"Spain",lvl:"A",amb:"112",nums:[["061","医疗急救（部分地区）","Medical (some regions)"]],
+  notes:[["112 为全国统一紧急号码，外国手机也直接拨 112，无需加区号。","112 is the general emergency number; dial 112 with no prefix, even from a foreign phone."]],src:[45,15]},
+EU:{f:"🇪🇺",zh:"欧盟其他国家",en:"Other EU countries",lvl:"A",amb:"112",nums:[],
+  notes:[["112 在全部 27 个欧盟成员国免费、全天可用，可接通急救、消防和警察。","112 works free of charge, 24/7, in all 27 EU member states for ambulance, fire and police."],
+         ["部分国家另有本国号码，但 112 始终可用。","Some countries also keep national numbers, but 112 always works."]],src:[15]},
+US:{f:"🇺🇸",zh:"美国",en:"United States",lvl:"A",amb:"911",nums:[],
+  notes:[["911 为警察、消防、急救统一号码。","911 covers police, fire and ambulance."]],src:[17]},
+CA:{f:"🇨🇦",zh:"加拿大",en:"Canada",lvl:"A",amb:"911",nums:[],
+  notes:[["911 为统一紧急号码。","911 is the emergency number."]],src:[17]},
+AU:{f:"🇦🇺",zh:"澳大利亚",en:"Australia",lvl:"A",amb:"000",nums:[["112","手机备用","From mobiles"],["106","听障文字电话 TTY","TTY (deaf / speech-impaired)"]],
+  notes:[["000（Triple Zero）为主要紧急号码，免费。","Triple Zero (000) is the main emergency number and is free."],
+         ["在澳大利亚不要拨 911；000 不能通过短信联系。","Do not use 911 in Australia; 000 cannot be reached by SMS."]],src:[16,17]},
+NZ:{f:"🇳🇿",zh:"新西兰",en:"New Zealand",lvl:"A",amb:"111",nums:[],
+  notes:[["111 为警察、消防、急救统一号码；接通后说明需要 Ambulance（救护车）。","111 covers police, fire and ambulance; tell the operator you need “Ambulance”."]],src:[46]},
+XX:{f:"🌐",zh:"其他地区 / 未识别",en:"Other / not detected",lvl:"B",amb:"112",nums:[["911","美洲等地区","Americas & others"]],
+  notes:[["未能识别所在国家。请点上方按钮手动选择。","Country not detected. Tap the button above to choose it."],
+         ["112 在很多国家的手机上可接通当地紧急服务，但并非所有国家都可靠（例如中国大陆、泰国不适用）。","112 reaches local emergency services from mobiles in many countries, but not reliably everywhere (e.g. not mainland China or Thailand)."]],src:[15,20]}
+};
+var ORDER=["CN","HK","MO","TW","JP","KR","TH","SG","MY","VN","ID","PH","IN","AE","GB","IE","FR","DE","IT","ES","EU","US","CA","AU","NZ","XX"];
+
+/* 时区 → 国家（离线识别，不上传任何数据） */
+var TZ={};
+function tz(code,list){list.split(" ").forEach(function(z){TZ[z]=code})}
+tz("CN","Asia/Shanghai Asia/Urumqi Asia/Chongqing Asia/Harbin Asia/Kashgar Asia/Chungking PRC");
+tz("HK","Asia/Hong_Kong Hongkong");tz("MO","Asia/Macau Asia/Macao");tz("TW","Asia/Taipei");
+tz("JP","Asia/Tokyo Japan");tz("KR","Asia/Seoul");tz("TH","Asia/Bangkok");tz("SG","Asia/Singapore Singapore");
+tz("MY","Asia/Kuala_Lumpur Asia/Kuching");tz("VN","Asia/Ho_Chi_Minh Asia/Saigon");
+tz("ID","Asia/Jakarta Asia/Makassar Asia/Jayapura Asia/Pontianak");tz("PH","Asia/Manila");
+tz("IN","Asia/Kolkata Asia/Calcutta");tz("AE","Asia/Dubai");
+tz("GB","Europe/London Europe/Belfast GB");tz("IE","Europe/Dublin");tz("FR","Europe/Paris");
+tz("DE","Europe/Berlin Europe/Busingen");tz("IT","Europe/Rome");tz("ES","Europe/Madrid Atlantic/Canary Africa/Ceuta");
+tz("EU","Europe/Amsterdam Europe/Brussels Europe/Vienna Europe/Lisbon Atlantic/Madeira Atlantic/Azores Europe/Stockholm Europe/Copenhagen Europe/Helsinki Europe/Mariehamn Europe/Athens Europe/Warsaw Europe/Prague Europe/Budapest Europe/Bucharest Europe/Sofia Europe/Zagreb Europe/Ljubljana Europe/Bratislava Europe/Tallinn Europe/Riga Europe/Vilnius Europe/Luxembourg Europe/Malta Asia/Nicosia Europe/Nicosia");
+tz("US","America/New_York America/Detroit America/Chicago America/Denver America/Phoenix America/Los_Angeles America/Anchorage America/Juneau America/Boise America/Menominee America/Nome America/Sitka America/Yakutat America/Metlakatla America/Adak Pacific/Honolulu");
+tz("CA","America/Toronto America/Vancouver America/Edmonton America/Winnipeg America/Halifax America/St_Johns America/Regina America/Montreal America/Moncton America/Whitehorse America/Yellowknife America/Iqaluit America/Glace_Bay America/Goose_Bay America/Thunder_Bay America/Swift_Current America/Dawson America/Dawson_Creek America/Fort_Nelson America/Cambridge_Bay America/Rankin_Inlet America/Resolute America/Inuvik America/Atikokan America/Creston America/Blanc-Sablon");
+tz("NZ","Pacific/Auckland Pacific/Chatham NZ");
+
+function detect(){
+  var z="";try{z=Intl.DateTimeFormat().resolvedOptions().timeZone||""}catch(e){}
+  if(TZ[z])return TZ[z];
+  if(/^Australia\//.test(z))return "AU";
+  if(/^America\/(Indiana|Kentucky|North_Dakota)\//.test(z))return "US";
+  return "XX";
+}
+
+/* ===================== 急救卡内容 FIRST-AID CARDS ===================== */
+// {N} 会替换为当前国家的急救电话
+var CARDS=[
+{id:"cpr",i:"❤️",top:1,zh:"心脏骤停 · 心肺复苏",en:"Cardiac arrest · CPR",
+ szh:"没反应、没有正常呼吸",sen:"Unresponsive, not breathing normally",
+ when:["叫不醒，并且不呼吸或只有喘息样呼吸。","Does not respond, and is not breathing or only gasping."],
+ steps:[["确认周围安全，拍双肩并大声呼喊。","Check it is safe. Tap both shoulders and shout."],
+  ["立刻拨打 {N} 并开免提；让旁人去找 AED（自动体外除颤器）。","Call {N} now on speaker. Send someone to fetch an AED."],
+  ["让患者平躺。掌根放在胸部正中，双手叠放，手臂伸直。","Lay them flat. Heel of one hand on the centre of the chest, other hand on top, arms straight."],
+  ["用力、快速按压：每分钟 100–120 次，深度 5–6 厘米，每次让胸廓完全回弹。","Push hard and fast: 100–120 per minute, 5–6 cm (2–2.4 in) deep, letting the chest fully recoil."],
+  ["受过训练：30 次按压 + 2 次人工呼吸循环。没学过：只做按压，不要停。","If trained: 30 compressions then 2 breaths. If not: compressions only — keep going."],
+  ["AED 一到立刻开机，按语音提示操作。","As soon as an AED arrives, switch it on and follow its voice prompts."],
+  ["持续到急救人员接手，或患者恢复正常呼吸。","Continue until professionals take over or normal breathing returns."]],
+ dont:[["不要因为怕做错而不做——不按压一定更糟。","Do not hold back for fear of doing it wrong — doing nothing is worse."],
+  ["按压中断不要超过 10 秒。","Do not pause compressions for more than 10 seconds."]],
+ metro:1,src:[18]},
+{id:"choke",i:"🫁",zh:"气道异物 · 噎住",en:"Choking",szh:"不能说话、咳嗽或呼吸",sen:"Cannot speak, cough or breathe",
+ when:["手抓喉咙、说不出话、咳不出声、脸色发紫。","Clutching the throat, unable to speak or cough, turning blue."],
+ steps:[["还能咳嗽：鼓励用力咳，守在旁边。","If they can cough: encourage hard coughing and stay with them."],
+  ["不能咳嗽或呼吸：站到侧后方，扶住胸部让其前倾，用掌根在两肩胛骨之间用力拍 5 次。","If they cannot cough or breathe: stand to the side and slightly behind, lean them forward, give 5 firm back blows between the shoulder blades with the heel of your hand."],
+  ["无效：从背后环抱，一手握拳放在肚脐上方，另一手包住，向内向上快速冲击 5 次。","If that fails: from behind, place a fist just above the navel, grasp it with the other hand, give 5 quick inward-and-upward abdominal thrusts."],
+  ["5 次拍背 + 5 次腹部冲击交替进行，直到异物排出；同时让人拨打 {N}。","Alternate 5 back blows and 5 abdominal thrusts until the object comes out. Have someone call {N}."],
+  ["如果失去反应：轻放平躺，拨打 {N}，立即开始心肺复苏。","If they become unresponsive: lower them to the floor, call {N}, start CPR."]],
+ dont:[["不要盲目用手指去掏看不见的异物。","Do not sweep the mouth blindly with your fingers."]],
+ extra:["1 岁以下婴儿：脸朝下趴在前臂上，头低于胸，拍背 5 次；翻转后用掌根在胸部正中按压 5 次，交替进行。不要做腹部冲击。",
+        "Infants under 1: face-down along your forearm, head lower than chest, 5 back blows; turn over and give 5 chest thrusts with the heel of one hand; alternate. No abdominal thrusts."],
+ src:[18]},
+{id:"heart",i:"💔",zh:"胸痛 · 疑似心梗",en:"Chest pain · Heart attack",szh:"胸口压迫感、出汗、气短",sen:"Chest pressure, sweating, breathless",
+ when:["胸部压榨样疼痛或不适，可放射到手臂、颈部、下颌、背部或上腹，伴出汗、恶心、气短。持续超过 15 分钟要高度警惕。",
+       "Crushing chest pain or discomfort that may spread to the arm, neck, jaw, back or stomach, with sweating, nausea or breathlessness. Pain lasting over 15 minutes is a warning sign."],
+ steps:[["立刻拨打 {N}，说明“怀疑心脏病发作”。","Call {N} now and say you suspect a heart attack."],
+  ["让患者坐下休息，头肩有支撑，膝盖弯曲，松开紧身衣物。","Sit them down, head and shoulders supported, knees bent; loosen tight clothing."],
+  ["如果手边有阿司匹林，且患者不过敏、年满 16 岁：慢慢嚼服 1 片 300 毫克。","If aspirin is available, they are not allergic and are 16 or over: slowly chew one 300 mg tablet."],
+  ["患者自带的心绞痛药物（如硝酸甘油），可协助其按医嘱使用。","If they carry their own angina medicine (e.g. GTN), help them take it as prescribed."],
+  ["守在旁边观察。若失去反应且没有正常呼吸：立即心肺复苏。","Stay and watch. If they become unresponsive and stop breathing normally: start CPR."]],
+ dont:[["不要自己开车去医院。","Do not drive yourself to hospital."],["对阿司匹林过敏者、16 岁以下不要给阿司匹林。","No aspirin if allergic or under 16."]],src:[12,19]},
+{id:"stroke",i:"🧠",zh:"中风（脑卒中）",en:"Stroke",szh:"脸歪、手臂无力、说话不清",sen:"Face droop, arm weakness, slurred speech",
+ when:["FAST 快速识别：任何一项异常都要立即呼救。","Use FAST: any single sign means call now."],
+ steps:[["F 脸：让他微笑，是否一侧下垂？","F — Face: ask them to smile. Has one side dropped?"],
+  ["A 手臂：双臂平举，是否一侧抬不起或下落？","A — Arms: can they raise both arms and keep them there?"],
+  ["S 言语：说话是否含糊、答非所问？","S — Speech: is it slurred or confused?"],
+  ["T 时间：立刻拨打 {N}，说明“怀疑中风”，并记下症状开始的时间。","T — Time: call {N} now, say you suspect a stroke, and note when symptoms began."],
+  ["让患者保持舒适、有支撑，安抚并持续观察反应。","Keep them comfortable and supported, reassure them, keep checking their response."]],
+ dont:[["不要给任何吃的、喝的或药物——可能吞咽困难。","Give nothing to eat or drink — they may not be able to swallow."],
+  ["症状自行缓解也必须就医（可能是短暂性脑缺血发作）。","Even if symptoms pass, it is still an emergency (possible TIA)."]],src:[12,19]},
+{id:"bleed",i:"🩸",zh:"严重出血",en:"Severe bleeding",szh:"血流不止或喷射",sen:"Bleeding that will not stop",
+ when:["出血量大、喷射状，或按压后仍止不住。","Heavy or spurting bleeding, or bleeding not controlled by pressure."],
+ steps:[["有条件先戴手套。用干净的布或敷料（没有就用手）直接压在伤口上，用力、持续按压。","Wear gloves if you can. Press firmly and continuously, directly on the wound, with a clean cloth or dressing (or your hands)."],
+  ["让旁人拨打 {N}；独自一人时开免提边按压边通话。","Have someone call {N}; if alone, use speakerphone while keeping pressure on."],
+  ["伤口里有异物：不要拔出，在异物两侧按压。","If something is embedded: do not pull it out; press on either side of it."],
+  ["血渗透敷料：在上面再加一层，继续按压。","If blood soaks through: add another dressing on top and keep pressing."],
+  ["四肢危及生命的大出血压不住：在伤口上方使用止血带（有且会用时），记下时间。","Life-threatening limb bleeding that pressure cannot stop: apply a tourniquet above the wound (if available and you know how); note the time."],
+  ["让伤者躺下、保暖、保持不动，持续观察反应。","Lay them down, keep them warm and still, monitor their response."]],
+ dont:[["不要反复掀开看伤口。","Do not keep lifting the dressing to look."]],src:[19,22]},
+{id:"ana",i:"⚠️",zh:"严重过敏反应",en:"Anaphylaxis",szh:"喉咙肿、喘不上气、晕厥",sen:"Throat swelling, wheeze, collapse",
+ when:["进食、用药或蜂蜇后突然出现：嘴唇/舌头/喉咙肿胀、呼吸困难或喘鸣、头晕或晕倒。","Sudden swelling of lips, tongue or throat, difficulty breathing or wheeze, dizziness or collapse — after food, medicine or a sting."],
+ steps:[["患者带有肾上腺素自动注射笔：立刻在大腿外侧中部注射（可隔着衣物，按笔身说明操作）。","If they have an adrenaline (epinephrine) auto-injector: use it at once in the outer mid-thigh (through clothing if needed; follow the label)."],
+  ["拨打 {N}，明确说“过敏性休克 / anaphylaxis”。","Call {N} and say “anaphylaxis”."],
+  ["让患者平躺并抬高双腿。呼吸困难时可稍微坐起；孕妇取左侧卧。","Lie them flat with legs raised. If struggling to breathe, sit them up slightly; if pregnant, lie on the left side."],
+  ["5 分钟后没有好转：使用第二支注射笔。","No improvement after 5 minutes: use a second auto-injector."],
+  ["即使好转也必须去医院观察。失去反应且无正常呼吸：心肺复苏。","They must go to hospital even if they improve. If unresponsive and not breathing normally: CPR."]],
+ dont:[["不要让患者站起来或走动。","Do not let them stand up or walk."]],src:[23]},
+{id:"seiz",i:"⚡",zh:"抽搐 · 癫痫发作",en:"Seizure",szh:"倒地、四肢抽动",sen:"Collapse with jerking",
+ when:["突然倒地、身体僵直或抽动、意识丧失。","Sudden collapse, stiffening or jerking, loss of awareness."],
+ steps:[["移开周围硬物、尖锐物，用柔软衣物垫住头部。","Clear hard or sharp objects away; cushion the head."],
+  ["记下开始时间。","Note the time it started."],
+  ["抽搐停止后：让其侧卧（复原体位），陪伴直到完全清醒。","When jerking stops: roll them onto their side (recovery position) and stay until fully awake."],
+  ["出现以下任一情况拨打 {N}：超过 5 分钟、反复发作、第一次发作、受伤、怀孕、在水中发作、之后不清醒。","Call {N} if: it lasts over 5 minutes, repeats, is a first seizure, they are injured, pregnant, it happened in water, or they do not wake afterwards."]],
+ dont:[["不要按压、束缚肢体。","Do not hold them down."],["不要往嘴里塞任何东西。","Do not put anything in their mouth."]],src:[24]},
+{id:"burn",i:"🔥",zh:"烧伤 · 烫伤",en:"Burns & scalds",szh:"流动冷水冲 20 分钟",sen:"Cool running water, 20 minutes",
+ when:["任何热力、热液烧烫伤。","Any burn from heat or hot liquid."],
+ steps:[["先让人离开热源、扑灭火焰，确保自己安全。","Stop the burning: move away from the heat, put out flames; keep yourself safe."],
+  ["立即用流动的凉水冲 20 分钟（受伤 3 小时内冲洗仍有益）。","Cool with cool running water for 20 minutes (still helpful up to 3 hours after)."],
+  ["取下伤处附近的衣物和首饰——粘在皮肤上的不要撕。","Remove nearby clothing and jewellery — but not anything stuck to the skin."],
+  ["用保鲜膜或干净不粘的敷料松松覆盖。","Cover loosely with cling film or a clean non-stick dressing."],
+  ["给伤者保暖，防止失温（尤其儿童和老人）。","Keep the person warm, especially children and older people."],
+  ["面积大、较深、在面部/手/关节/会阴，化学或电烧伤，儿童或老人：拨打 {N} 或立即就医。","Large or deep burns, burns to face, hands, joints or genitals, chemical or electrical burns, children or older people: call {N} or get urgent care."]],
+ dont:[["不要用冰、冰水。","No ice or iced water."],["不要涂牙膏、黄油、酱油或任何药膏。","No toothpaste, butter, or creams."]],src:[25]},
+{id:"heat",i:"🌡️",zh:"中暑 · 热射病",en:"Heat exhaustion & heatstroke",szh:"高热、意识模糊是急症",sen:"Very hot and confused is an emergency",
+ when:["热衰竭：乏力、头晕、头痛、恶心、大量出汗。热射病（急症）：体温极高、皮肤发烫不出汗、呼吸心跳加快、意识模糊、抽搐或昏迷。",
+       "Heat exhaustion: tiredness, dizziness, headache, nausea, heavy sweating. Heatstroke (emergency): very high temperature, hot skin not sweating, fast breathing or heartbeat, confusion, seizure or loss of consciousness."],
+ steps:[["转移到阴凉处，脱去多余衣物。","Move them to a cool place; remove unnecessary clothing."],
+  ["清醒时让其喝凉水或补液饮料。","If awake, give cool water or a rehydration drink."],
+  ["给皮肤降温：喷洒或擦拭凉水并扇风，腋下、颈部放包布的冰袋。","Cool the skin: spray or sponge with cool water and fan; wrapped cold packs at armpits and neck."],
+  ["守在旁边。30 分钟内应明显好转。","Stay with them. They should improve within 30 minutes."],
+  ["30 分钟后仍不适，或出现任何热射病表现：拨打 {N}，等待时用凉湿床单包裹并持续降温。","Still unwell after 30 minutes, or any heatstroke sign: call {N}; while waiting wrap in a cool wet sheet and keep cooling."],
+  ["失去意识但有呼吸：侧卧（复原体位）。","If they lose consciousness but are breathing: recovery position."]],
+ dont:[["不要给意识不清的人喂水。","Do not give drinks to someone who is not fully awake."]],src:[26]},
+{id:"poison",i:"☠️",zh:"中毒 · 药物过量",en:"Poisoning & overdose",szh:"不要催吐",sen:"Do not make them vomit",
+ when:["误服或过量服用药物、化学品，吸入有毒气体。","Swallowed medicines or chemicals, overdose, or breathed in toxic fumes."],
+ steps:[["先确保自己安全。有毒气体环境：尽快把人带到空气新鲜处。","Keep yourself safe. Toxic fumes: get the person into fresh air if you safely can."],
+  ["拨打 {N}：说明吃了什么、多少、什么时候。","Call {N}: say what was taken, how much and when."],
+  ["保留药瓶、包装或呕吐物，交给医护人员。","Keep the packaging, container or any vomit for the medical team."],
+  ["皮肤沾染：脱掉被污染的衣物，用水充分冲洗。","On skin: remove contaminated clothing and rinse thoroughly with water."],
+  ["昏迷但有呼吸：侧卧（复原体位），持续观察呼吸。","Unconscious but breathing: recovery position; keep checking breathing."],
+  ["没有呼吸：心肺复苏。怀疑阿片类过量且有纳洛酮：立即使用。","Not breathing: CPR. Suspected opioid overdose and naloxone available: use it now."]],
+ dont:[["不要催吐。","Do not try to make them vomit."],["不要给任何吃的喝的。","Give nothing to eat or drink."],["不要把手伸进其口中。","Do not put your hand in their mouth."]],src:[27]},
+{id:"unc",i:"🛌",zh:"昏迷但有呼吸",en:"Unconscious but breathing",szh:"侧卧，保持气道通畅",sen:"On their side, airway open",
+ when:["叫不醒，但呼吸正常。","Does not wake, but is breathing normally."],
+ steps:[["拨打 {N}。","Call {N}."],
+  ["让其侧卧：上方的腿向前屈起支撑，背后可垫东西，防止翻回仰卧或趴下。","Roll them onto their side: upper leg bent forward for support, something behind the back so they do not roll."],
+  ["头略后仰，保持气道通畅；有呕吐物让其自然流出并擦去。","Tilt the head back slightly to keep the airway open; let any vomit drain and wipe it away."],
+  ["守在旁边，持续观察呼吸。","Stay and keep checking their breathing."],
+  ["呼吸停止或不正常：立刻平躺，开始心肺复苏。","If breathing stops or becomes abnormal: roll onto the back and start CPR."]],
+ dont:[["不要喂水喂药。","Give nothing by mouth."],["不要独自留下患者。","Do not leave them alone."]],src:[27]}
+];
+
+/* 来源 SOURCES（核实日期见 VERIFIED_ON） */
+var SRC={
+1:["国家卫健委英文站：Emergency numbers in the Chinese mainland","https://en.nhc.gov.cn/2019-03/05/c_74520.htm"],
+2:["上海市政府英文站：What to do in an emergency","https://english.shanghai.gov.cn/en-EmergencyNumbers/20241210/cbc5280b9f96440a93234bfc5e0c1023.html"],
+3:["東京都中央区 Emergency contact（110 / 119 / #7119）","https://www.city.chuo.lg.jp/en/introuble.html"],
+4:["東京都豊島区 Hotlines","https://www.city.toshima.lg.jp/info/en/hotlines.html"],
+5:["Ewha Womans University: Emergency Numbers in Korea","https://cmsfox.ewha.ac.kr/winter/student-services/health03.do"],
+6:["SeoulStart: Korea emergency room guide（1339 职能变更）","https://seoulstart.com/guides/korea-emergency-room-guide"],
+7:["澳大利亚政府 Smartraveller — Thailand","https://smartraveller.gov.au/destinations/asia/thailand"],
+8:["ExpatDen: Emergencies in Thailand","https://expatden.com/thailand/emergencies-in-thailand-what-to-do-and-who-to-call"],
+9:["SCDF Emergency Medical Services","https://scdf.gov.sg/home/about-us/information-on-ems/scdf-emergency-medical-services"],
+10:["新加坡卫生部：1777 hotline to cease from 1 Jan 2027","https://www.moh.gov.sg/newsroom/1777-non-emergency-ambulance-hotline-to-cease--from-1-january-2027/"],
+11:["Seasia: Southeast Asia emergency numbers (2026-09)","https://seasia.co/2026/09/14/southeast-asia-emergency-numbers-what-to-call-instead-of-911"],
+12:["NHS: Act FAST（中风）/ 冠心病与心梗","https://www.nhs.uk/actfast/"],
+13:["GOV.UK: 999 and 112 — the UK's national emergency numbers","https://www.gov.uk/guidance/999-and-112-the-uks-national-emergency-numbers"],
+14:["HSE Ireland: Heart attack","https://www2.hse.ie/conditions/heart-attack/"],
+15:["EENA: What's 112 all about","https://eena.org/about-112/whats-112-all-about/"],
+16:["Australian Government: Triple Zero — other emergency numbers","https://www.triplezero.gov.au/triple-zero/other-emergency-numbers"],
+17:["Australian Government: Using other emergency numbers（含 911 用于美加的说明）","https://www.infrastructure.gov.au/media-communications/phone/triple-zero/using-other-emergency-numbers"],
+18:["2025 AHA Guidelines for CPR & ECC（概览）","https://laerdal.com/information/2025-aha-guidelines/"],
+19:["St John Ambulance (UK): Stroke / Heart attack / Life-threatening bleed","https://www.sja.org.uk/get-advice/first-aid-advice/stroke"],
+20:["Wikipedia: 112 (emergency telephone number) / List of emergency telephone numbers","https://simple.wikipedia.com/wiki/112_(emergency_telephone_number)"],
+21:["ATCOG: International Emergency Services Numbers Map 2026","https://atcog.org/wp-content/uploads/2026/08/International-Emergency-Services-Numbers-Map-2026-hi-res-v2.pdf"],
+22:["St John Ambulance Australia: Severe bleeding fact sheet","https://stjohn.org.au/fact-sheet/severe-bleeding/"],
+23:["GOV.UK / MHRA: Adrenaline auto-injector advice for patients","https://www.gov.uk/drug-safety-update/adrenaline-auto-injector-advice-for-patients"],
+24:["American Red Cross: emergencies reference（seizure / stroke）","https://www.gvsu.edu/cms5/asset/708e9274-3f35-495e-9a6f-61cbe5addf67/af8837cb-b1f1-40e8-be80-31e899b8ea21/rm_manual-_other_emergencies.pdf"],
+25:["NHS: Burns and scalds — treatment","https://www.nhs.uk/conditions/burns-and-scalds/treatment/"],
+26:["NHS: Heat exhaustion and heatstroke","https://www.nhs.uk/conditions/heat-exhaustion-and-heatstroke/"],
+27:["NHS: Poisoning","https://www.nhs.uk/conditions/poisoning/"],
+28:["香港消防处：How to call an ambulance","https://www.hkfsd.gov.hk/eng/source/safety/uambu.htm"],
+29:["澳门特区政府入口网站：消防局紧急报案热线 119、120、28572222","https://www.gov.mo/en/preset-notice-post/271128"],
+30:["澳门特区政府 / 卫生局：急诊服务（需救护车可致电 999）","https://www.gov.mo/zh-hans/wp-content/uploads/sites/5/2018/01/%E6%80%A5%E8%A8%BA%E6%9C%8D%E5%8B%99%E6%94%B6%E8%B2%BB%E6%BA%96%E5%89%87.pdf"],
+31:["台中市西屯区公所（转载消防署）：119 报案宣导","https://www.xitun.taichung.gov.tw/media/674565/%E8%81%BD%E8%AA%9E%E9%9A%9C%E4%BA%BA%E5%A3%AB119%E5%A0%B1%E6%A1%88%E5%AE%A3%E5%B0%8E.pdf"],
+32:["台湾事实查核中心（引消防署、警政署）：119 / 110 / 112","https://tfc-taiwan.org.tw/?p=108722"],
+33:["釜山广域市政府：Emergency call service for foreigners (119)","https://www.busan.go.kr/eng/bsnews01/796823"],
+34:["韩国政府政策简报 korea.kr：119 短信 / 视频报警","https://www.korea.kr/news/reporterView.do?newsId=148929801"],
+35:["马来西亚政府入口网站：MERS 999 Emergency Line","https://www.malaysia.gov.my/en/categories/safety-and-community/public-safety/mers-999-emergency-line"],
+36:["马来西亚民防部队：999 Emergency Services","https://www.civildefence.gov.my/999-emergency-services/?lang=en"],
+37:["Thư Viện Pháp Luật（引越南电信号码法规）：111、113、114、115","https://thuvienphapluat.vn/hoi-dap-phap-luat/111-113-114-115-la-so-dien-thoai-gi-138013545.html"],
+38:["印尼卫生部 Kemenkes：医疗急救拨 119","https://kemkes.go.id/eng/terjadi-darurat-kesehatan-saat-mudik-hubungi-119"],
+39:["印尼通信与数字部法规库：统一紧急号码 112（2016 年第 10 号部长条例）","https://jdih.komdigi.go.id/produk_hukum/unduh-abstrak/278"],
+40:["菲律宾内政与地方政府部 DILG：Unified 911","https://calabarzon.dilg.gov.ph/one-number-for-all-emergencies-unified-911-to-launch-nationwide/"],
+41:["印度政府：Emergency Response Support System 112","https://112.gov.in/about"],
+42:["阿联酋政府门户 u.ae：Handling emergencies","https://u.ae/en/information-and-services/justice-safety-and-the-law/handling-emergencies"],
+43:["德国联邦政府：Notrufnummern 110 und 112","https://www.bundesregierung.de/breg-de/aktuelles/notrufnummer-50-jahre-2224394"],
+44:["意大利卫生部：Numero unico europeo per le emergenze (NUE) 112","https://www.salute.gov.it/new/it/tema/112-118-e-pronto-soccorso/numero-unico-europeo-le-emergenze-nue-112/"],
+45:["西班牙政府 administracion.gob.es：Números de urgencia","https://administracion.gob.es/pag_Home/Tu-espacio-europeo/derechos-obligaciones/ciudadanos/asistencia-sanitaria/numeros-urgencia.html"],
+46:["新西兰政府 Govt.nz：111 emergency service","https://www.govt.nz/browse/law-crime-and-justice/crimes-and-emergencies/111-emergency-service/"],
+47:["LuatVietnam（越南总理决定）：112 号码使用规定","https://luatvietnam.vn/tai-nguyen/quyet-dinh-2024-qd-ttg-2025-quy-che-su-dung-so-dien-thoai-112-tiep-nhan-thong-tin-su-co-thien-tai-411548-d1.html"],
+48:["Apple 支持：在 iPhone 的“健康”App 中设置医疗急救卡","https://support.apple.com/105072"],
+49:["Google Android 帮助：Get help during an emergency with your Android phone","https://support.google.com/android/answer/9319337"]
+};
+
+/* ===================== 界面文字 UI STRINGS ===================== */
+var T={
+brand:["急救卡","Emergency Card"],
+beta:["测试版（"+VERSION+"）：内容依据公开的官方指南整理，尚未经执业急诊医师签审。紧急情况请先打电话，接线员的指示优先于本卡。",
+      "Test version ("+VERSION+"): compiled from public official guidance; not yet signed off by a practising emergency physician. In an emergency call first — the dispatcher's instructions override this card."],
+youAre:["你所在的位置","You appear to be in"],auto:["按手机时区自动识别","Detected from device time zone"],manual:["手动选择","Chosen manually"],
+change:["更换","Change"],callAmb:["呼叫救护车","Call an ambulance"],tap:["点击拨打","Tap to call"],
+lvlA:["官方来源","Official source"],lvlB:["二手来源","Secondary source"],lvlC:["待核实","Unverified"],
+say:["电话里说什么","What to say on the call"],
+s1:["地点：详细地址，或附近的地标、路口、酒店名","Where: exact address, or a nearby landmark, junction or hotel name"],
+s2:["发生了什么：例如“胸痛”“没有呼吸”“车祸”","What happened: e.g. “chest pain”, “not breathing”, “car crash”"],
+s3:["几个人，大约年龄","How many people, roughly what age"],
+s4:["是否清醒？是否有呼吸？","Are they awake? Are they breathing?"],
+s5:["你的电话号码。等对方先挂电话","Your phone number. Let them hang up first"],
+locBtn:["显示我的经纬度","Show my coordinates"],locing:["定位中…","Locating…"],locFail:["无法定位。请允许位置权限，或直接描述地址与地标。","Could not get location. Allow location access, or describe the address and landmarks."],
+acc:["精度约","Accuracy about"],m:["米","m"],copy:["复制","Copy"],copied:["已复制","Copied"],map:["在地图中打开","Open in maps"],
+cards:["急救步骤","What to do"],back:["返回","Back"],dontT:["不要做","Do not"],srcT:["依据","Based on"],
+metroOn:["开始按压节拍（110 次/分）","Start compression beat (110/min)"],metroOff:["停止节拍","Stop beat"],
+idT:["我的急救信息","My medical ID"],idHint:["只保存在本机浏览器，不会上传。昏迷时可供施救者查看。","Stored only in this browser — never uploaded. Helps rescuers if you cannot speak."],
+edit:["填写 / 修改","Add / edit"],save:["保存","Save"],clear:["清空","Clear"],
+fName:["姓名","Name"],fBlood:["血型","Blood type"],fAll:["过敏","Allergies"],fCond:["疾病史","Medical conditions"],fMed:["正在用药","Current medication"],fIce:["紧急联系人及电话","Emergency contact & phone"],
+fbT:["反馈","Feedback"],fbQ:["这张卡片对你有用吗？哪里看不懂、哪里不对？","Was this card useful? What was unclear or wrong?"],
+fbPh:["写下你的意见…","Write your feedback…"],fbSend:["提交反馈","Send feedback"],fbG:["Google 表单","Google Form"],fbT2:["腾讯问卷（中国大陆可用）","Tencent Survey (works in mainland China)"],fbCtx:["填表时请照抄这一行","Please copy this line into the form"],fbNoPII:["请不要填写姓名、电话或病史。","Please do not include names, phone numbers or medical history."],fbDone:["反馈文字已复制，请粘贴发送给项目方。谢谢！","Feedback copied — please paste and send it to the project team. Thank you!"],
+srcAll:["信息来源","Sources"],verified:["核实日期","Verified on"],
+disc:["本卡为公众急救科普与应急参考，不能替代专业医疗救治或急救培训。各国号码与规程可能变动，请以当地官方信息为准。不收集任何个人数据。",
+      "This card is public first-aid information for reference in an emergency. It does not replace professional medical care or first-aid training. Numbers and procedures can change — rely on local official information. No personal data is collected."],
+pick:["选择国家或地区","Choose country or region"],useAuto:["恢复自动识别","Use automatic detection"],
+offline:["可离线使用：首次打开后，无网络也能查看。","Works offline after the first visit."],
+/* ---- v0.3 界面文字（只涉及界面，不新增医学内容；分诊问句取自上面卡片的原文）---- */
+triK:["快速判断","Quick check"],
+tq1:["他（她）有反应吗？","Do they respond?"],tq1s:["拍双肩并大声呼喊。","Tap both shoulders and shout."],
+t1n:["没反应","No response"],t1y:["有反应","Responds"],
+tq2:["呼吸正常吗？","Breathing normally?"],tq2s:["不呼吸，或只有喘息样呼吸，都算不正常。","Not breathing, or only gasping, is not normal."],
+t2n:["没有正常呼吸","Not breathing normally"],t2ns:["开始心肺复苏","Start CPR"],
+t2y:["呼吸正常","Breathing normally"],t2ys:["叫不醒，但有呼吸","Will not wake, but breathing"],
+tq3:["选择最接近的情况","Choose the closest situation"],tq3s:["有反应。在下面的急救卡里选一张。","They respond. Pick a card below."],
+triBack:["重新判断","Start again"],local:["当地号码与说明","Local numbers & notes"],
+stepOf:["第 {a} 步 / 共 {b} 步","Step {a} of {b}"],prev:["上一步","Previous"],next:["下一步","Next"],finish:["完成","Done"],
+modeStep:["逐步","Step by step"],modeList:["全部步骤","All steps"],voice:["语音","Voice"],
+voiceOnA:["语音播报已开，点击关闭","Voice is on, tap to turn off"],voiceOffA:["语音播报已关，点击打开","Voice is off, tap to turn on"],
+beatLbl:["按压节拍 110/分","Beat 110/min"],
+soundOn:["声音：开","Sound: on"],soundOff:["声音：关","Sound: off"],soundTap:["点击开声音","Tap for sound"],
+awake:["屏幕保持常亮","Screen stays on"],
+cfQ:["你现在在这里吗？","Are you here now?"],cfS:["急救电话按所在国家切换，请先确认。","Emergency numbers depend on the country you are in. Please confirm."],
+cfY:["是，就在这里","Yes, I am here"],cfN:["不是，选择其他国家","No, choose another country"],
+cfX:["未能识别你所在的国家","We could not detect your country"],cfXY:["暂时使用通用号码","Use general numbers for now"],cfXN:["选择国家或地区","Choose country or region"],
+ambLbl:["急救电话","Ambulance"],
+instT:["添加到主屏幕","Add to Home Screen"],instHint:["把急救卡放到手机桌面：紧急时一点就开，没有网络也能用。","Keep this card on your home screen: one tap to open, works without a connection."],
+instBtn:["安装到主屏幕","Install on this phone"],
+instIOS:["iPhone / iPad：用 Safari 打开本页 → 点“分享”按钮 → 选“添加到主屏幕”。","iPhone / iPad: open this page in Safari → tap the Share button → “Add to Home Screen”."],
+instAnd:["安卓：点浏览器右上角菜单 → “添加到主屏幕”或“安装应用”。","Android: browser menu (top right) → “Add to Home screen” or “Install app”."],
+midT:["同时设置手机自带的医疗急救卡","Also set up your phone's built-in Medical ID"],
+midWhy:["手机锁屏时，别人看不到本页的信息；手机系统自带的医疗急救卡可以在锁屏界面显示。","When your phone is locked, rescuers cannot see this page. Your phone's built-in Medical ID can be shown on the lock screen."],
+midIOS:["iPhone：打开“健康”App → 点右上角头像 → 医疗急救卡 → 编辑 → 打开“锁定时显示”。","iPhone: open the Health app → tap your profile picture → Medical ID → Edit → turn on “Show When Locked”."],
+midAnd:["安卓：打开“安全”App（或 设置 → 安全与紧急情况）→ 填写医疗信息 → 打开锁屏时显示。不同品牌的菜单名称略有不同。","Android: open the Safety app (or Settings → Safety & emergency) → add medical information → allow it to show when locked. Menu names vary by brand."],
+figCpr:["示意图：跪在患者身旁，双手叠放在胸部正中，手臂伸直向下按压","Illustration: kneeling beside the person, hands stacked on the centre of the chest, arms straight, pushing down"],
+figBack:["示意图：让患者前倾，用掌根拍击两肩胛骨之间","Illustration: the person leans forward; the heel of the hand strikes between the shoulder blades"],
+figPress:["示意图：用敷料直接压住伤口，持续用力","Illustration: pressing a dressing firmly and directly on the wound"],
+figRec:["示意图（从上方看）：侧卧，上方的手垫在脸颊下，上方的腿向前屈起支撑","Illustration (seen from above): lying on the side, upper hand under the cheek, upper leg bent forward for support"],
+figTop:["从上方看","Seen from above"],
+noAwakeS:["屏幕可能会自动熄灭（点此查看）","Screen may turn off (tap for help)"],
+noAwake:["本机网页无法让屏幕常亮。请把自动锁屏时间调长：iPhone 设置 › 显示与亮度 › 自动锁定；安卓 设置 › 显示 › 屏幕超时（各品牌名称略有不同）。","This phone cannot keep the screen on from a web page. Make auto-lock longer: iPhone Settings › Display & Brightness › Auto-Lock; Android Settings › Display › Screen timeout (names vary by brand)."],
+fbA:["反馈内容","Feedback text"],srcN:["查看全部来源","Show all sources"]
+};
+
+/* ===================== 状态与工具 ===================== */
+var lang=(function(){var q=/[?&]lang=(zh|en)/.exec(location.search);if(q)return q[1];
+  try{var s=localStorage.getItem("ec_lang");if(s)return s}catch(e){}
+  return /^zh/i.test(navigator.language||"")?"zh":"en"})();
+function store(k,v){try{if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,v)}catch(e){}}
+function load(k){try{return localStorage.getItem(k)}catch(e){return null}}
+
+/* 国家：自动识别 + 首次打开确认。时区识别结果变了（例如出国）会重新确认。 */
+var DET=detect(),manual=null,confirmed=false;
+(function(){var q=/[?&]c=([A-Za-z]{2})/.exec(location.search);
+  if(q&&C[q[1].toUpperCase()]){manual=q[1].toUpperCase();confirmed=true;return}
+  try{var g=JSON.parse(load("ec_geo")||"null");
+    if(g&&g.det===DET&&C[g.c]){confirmed=true;manual=(g.c!==DET)?g.c:null}}catch(e){}})();
+function cc(){return manual||DET}
+function saveGeo(){confirmed=true;store("ec_geo",JSON.stringify({det:DET,c:cc()}))}
+
+function t(k){return T[k][lang==="zh"?0:1]}
+function L(p){return p[lang==="zh"?0:1]}
+function nm(c){return C[c][lang]}
+function esc(s){return String(s).replace(/[&<>"]/g,function(m){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]})}
+function tel(n){return "tel:"+encodeURIComponent(n)}
+function $(id){return document.getElementById(id)}
+function digits(n){return String(n).split("").join(" ")}
+function phoneIco(){return '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>'}
+function srcLine(ids){return ids.map(function(i){return '<a href="'+SRC[i][1]+'" target="_blank" rel="noopener">'+esc(SRC[i][0])+'</a>'}).join(" · ")}
+function callBtn(c){var d=C[c];
+  return '<a class="call" href="'+tel(d.amb)+'" aria-label="'+esc(t("callAmb")+"，"+nm(c)+"，"+digits(d.amb))+'"><span aria-hidden="true"><span class="lbl">'+t("callAmb")+' · '+esc(nm(c))+'</span><span class="num">'+esc(d.amb)+'</span></span><span class="ico" aria-hidden="true">'+phoneIco()+'</span></a>'}
+function emo(s){return '<span aria-hidden="true">'+s+'</span>'}
+
+/* ===================== 写实风格示意图（v0.3.1 方案 A；仅示意，随医师签审一并审核） =====================
+   固定浅色底，深色模式下同样清晰。施救者 = 蓝色上衣；患者 = 绿色上衣；红色 = 动作方向。 */
+var SK="#E9BC98",SKD="#CF9A74",HR="#3B2A21",RS="#2F5DA8",RSD="#244A88",RT="#2C313C",PS="#5E8F86",PSD="#4B7770",PT="#4A5B78",PTD="#3C4B64",SH="#2A2622",GL="#9FD0F2",GLD="#6FA9D6",AR="#C8281C",OL="rgba(30,25,20,.35)";
+function bg(){return '<rect width="320" height="190" rx="14" fill="#F5F2EC"/><rect y="168" width="320" height="22" fill="#E6E0D4"/><path d="M0 168H320" stroke="#D3CBBC" stroke-width="2"/>'}
+function arrow(x,y1,y2){return '<path d="M'+x+' '+y1+'V'+(y2-12)+'" stroke="'+AR+'" stroke-width="6" stroke-linecap="round"/><path d="M'+(x-11)+' '+(y2-14)+'L'+x+' '+y2+'L'+(x+11)+' '+(y2-14)+'Z" fill="'+AR+'" stroke="'+AR+'" stroke-width="3" stroke-linejoin="round"/>'}
+function P(d,f){return '<path d="'+d+'" fill="'+f+'" stroke="'+OL+'" stroke-width="1.2" stroke-linejoin="round"/>'}
+function E(cx,cy,rx,ry,f,rot){return '<ellipse cx="'+cx+'" cy="'+cy+'" rx="'+rx+'" ry="'+ry+'" fill="'+f+'" stroke="'+OL+'" stroke-width="1.2"'+(rot?' transform="rotate('+rot+' '+cx+' '+cy+')"':'')+'/>'}
+function limb(x1,y1,x2,y2,w,f){return '<path d="M'+x1+' '+y1+'L'+x2+' '+y2+'" stroke="'+OL+'" stroke-width="'+(w+2)+'" stroke-linecap="round"/><path d="M'+x1+' '+y1+'L'+x2+' '+y2+'" stroke="'+f+'" stroke-width="'+w+'" stroke-linecap="round"/>'}
+function eye(x,y){return '<circle cx="'+x+'" cy="'+y+'" r="1.8" fill="'+SH+'"/>'}
+function shut(x,y){return '<path d="M'+(x-3)+' '+y+'q3 2 6 0" stroke="'+SH+'" stroke-width="1.6" fill="none" stroke-linecap="round"/>'}
+
+/* 跪姿施救者，面向左，前倾约 45°；双臂伸直，肩在手的正上方。hand = 手套颜色（可选） */
+function kneeler(dx,hand,front){var g='<g transform="translate('+dx+' 0)">';if(!front)return g+
+  limb(150,116,147,154,20,RT)+                                  /* 大腿（小腿被患者挡住） */
+  limb(110,58,107,128,11,RSD)+                                  /* 远侧手臂 */
+  P("M137 124 L96 72 C91 62 99 50 111 48 C116 48 120 50 123 54 L163 104 C167 114 160 125 149 127 C144 127 140 126 137 124 Z",RS)+
+  P("M140 118 C150 120 158 114 160 106 L163 104 C167 114 160 125 149 127 C144 127 140 126 137 124 Z",RT)+
+  P("M101 52 L97 40 L105 37 L110 49 Z",SKD)+                    /* 颈 */
+  E(95,31,12,13.5,SK)+
+  P("M83 27 C84 16 100 13 107 22 C109 27 108 33 104 34 C101 27 93 25 88 30 C86 32 84 31 83 27 Z",HR)+
+  P("M84 35 L79 38 L84 39 Z",SK)+eye(88,30)+
+  '</g>';
+  return g+limb(108,56,106,96,13,RS)+limb(106,96,106,128,11,SK)+       /* 近侧手臂：伸直 */
+  P("M93 130 C93 125 119 125 120 130 L120 139 C108 141 98 141 93 139 Z",hand||SK)+
+  P("M95 128 C101 124 113 124 118 128 L116 132 C110 130 102 130 96 132 Z",hand?GLD:SKD)+
+  '</g>'}
+
+/* 仰卧患者（头在 hx 一侧；dir=1 头在左，-1 头在右） */
+function supine(dir){var g='<g'+(dir<0?' transform="translate(320 0) scale(-1 1)"':'')+'>'+
+  E(46,152,15,14,SK)+
+  P("M33 158 C30 146 36 138 46 138 C40 142 38 150 40 162 C37 164 34 162 33 158 Z",HR)+
+  P("M52 139 L55 133 L58 139 Z",SK)+shut(50,146)+
+  P("M60 150 H70 V166 H60 Z",SKD)+
+  P("M68 146 C80 138 100 136 120 138 L166 142 C172 144 172 166 166 168 L70 168 C64 166 64 150 68 146 Z",PS)+
+  P("M74 160 L150 162 C154 162 154 168 150 168 L74 168 Z",PSD)+
+  P("M164 144 L276 150 C282 151 282 166 276 167 L164 168 Z",PT)+
+  P("M166 160 L276 162 L276 167 L166 168 Z",PTD)+
+  P("M276 136 C282 134 290 136 290 142 L292 168 L276 168 Z",SH)+'</g>';return g}
+
+var FIGS={
+/* 1 胸外按压：跪在患者身旁，双手叠放在胸部正中，手臂伸直，肩在手的正上方 */
+cpr: bg()+kneeler(0)+supine(1)+kneeler(0,0,1)+arrow(60,64,112),
+
+/* 2 拍背：患者前倾，施救者在侧后方，一手扶胸，一手掌根拍两肩胛骨之间 */
+back: bg()+
+  limb(206,68,178,98,11,RSD)+limb(178,98,130,106,10,SKD)+         /* 施救者远侧手臂：从后面伸到患者胸前扶住 */
+  limb(206,116,200,162,16,RT)+limb(220,116,228,162,16,RT)+
+  P("M188 158 H206 V168 H182 Q182 160 188 158 Z",SH)+P("M222 158 H238 Q244 160 244 168 H222 Z",SH)+
+  P("M196 64 C204 56 226 56 230 66 L228 118 C222 124 202 124 196 118 Z",RS)+
+  P("M199 106 L228 106 L228 118 C222 124 202 124 198 118 Z",RT)+
+  P("M207 54 H217 V64 H207 Z",SKD)+
+  E(210,38,12,13.5,SK)+
+  P("M199 33 C200 22 216 19 222 28 C224 33 223 38 220 40 C217 33 210 31 204 37 C202 38 199 37 199 33 Z",HR)+
+  P("M199 42 L194 45 L199 46 Z",SK)+eye(203,37)+
+  limb(150,116,142,162,17,PT)+limb(160,116,166,162,17,PT)+
+  P("M128 158 H146 V168 H122 Q122 160 128 158 Z",SH)+P("M160 158 H176 Q182 160 182 168 H160 Z",SH)+
+  P("M162 120 C170 112 168 100 160 96 L104 72 C94 68 82 76 84 86 C86 94 96 100 104 104 L144 124 C150 126 158 124 162 120 Z",PS)+
+  P("M150 110 C156 112 160 116 158 120 C152 124 146 124 140 120 L118 108 C124 106 140 106 150 110 Z",PSD)+
+  P("M84 86 L76 90 L80 98 L88 94 Z",SKD)+
+  E(70,98,12,13.5,SK,25)+
+  P("M64 86 C74 80 86 86 84 96 C80 94 74 92 70 94 C66 92 62 90 64 86 Z",HR)+
+  '<path d="M62 104 q3 2 6 0" stroke="'+SH+'" stroke-width="1.6" fill="none" stroke-linecap="round" transform="rotate(25 65 105)"/>'+
+  limb(98,84,92,116,10,PS)+limb(92,116,90,136,9,SK)+
+  limb(200,68,172,92,12,RS)+limb(172,92,132,82,10,SK)+            /* 施救者近侧手臂：掌根拍击 */
+  P("M114 74 C120 70 132 72 134 78 L132 86 C124 88 116 86 114 80 Z",SK)+
+  '<g stroke="'+AR+'" stroke-width="4" stroke-linecap="round"><path d="M108 62 L102 50"/><path d="M122 58 L122 44"/><path d="M136 62 L144 50"/></g>',
+
+/* 3 直接压迫止血：戴手套，用敷料直接压住伤口，手臂伸直持续用力 */
+press: bg()+kneeler(23,GL)+supine(-1)+
+  '<ellipse cx="130" cy="147" rx="18" ry="4" fill="#B3261E" opacity=".85"/>'+
+  P("M106 138 H152 A3 3 0 0 1 155 141 V147 H103 V141 A3 3 0 0 1 106 138 Z","#FFFFFF")+
+  '<path d="M112 142 H146" stroke="#E0DAD0" stroke-width="2"/>'+
+  kneeler(23,GL,1)+arrow(70,64,112),
+
+/* 4 侧卧（复原体位，从上方看）：上方的手垫在脸颊下，上方的腿屈髋屈膝，膝盖向前着地支撑 */
+rec: '<rect width="320" height="190" rx="14" fill="#F5F2EC"/><rect x="12" y="14" width="296" height="162" rx="10" fill="#E6E0D4"/>'+
+  /* 地面上的影子：表示人躺在地上 */
+  '<g fill="#000" opacity=".08"><path d="M70 78 C100 66 160 66 196 80 L298 90 L298 108 L196 114 C160 122 104 120 76 110 Z"/><path d="M180 100 L220 152 L276 152 L276 136 L226 140 L198 96 Z"/><ellipse cx="54" cy="96" rx="22" ry="18"/><path d="M96 108 L110 152 L74 160 L72 150 L98 144 Z"/></g>'+
+  P("M178 76 L288 82 C294 83 294 96 288 97 L178 98 Z",PTD)+                                   /* 下方的腿：伸直 */
+  P("M286 78 C294 78 298 82 298 88 L298 98 L286 98 Z",SH)+
+  P("M76 64 C100 54 150 56 182 68 C190 72 190 98 182 102 C150 110 104 108 80 98 C70 92 68 70 76 64 Z",PS)+   /* 躯干 */
+  P("M82 96 C110 104 150 104 180 98 L182 102 C150 110 104 108 80 98 Z",PSD)+
+  limb(92,98,104,140,11,PS)+limb(104,140,72,148,10,SK)+                                        /* 下方手臂：向前伸出、屈肘 */
+  P("M60 72 H76 V90 H60 Z",SKD)+
+  E(50,86,17,15,SK)+                                                                                 /* 头：侧放、略后仰 */
+  P("M36 80 C38 66 56 64 66 74 C64 78 60 78 56 76 C48 74 42 78 40 88 C36 88 35 84 36 80 Z",HR)+
+  P("M38 96 L33 100 L39 100 Z",SK)+shut(44,88)+
+  limb(96,74,98,106,11,PS)+limb(98,106,60,102,10,SK)+                                          /* 上方手臂：手背垫在脸颊下 */
+  P("M44 96 C48 92 60 94 62 100 C58 106 48 106 44 102 Z",SK)+
+  P("M170 70 C180 66 192 70 194 78 L214 134 C216 142 204 148 196 144 L172 90 C166 84 164 74 170 70 Z",PT)+   /* 上方的腿：屈起 */
+  limb(204,138,262,134,17,PT)+
+  P("M258 124 C266 122 274 124 276 130 L276 144 L258 144 Z",SH)+
+  '<text x="300" y="168" text-anchor="end" font-size="13" font-weight="600" fill="#7A7468" font-family="-apple-system,PingFang SC,Noto Sans SC,sans-serif">{TOP}</text>'
+};
+var FIGMAP={cpr:{2:"cpr",3:"cpr"},choke:{1:"back"},bleed:{0:"press"},unc:{1:"rec"},seiz:{2:"rec"},heat:{5:"rec"},poison:{4:"rec"}};
+var FIGLBL={cpr:"figCpr",back:"figBack",press:"figPress",rec:"figRec"};
+function fig(cardId,i){var f=(FIGMAP[cardId]||{})[i];if(!f)return "";
+  return '<svg class="fig" viewBox="0 0 320 190" role="img" aria-label="'+esc(t(FIGLBL[f]))+'">'+FIGS[f].replace("{TOP}",esc(t("figTop")))+'</svg>'}
+
+/* ===================== 首页 ===================== */
+var tri=0; // 0 = 第一问；1 = 第二问；2 = 有反应，去选卡片
+function triHtml(){
+  if(tri===1)return '<div class="tri-k">'+t("triK")+' · 2/2</div><h1 id="triQ" tabindex="-1">'+t("tq2")+'</h1><p>'+t("tq2s")+'</p>'+
+    '<div class="tri-b"><button class="big no" data-go="cpr">'+t("t2n")+'<small>'+t("t2ns")+' ›</small></button>'+
+    '<button class="big yes" data-go="unc">'+t("t2y")+'<small>'+t("t2ys")+' ›</small></button></div>'+
+    '<button class="link" data-tri="0">‹ '+t("triBack")+'</button>';
+  if(tri===2)return '<div class="tri-k">'+t("triK")+'</div><h1 id="triQ" tabindex="-1">'+t("tq3")+'</h1><p>'+t("tq3s")+'</p>'+
+    '<button class="link" data-tri="0">‹ '+t("triBack")+'</button>';
+  return '<div class="tri-k">'+t("triK")+' · 1/2</div><h1 id="triQ" tabindex="-1">'+t("tq1")+'</h1><p>'+t("tq1s")+'</p>'+
+    '<div class="tri-b"><button class="big no" data-tri="1">'+t("t1n")+'</button><button class="big yes" data-tri="2">'+t("t1y")+'</button></div>';
+}
+function standalone(){try{return (window.matchMedia&&matchMedia("(display-mode: standalone)").matches)||navigator.standalone===true}catch(e){return false}}
+var dip=null;
+window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();dip=e;var b=$("instBtn");if(b)b.hidden=false});
+window.addEventListener("appinstalled",function(){dip=null;var s=$("instSec");if(s)s.hidden=true});
+
+function render(){
+  document.documentElement.lang=lang==="zh"?"zh-CN":"en";
+  document.title=lang==="zh"?"急救卡 Emergency Card":"Emergency Card 急救卡";
+  $("brand").textContent=t("brand");
+  $("langBtn").textContent=lang==="zh"?"EN":"中文";
+  var c=cc(),d=C[c],h="";
+  h+='<div class="where"><div><small>'+t("youAre")+' · '+(manual?t("manual"):t("auto"))+'</small><b>'+emo(d.f)+' '+esc(nm(c))+'</b><span class="lvl '+d.lvl+'">'+t("lvl"+d.lvl)+'</span></div>'+
+     '<button class="pill" id="chg" aria-label="'+esc(t("change")+"："+t("pick"))+'">'+t("change")+'</button></div>';
+  h+='<section class="tri" id="tri" aria-labelledby="triQ">'+triHtml()+'</section>';
+  h+='<div class="beta" role="note">'+t("beta")+'</div>';
+
+  h+='<h2 id="cardsH" tabindex="-1">'+t("cards")+'</h2><div class="grid">'+CARDS.map(function(k){
+     return '<button class="tile'+(k.top?" top":"")+'" data-card="'+k.id+'"><i aria-hidden="true">'+k.i+'</i><span><b>'+esc(k[lang])+'</b><small>'+esc(lang==="zh"?k.szh:k.sen)+'</small></span></button>'}).join("")+'</div>';
+
+  h+='<h2>'+t("local")+' · '+esc(nm(c))+'</h2><section class="hero">';
+  if(d.nums.length){h+='<div class="nums">'+d.nums.map(function(n){var lb=lang==="zh"?n[1]:n[2];
+     return '<a class="n" href="'+tel(n[0])+'" aria-label="'+esc(lb+"，"+digits(n[0]))+'"><span aria-hidden="true">'+esc(lb)+'</span><b aria-hidden="true">'+esc(n[0])+'</b></a>'}).join("")+'</div>'}
+  h+='<ul class="notes"'+(d.nums.length?'':' style="margin-top:0"')+'>'+d.notes.map(function(n){return '<li>'+esc(L(n))+'</li>'}).join("")+'</ul>';
+  if(d.src.length)h+='<div class="src">'+t("srcT")+'：'+srcLine(d.src)+'</div>';
+  h+='</section>';
+
+  h+='<h2>'+t("say")+'</h2><section class="panel"><ol class="say">'+["s1","s2","s3","s4","s5"].map(function(k){return '<li>'+t(k)+'</li>'}).join("")+'</ol>'+
+     '<div id="locOut" aria-live="polite"></div><button class="btn ghost" id="locBtn">'+emo("📍")+' '+t("locBtn")+'</button></section>';
+
+  h+='<h2>'+t("idT")+'</h2><section class="panel"><div id="idBox"></div>'+
+     '<div class="tip"><b>'+emo("📱")+' '+t("midT")+'</b>'+t("midWhy")+'<p>'+t("midIOS")+'</p><p>'+t("midAnd")+'</p><div class="src" style="margin-top:8px">'+t("srcT")+'：'+srcLine([48,49])+'</div></div></section>';
+
+  if(!standalone()){
+    var ios=/iPhone|iPad|iPod/.test(navigator.userAgent||"")||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+    var and=/Android/.test(navigator.userAgent||"");
+    h+='<div id="instSec"><h2>'+t("instT")+'</h2><section class="panel"><div>'+t("instHint")+'</div>'+
+       '<button class="btn" id="instBtn"'+(dip?'':' hidden')+'>'+t("instBtn")+'</button>'+
+       (and?'':'<p class="muted">'+t("instIOS")+'</p>')+(ios?'':'<p class="muted">'+t("instAnd")+'</p>')+'</section></div>';
+  }
+
+  h+='<h2 id="fb">'+t("fbT")+'</h2><section class="panel"><div>'+t("fbQ")+'</div>'+fbBlock(c)+'</section>';
+
+  var ks=Object.keys(SRC);
+  h+='<h2>'+t("srcAll")+'</h2><section class="panel"><div class="muted">'+t("verified")+'：'+VERIFIED_ON+' · A = '+t("lvlA")+' · B = '+t("lvlB")+' · C = '+t("lvlC")+'</div>'+
+     '<details class="sl"><summary>'+t("srcN")+'（'+ks.length+'）</summary><ol class="srcs">'+
+     ks.map(function(i){return '<li><a href="'+SRC[i][1]+'" target="_blank" rel="noopener">'+esc(SRC[i][0])+'</a></li>'}).join("")+'</ol></details></section>';
+  h+='<footer>'+t("disc")+'<br>'+t("offline")+'</footer>';
+  $("app").innerHTML=h;
+  $("dock").innerHTML=callBtn(c);
+  renderId(false);
+  route();
+}
+
+/* 反馈：Google 表单 + 腾讯问卷；大陆优先腾讯，其余优先 Google；都没填则复制文字 */
+function fbCtx(c){return VERSION+" · "+c+" · "+lang}
+function fbBlock(c){
+  var g=FEEDBACK_GOOGLE,q=FEEDBACK_TENCENT;
+  if(!g&&!q)return '<textarea id="fbTxt" rows="3" aria-label="'+esc(t("fbA"))+'" placeholder="'+esc(t("fbPh"))+'"></textarea><button class="btn" id="fbBtn">'+t("fbSend")+'</button><div class="muted" id="fbMsg" role="status"></div>';
+  if(g&&GOOGLE_PREFILL_ENTRY)g+=(g.indexOf("?")<0?"?":"&")+"usp=pp_url&"+encodeURIComponent(GOOGLE_PREFILL_ENTRY)+"="+encodeURIComponent(fbCtx(c));
+  var bg=g?'<a class="btn{K}" href="'+esc(g)+'" target="_blank" rel="noopener">'+t("fbG")+'</a>':"";
+  var bq=q?'<a class="btn{K}" href="'+esc(q)+'" target="_blank" rel="noopener">'+t("fbT2")+'</a>':"";
+  var list=(c==="CN")?[bq,bg]:[bg,bq];
+  list=list.filter(function(x){return x});
+  var h=list.map(function(x,i){return x.replace("{K}",i?" ghost":"")}).join("");
+  return h+'<div class="muted" style="margin-top:10px">'+t("fbCtx")+'：<b>'+esc(fbCtx(c))+'</b><br>'+t("fbNoPII")+'</div>';
+}
+
+function renderId(editing){
+  var box=$("idBox");if(!box)return;
+  var d={};try{d=JSON.parse(load("ec_id")||"{}")}catch(e){}
+  var F=[["name","fName"],["blood","fBlood"],["allergy","fAll"],["cond","fCond"],["med","fMed"],["ice","fIce"]];
+  var has=F.some(function(f){return d[f[0]]});
+  var h='<div class="muted">'+t("idHint")+'</div>';
+  if(editing){
+    h+=F.map(function(f){return '<label>'+t(f[1])+'<input data-f="'+f[0]+'" value="'+esc(d[f[0]]||"")+'" autocomplete="off"></label>'}).join("")+
+       '<button class="btn" id="idSave">'+t("save")+'</button><button class="btn ghost" id="idClear">'+t("clear")+'</button>';
+  }else{
+    if(has)h+='<div class="idv">'+F.filter(function(f){return d[f[0]]}).map(function(f){return '<div><span>'+t(f[1])+'</span>'+esc(d[f[0]])+'</div>'}).join("")+'</div>';
+    h+='<button class="btn ghost" id="idEdit">'+t("edit")+'</button>';
+  }
+  box.innerHTML=h;
+}
+
+/* ===================== 全屏层 ===================== */
+var cur=null,lastFocus=null;
+function showSheet(html,dockHtml,keepScroll){
+  var s=$("sheet");
+  if(!s.classList.contains("on"))lastFocus=document.activeElement;
+  $("sheetBody").innerHTML=html;$("dock").innerHTML=dockHtml;
+  s.classList.add("on");if(!keepScroll)s.scrollTop=0;document.body.style.overflow="hidden";
+  $("app").setAttribute("aria-hidden","true");
+  var h1=$("sheetT");if(h1&&!keepScroll)try{h1.focus({preventScroll:true})}catch(e){}
+}
+function closeSheet(){
+  metroStop();awake(false);hush();cur=null;
+  var s=$("sheet"),was=s.classList.contains("on");
+  s.classList.remove("on");$("sheetBody").innerHTML="";$("dock").innerHTML=callBtn(cc());document.body.style.overflow="";
+  $("app").removeAttribute("aria-hidden");
+  if(was&&lastFocus&&document.contains(lastFocus))try{lastFocus.focus({preventScroll:true})}catch(e){}
+}
+
+/* 急救卡：执行模式（一屏一步）与全部步骤 */
+function openCard(id){
+  var k=CARDS.filter(function(x){return x.id===id})[0];if(!k){closeSheet();return}
+  if(!cur||cur.k!==k){
+    var v=load("ec_voice");
+    cur={k:k,i:0,mode:load("ec_mode")==="list"?"list":"step",voice:v===null?!!k.metro:v==="1"};
+  }
+  awake(true);
+  if(k.metro)metroStart();else metroStop();
+  renderCard(false);
+}
+function stepPlain(k,i){return L(k.steps[i]).replace(/\{N\}/g,digits(C[cc()].amb))}
+function renderCard(keep){
+  var k=cur.k,c=cc(),N=C[c].amb,n=k.steps.length,i=cur.i,step=cur.mode==="step";
+  function fill(s){return esc(s).replace(/\{N\}/g,'<b>'+esc(N)+'</b>')}
+  var dont='<ul>'+k.dont.map(function(s){return '<li>'+esc(L(s))+'</li>'}).join("")+'</ul>';
+  var h='<div class="shead"><button class="back" id="bk">‹ '+t("back")+'</button><span class="sp"></span>'+
+    '<button class="chip" id="voiceBtn" aria-pressed="'+(cur.voice?"true":"false")+'" aria-label="'+esc(cur.voice?t("voiceOnA"):t("voiceOffA"))+'">'+emo(cur.voice?"🔊":"🔇")+' '+t("voice")+'</button>'+
+    '<button class="chip" id="modeBtn">'+(step?t("modeList"):t("modeStep"))+'</button></div>'+
+    '<h1 id="sheetT" tabindex="-1">'+emo(k.i)+' '+esc(k[lang])+'</h1>';
+  if(k.metro)h+='<div class="metro"><div class="dot" id="dot" aria-hidden="true"></div><div class="ml">'+t("beatLbl")+'</div><button class="chip" id="sndBtn">'+sndLabel()+'</button></div>';
+  h+='<div class="status" id="awk"'+(wl?'':' hidden')+'>'+emo("☀️")+' '+t("awake")+'</div><details class="when" id="noawk" style="margin-top:8px;padding:6px 12px"'+(wlFail?'':' hidden')+'><summary style="min-height:36px;display:flex;align-items:center;cursor:pointer">'+emo("⚠️")+'&nbsp;'+t("noAwakeS")+'</summary><div style="padding-bottom:6px">'+t("noAwake")+'</div></details>';
+  if(step){
+    h+='<div class="prog" aria-hidden="true">';
+    for(var j=0;j<=n;j++)h+='<i'+(j<=i?' class="d"':'')+'></i>';
+    h+='</div>';
+    if(i<n){
+      h+='<div aria-live="polite" aria-atomic="true"><div class="stepK">'+t("stepOf").replace("{a}",i+1).replace("{b}",n)+'</div>'+
+         '<p class="stepTxt">'+fill(L(k.steps[i]))+'</p></div>'+fig(k.id,i)+
+         (i===0?'<div class="when" style="margin-top:14px">'+esc(L(k.when))+'</div>':'')+
+         '<details class="dd"><summary>✕ '+t("dontT")+'（'+k.dont.length+'）</summary>'+dont+'</details>';
+    }else{
+      h+='<div class="dont" aria-live="polite"><b>✕ '+t("dontT")+'</b>'+dont+'</div>'+
+         (k.extra?'<div class="extra">'+esc(L(k.extra))+'</div>':'')+
+         '<div class="src">'+t("srcT")+'：'+srcLine(k.src)+'</div>';
+    }
+  }else{
+    h+='<div class="when" style="margin-top:10px">'+esc(L(k.when))+'</div>'+
+      '<ol class="steps">'+k.steps.map(function(s,j){return '<li><span>'+fill(L(s))+fig(k.id,j)+'</span></li>'}).join("")+'</ol>'+
+      '<div class="dont"><b>✕ '+t("dontT")+'</b>'+dont+'</div>'+
+      (k.extra?'<div class="extra">'+esc(L(k.extra))+'</div>':'')+
+      '<div class="src">'+t("srcT")+'：'+srcLine(k.src)+'</div>';
+  }
+  var nav=step?'<div class="snav"><button class="pv" id="pv"'+(i===0?' disabled':'')+'>‹ '+t("prev")+'</button>'+
+    '<button class="nx" id="nx">'+(i<n?t("next")+' ›':t("finish"))+'</button></div>':'';
+  showSheet(h,nav+callBtn(c),keep);
+  if(keep)$("sheet").scrollTop=0;
+  if(step&&cur.voice){
+    if(i<n)say(stepPlain(k,i));
+    else say(t("dontT")+"。"+k.dont.map(L).join(" "));
+  }else hush();
+}
+function go(d){if(!cur)return;var n=cur.k.steps.length,i=cur.i+d;
+  if(i>n){location.hash="";return}
+  if(i<0)return;cur.i=i;renderCard(true)}
+
+function openPicker(){
+  metroStop();hush();cur=null;
+  var h='<div class="shead"><button class="back" id="bk">‹ '+t("back")+'</button></div><h1 id="sheetT" tabindex="-1">'+t("pick")+'</h1>'+
+    (DET!=="XX"?'<button class="btn ghost" data-pick="">'+t("useAuto")+'：'+emo(C[DET].f)+' '+esc(nm(DET))+'</button>':'')+'<div class="list">'+
+    ORDER.map(function(c){return '<button class="opt" data-pick="'+c+'"><span>'+emo(C[c].f)+' '+esc(nm(c))+'</span><b>'+esc(C[c].amb)+'</b></button>'}).join("")+'</div>';
+  showSheet(h,callBtn(cc()));
+}
+function openConfirm(){
+  var c=DET,d=C[c],x=c==="XX";
+  var h='<div class="cf"><div class="flag" aria-hidden="true">'+d.f+'</div>'+
+    '<h1 id="sheetT" tabindex="-1">'+(x?t("cfX"):t("cfQ"))+'</h1>'+
+    (x?'':'<div class="cn">'+esc(nm(c))+'</div>')+
+    '<div class="an">'+t("ambLbl")+' <b>'+esc(d.amb)+'</b></div><p class="muted">'+t("cfS")+'</p>'+
+    (x?'<button class="btn" id="cfN">'+t("cfXN")+'</button><button class="btn ghost" id="cfY">'+t("cfXY")+'</button>'
+      :'<button class="btn" id="cfY">'+t("cfY")+'</button><button class="btn ghost" id="cfN">'+t("cfN")+'</button>')+
+    '<p style="margin-top:18px"><button class="pill" id="langBtn2" aria-label="Switch language / 切换语言">'+(lang==="zh"?"English":"中文")+'</button></p></div>';
+  showSheet(h,callBtn(c));
+}
+function route(){var h=location.hash.slice(1);
+  if(h==="pick"){openPicker();return}
+  if(!confirmed){openConfirm();return}
+  if(h)openCard(h);else closeSheet()}
+var skipHash=null;
+function goHash(h){skipHash=h;location.hash=h;route()}
+window.addEventListener("hashchange",function(){var h=location.hash.slice(1);if(skipHash!==null&&h===skipHash){skipHash=null;return}skipHash=null;route()});
+
+/* ===================== 心肺复苏节拍（110 次/分）、语音、屏幕常亮 ===================== */
+var mt=null,ac=null,snd=load("ec_snd")!=="0";
+function audio(){try{if(navigator.audioSession&&navigator.audioSession.type!=="playback")navigator.audioSession.type="playback"}catch(e){}
+  try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();
+  if(ac.state==="suspended"){var p=ac.resume();if(p&&p.then)p.then(sndShow,function(){})}}catch(e){ac=null}}
+function sndLabel(){return !snd?emo("🔕")+" "+t("soundOff"):(ac&&ac.state==="running")?emo("🔔")+" "+t("soundOn"):emo("🔔")+" "+t("soundTap")}
+function sndShow(){var b=$("sndBtn");if(b){var s=sndLabel();if(b.innerHTML!==s)b.innerHTML=s}}
+function beat(){
+  var d=$("dot");if(d){d.classList.remove("beat");void d.offsetWidth;d.classList.add("beat")}
+  if(snd&&ac&&ac.state==="running"){try{var o=ac.createOscillator(),g=ac.createGain();o.frequency.value=880;g.gain.setValueAtTime(.35,ac.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+.09);o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+.1)}catch(e){}}
+}
+function metroStart(){if(mt)return;if(snd)audio();beat();mt=setInterval(beat,60000/110)}
+function metroStop(){if(mt){clearInterval(mt);mt=null}}
+
+function voiceFor(){try{var want=lang==="zh"?/^zh[-_](CN|Hans)/i:/^en[-_]GB/i,alt=lang==="zh"?/^zh/i:/^en/i,vs=speechSynthesis.getVoices()||[],v=null;
+  for(var i=0;i<vs.length&&!v;i++)if(want.test(vs[i].lang))v=vs[i];for(i=0;i<vs.length&&!v;i++)if(alt.test(vs[i].lang))v=vs[i];return v}catch(e){return null}}
+function say(s){try{if(!("speechSynthesis" in window))return;speechSynthesis.cancel();
+  var u=new SpeechSynthesisUtterance(s);u.lang=lang==="zh"?"zh-CN":"en-GB";var v=voiceFor();if(v)u.voice=v;u.rate=.95;speechSynthesis.speak(u)}catch(e){}}
+function hush(){try{if("speechSynthesis" in window)speechSynthesis.cancel()}catch(e){}}
+/* 在用户点击的那一刻预先解锁声音（iPhone 要求声音由点击触发） */
+function prime(){audio();try{if("speechSynthesis" in window&&!speechSynthesis.speaking){var u=new SpeechSynthesisUtterance(lang==="zh"?"好":"ok");u.volume=0;u.rate=2;speechSynthesis.speak(u)}}catch(e){}}
+
+var wl=null,wlWant=false,wlFail=false;
+/* iOS 18.4 之前，从主屏幕图标打开时常亮接口不起作用（WebKit bug 254545），按不支持处理 */
+function wlBroken(){var m=/OS (\d+)_(\d+)/.exec(navigator.userAgent||"");if(!m||!standalone()||!/iPhone|iPad|iPod/.test(navigator.userAgent))return false;var v=+m[1]+m[2]/100;return v<18.04}
+function awkShow(){var a=$("awk");if(a)a.hidden=!wl;var b=$("noawk");if(b)b.hidden=!(wlFail&&!wl)}
+function awake(on){
+  wlWant=on;
+  if(!on){if(wl){try{wl.release()}catch(e){}wl=null}awkShow();return}
+  if(wl)return;
+  if(!("wakeLock" in navigator)||wlBroken()){wlFail=true;awkShow();return}
+  try{navigator.wakeLock.request("screen").then(function(l){
+    if(!wlWant){try{l.release()}catch(e){}return}
+    wl=l;wlFail=false;awkShow();l.addEventListener("release",function(){if(wl===l)wl=null;awkShow()})},function(){wlFail=true;awkShow()})}catch(e){wlFail=true;awkShow()}
+}
+document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible"&&wlWant&&cur)awake(true)});
+
+function copyText(s,done){
+  function ok(){if(done)done()}
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(s).then(ok,fallback)}else fallback();
+  function fallback(){try{var a=document.createElement("textarea");a.value=s;document.body.appendChild(a);a.select();document.execCommand("copy");a.remove();ok()}catch(e){}}
+}
+
+/* ===================== 事件 ===================== */
+document.addEventListener("click",function(e){
+  var el=e.target.closest("button,[data-card]");if(!el)return;
+  if(el.id==="langBtn"||el.id==="langBtn2"){lang=lang==="zh"?"en":"zh";store("ec_lang",lang);render();return}
+  if(el.id==="chg"||el.id==="cfN"){location.hash="pick";return}
+  if(el.id==="cfY"){manual=null;saveGeo();render();return}
+  if(el.id==="bk"){
+    if(!confirmed){history.replaceState(null,"",location.pathname+location.search);openConfirm();return}
+    if(history.length>1)history.back();else location.hash="";return}
+  if(el.dataset.tri){tri=+el.dataset.tri;$("tri").innerHTML=triHtml();
+    if(tri===2){var ch=$("cardsH");try{ch.scrollIntoView({behavior:"smooth",block:"start"});ch.focus({preventScroll:true})}catch(x){}}
+    else try{$("triQ").focus({preventScroll:true})}catch(x){}
+    return}
+  if(el.dataset.go){prime();tri=0;$("tri").innerHTML=triHtml();goHash(el.dataset.go);return}
+  if(el.dataset.card){prime();goHash(el.dataset.card);return}
+  if(el.hasAttribute("data-pick")){manual=el.dataset.pick||null;if(manual===DET)manual=null;saveGeo();
+    history.replaceState(null,"",location.pathname);closeSheet();render();window.scrollTo(0,0);return}
+  if(el.id==="pv"){go(-1);return}
+  if(el.id==="nx"){go(1);return}
+  if(el.id==="modeBtn"){cur.mode=cur.mode==="step"?"list":"step";store("ec_mode",cur.mode);renderCard(false);return}
+  if(el.id==="voiceBtn"){cur.voice=!cur.voice;store("ec_voice",cur.voice?"1":"0");if(cur.voice)prime();renderCard(true);return}
+  if(el.id==="sndBtn"){
+    if(snd&&!(ac&&ac.state==="running"))audio();else{snd=!snd;store("ec_snd",snd?"1":"0");if(snd)audio()}
+    sndShow();setTimeout(sndShow,300);return}
+  if(el.id==="instBtn"){if(dip){dip.prompt();dip=null;el.hidden=true}return}
+  if(el.id==="idEdit"){renderId(true);return}
+  if(el.id==="idSave"){var d={};document.querySelectorAll("#idBox [data-f]").forEach(function(i){if(i.value.trim())d[i.dataset.f]=i.value.trim()});store("ec_id",JSON.stringify(d));renderId(false);return}
+  if(el.id==="idClear"){store("ec_id",null);renderId(false);return}
+  if(el.id==="locBtn"){
+    var out=$("locOut");
+    if(!navigator.geolocation){out.innerHTML='<div class="muted">'+t("locFail")+'</div>';return}
+    out.innerHTML='<div class="muted">'+t("locing")+'</div>';
+    navigator.geolocation.getCurrentPosition(function(p){
+      var s=p.coords.latitude.toFixed(5)+", "+p.coords.longitude.toFixed(5);
+      out.innerHTML='<div class="loc">'+s+'</div><div class="muted">'+t("acc")+' '+Math.round(p.coords.accuracy)+' '+t("m")+'</div>'+
+        '<button class="btn" id="locCopy" data-v="'+s+'">'+t("copy")+'</button>'+
+        '<a class="btn ghost" target="_blank" rel="noopener" href="https://www.google.com/maps?q='+encodeURIComponent(s)+'">'+t("map")+'</a>';
+    },function(){out.innerHTML='<div class="muted">'+t("locFail")+'</div>'},{enableHighAccuracy:true,timeout:15000,maximumAge:30000});
+    return}
+  if(el.id==="locCopy"){copyText(el.dataset.v,function(){el.textContent=t("copied")});return}
+  if(el.id==="fbBtn"){
+    var v=($("fbTxt").value||"").trim();if(!v)return;
+    var msg="[Emergency Card "+VERSION+"] "+cc()+"/"+lang+"\n"+v;
+    if(navigator.share){navigator.share({text:msg}).catch(function(){})}
+    copyText(msg,function(){$("fbMsg").textContent=t("fbDone")});
+  }
+});
+document.addEventListener("keydown",function(e){
+  if(!$("sheet").classList.contains("on"))return;
+  if(/^(INPUT|TEXTAREA|SELECT)$/.test((e.target&&e.target.tagName)||""))return;
+  if(e.key==="Escape"){var b=$("bk");if(b)b.click()}
+  else if(cur&&cur.mode==="step"){if(e.key==="ArrowRight")go(1);else if(e.key==="ArrowLeft")go(-1)}
+});
+
+render();
+if("serviceWorker" in navigator && (location.protocol==="https:"||location.hostname==="localhost")){try{navigator.serviceWorker.register("sw.js").catch(function(){})}catch(e){}}
+</script>
+</body>
+</html>
