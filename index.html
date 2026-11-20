@@ -62,7 +62,7 @@
 html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg-canvas);color:var(--text-primary);font:17px/1.5 var(--font-sans);-webkit-font-smoothing:antialiased;
   padding-top:calc(56px + env(safe-area-inset-top));
-  padding-bottom:calc(var(--nav-h) + 96px + env(safe-area-inset-bottom))}
+  padding-bottom:calc(var(--nav-h) + 84px + env(safe-area-inset-bottom))}
 .wrap{max-width:600px;margin:0 auto;padding:0 14px}
 button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
 a{color:var(--link)}
@@ -90,22 +90,22 @@ nav.bnav{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--bg-c
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-width:0;white-space:nowrap}
 .tab .ic{width:22px;height:22px}
 .tab[aria-current="page"]{background:var(--bg-subtle);color:var(--text-primary)}
-.tab.sos{color:var(--crimson)}
-.tab.sos[aria-current="page"]{background:var(--crimson-fill);color:var(--on-fill)}
+/* v0.3.3：红色只留给"拨打"本身；呼救栏目只保留红色图标，不再整块变红 */
+.tab.sos .ic{color:var(--crimson)}
 body.sheet-on nav.bnav{display:none}
 
 /* ---------- 呼叫栏（导航上方，任何页面一键拨打） ---------- */
 .dock{position:fixed;left:0;right:0;z-index:45;bottom:calc(var(--nav-h) + env(safe-area-inset-bottom));
-  padding:14px 14px 8px;background:linear-gradient(color-mix(in srgb,var(--bg-canvas) 0%,transparent),var(--bg-canvas) 14px)}
+  padding:10px 14px 8px;background:linear-gradient(color-mix(in srgb,var(--bg-canvas) 0%,transparent),var(--bg-canvas) 10px)}
 body.sheet-on .dock{bottom:0;padding-bottom:calc(10px + env(safe-area-inset-bottom))}
 .dock>*{max-width:572px;margin-left:auto;margin-right:auto}
 .call{display:flex;align-items:center;gap:12px;text-decoration:none;background:var(--crimson-fill);color:var(--on-fill);
-  border-radius:var(--radius-lg);padding:8px 10px 8px 16px;min-height:66px;box-shadow:var(--shadow-red)}
+  border-radius:var(--radius-lg);padding:6px 6px 6px 16px;min-height:58px;box-shadow:var(--shadow-red)}
 .call:active{background:var(--crimson-press);transform:scale(.99)}
 .call>span:first-child{flex:1;min-width:0;display:flex;align-items:baseline;gap:12px}
 .call .lbl{font-size:17px;font-weight:700;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;order:2;min-width:0}
-.call .num{font-family:var(--font-num);font-size:36px;font-weight:800;letter-spacing:1.5px;line-height:1;font-variant-numeric:tabular-nums;order:1;flex:none}
-.call .ico{width:48px;height:48px;border-radius:12px;background:#FFFFFF;color:#DC2626;display:grid;place-items:center;flex:none}
+.call .num{font-family:var(--font-num);font-size:32px;font-weight:800;letter-spacing:1.5px;line-height:1;font-variant-numeric:tabular-nums;order:1;flex:none}
+.call .ico{width:46px;height:46px;border-radius:11px;background:#FFFFFF;color:#DC2626;display:grid;place-items:center;flex:none}
 .snav{display:grid;grid-template-columns:1fr 1.7fr;gap:10px;margin-bottom:10px}
 .snav button{min-height:58px;border-radius:var(--radius-lg);font-size:20px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:4px}
 .snav .pv{background:var(--bg-card);border:1.5px solid var(--border-strong)}
@@ -144,6 +144,15 @@ a.rblock:active{background:var(--crimson-press);transform:scale(.98)}
 .rblock .rc{display:flex;align-items:center;gap:4px;font-size:17px;font-weight:700;opacity:.95;white-space:nowrap}
 .rblock .rc svg{width:16px;height:16px}
 .rblock.empty{background:var(--bg-subtle);color:var(--text-muted);border:1.5px dashed var(--border-strong);box-shadow:none}
+
+/* ---------- v0.3.3 位置条（一行，取代首页大红块；拨打统一交给底部呼叫栏） ---------- */
+.lcard{padding:10px 8px 10px 14px}
+.lrow{display:flex;align-items:center;gap:12px}
+.lflag{font-size:32px;line-height:1;flex:none}
+.linfo{flex:1;min-width:0}
+.lname{font-size:22px;font-weight:900;line-height:1.2;letter-spacing:-.2px;word-break:break-word}
+.lmeta{display:flex;flex-wrap:wrap;align-items:center;gap:2px 8px;margin-top:2px}
+.lrow .tbtn{align-self:center;margin:0;padding:0 8px;flex:none}
 
 /* ---------- 两问分诊 ---------- */
 .tri h1{font-size:30px;line-height:1.22;margin:6px 0 4px;letter-spacing:.2px}
@@ -319,7 +328,7 @@ details.dd li{margin-top:6px}
 .opt b{font-family:var(--font-num);font-size:20px;font-variant-numeric:tabular-nums;color:var(--crimson)}
 .pickh{margin-top:14px!important}
 
-@media (max-width:350px){.tri h1{font-size:26px}.big{font-size:20px}.stepTxt{font-size:24px}.call .num{font-size:30px}.seg span{padding:0 9px}.rblock{width:96px}.rblock .rv{font-size:32px}.place{font-size:22px}.tab{font-size:15px}}
+@media (max-width:350px){.tri h1{font-size:26px}.big{font-size:20px}.stepTxt{font-size:24px}.call .num{font-size:30px}.seg span{padding:0 9px}.rblock{width:96px}.rblock .rv{font-size:32px}.place{font-size:22px}.tab{font-size:15px}.lname{font-size:20px}.lflag{font-size:28px}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media print{header.top,nav.bnav,.dock,.btn,.ibtn,.shead,#fb{display:none!important}body{background:#fff;padding:0}}
 </style>
@@ -345,7 +354,7 @@ var FEEDBACK_GOOGLE = "";    // Google 表单链接，例如 https://docs.google
 var FEEDBACK_TENCENT = "";   // 腾讯问卷链接，例如 https://wj.qq.com/s2/xxxx/xxxx/
 // 可选：Google 表单里"版本/国家/语言"那道简答题的编号（形如 entry.123456789）。填了以后会自动带入，留空也能用。
 var GOOGLE_PREFILL_ENTRY = "";
-var VERSION = "MVP v0.3.2-oc";
+var VERSION = "MVP v0.3.3";
 var VERIFIED_ON = "2026-11-17";
 
 /* ===================== 国家数据 COUNTRY DATA =====================
@@ -711,7 +720,7 @@ function digits(n){return String(n).split("").join(" ")}
 function phoneIco(){return '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>'}
 function srcLine(ids){return ids.map(function(i){return '<a href="'+SRC[i][1]+'" target="_blank" rel="noopener">'+esc(SRC[i][0])+'</a>'}).join(" · ")}
 function callBtn(c){var d=C[c];
-  return '<a class="call" href="'+tel(d.amb)+'" aria-label="'+esc(t("callAmb")+"，"+nm(c)+"，"+digits(d.amb))+'"><span aria-hidden="true"><span class="lbl">'+t("callAmb")+' · '+esc(nm(c))+'</span><span class="num">'+esc(d.amb)+'</span></span><span class="ico" aria-hidden="true">'+phoneIco()+'</span></a>'}
+  return '<a class="call" href="'+tel(d.amb)+'" aria-label="'+esc(t("callAmb")+"，"+nm(c)+"，"+digits(d.amb))+'"><span aria-hidden="true"><span class="lbl">'+t("callShort")+'</span><span class="num">'+esc(d.amb)+'</span></span><span class="ico" aria-hidden="true">'+phoneIco()+'</span></a>'}
 function emo(s){return '<span aria-hidden="true">'+s+'</span>'}
 
 /* ===================== 图标（v0.3.2：取代表情符号，各平台显示一致） ===================== */
@@ -856,7 +865,7 @@ var T2={
 tabHome:["急救","First aid"],tabSos:["呼救","Call"],tabMe:["我的卡","My card"],tabMore:["更多","More"],navA:["主导航","Main navigation"],
 thT:["显示模式","Display"],thAuto:["跟随系统","System"],thLight:["日间","Light"],thDark:["夜间","Dark"],
 thToL:["切换到日间模式","Switch to light mode"],thToD:["切换到夜间模式","Switch to dark mode"],thDone:["已切换","Switched"],
-callTap:["点击拨打","Tap to call"],
+callTap:["点击拨打","Tap to call"],callShort:["呼叫救护车","Call ambulance"],
 idK:["急救信息 · MEDICAL ID","MEDICAL ID · 急救信息"],bloodK:["血型","BLOOD"],nameNone:["尚未填写姓名","Name not added"],
 none:["未填写","Not added"],iceCall:["拨打紧急联系人","Call emergency contact"],
 bUnk:["不详","Unknown"],bHint:["点选血型，或在下面直接输入","Tap a blood type, or type it below"],
@@ -915,12 +924,11 @@ function triHtml(){
     '<div class="tri-b"><button class="big no" data-tri="1">'+t("t1n")+'</button><button class="big yes" data-tri="2">'+t("t1y")+'</button></div>';
 }
 function heroHtml(c){var d=C[c];
-  return '<section class="card"><div class="hrow"><div class="hinfo">'+
-    '<div class="kick">'+I("pin","s")+t("youAre")+'</div>'+
-    '<div class="place">'+emo(d.f)+'<span>'+esc(nm(c))+'</span></div>'+
-    '<div class="meta"><span class="badge '+d.lvl+'">'+I(d.lvl==="A"?"check":"info")+t("lvl"+d.lvl)+'</span><span class="mut">'+(manual?t("manual"):t("auto"))+'</span></div>'+
-    '<button class="tbtn" id="chg" aria-label="'+esc(t("change")+"："+t("pick"))+'">'+t("change")+I("chevR","s")+'</button></div>'+
-    '<a class="rblock" href="'+tel(d.amb)+'" aria-label="'+esc(t("callAmb")+"，"+nm(c)+"，"+digits(d.amb))+'"><span class="rk" aria-hidden="true">'+t("ambLbl")+'</span><span class="rv" aria-hidden="true">'+esc(d.amb)+'</span><span class="rc" aria-hidden="true">'+t("callTap")+'</span></a>'+
+  return '<section class="card lcard" aria-label="'+esc(t("youAre")+"："+nm(c))+'"><div class="lrow">'+
+    '<span class="lflag" aria-hidden="true">'+d.f+'</span>'+
+    '<div class="linfo"><div class="lname">'+esc(nm(c))+'</div>'+
+    '<div class="lmeta"><span class="badge '+d.lvl+'">'+I(d.lvl==="A"?"check":"info")+t("lvl"+d.lvl)+'</span><span class="mut">'+(manual?t("manual"):t("auto"))+'</span></div></div>'+
+    '<button class="tbtn" id="chg" aria-label="'+esc(t("change")+"："+t("pick"))+'">'+t("change")+I("chevR","s")+'</button>'+
     '</div></section>'}
 
 function standalone(){try{return (window.matchMedia&&matchMedia("(display-mode: standalone)").matches)||navigator.standalone===true}catch(e){return false}}
