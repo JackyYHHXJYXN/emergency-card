@@ -1,11 +1,15 @@
 /* 急救卡 Emergency Card — 离线缓存。每次发布新版本时，把下面的版本号改一下。 */
-var V = "ec-v0.4.0";
-var FILES = ["./", "index.html", "manifest.webmanifest", "icon-192.png", "icon-512.png", "apple-touch-icon.png"];
+var V = "ec-v0.4.2";
+var FILES = ["./", "index.html", "config.js", "manifest.webmanifest", "icon-192.png", "icon-512.png", "apple-touch-icon.png"];
 
 self.addEventListener("install", function (e) {
   e.waitUntil(caches.open(V).then(function (c) {
     /* 安装新版时跳过浏览器缓存，确保拿到服务器上的最新文件 */
-    return c.addAll(FILES.map(function (f) { return new Request(f, { cache: "reload" }); }));
+    /* config.js 是可选文件：即使没上传，也不影响安装（否则旧版本会一直留在手机上） */
+    return Promise.all(FILES.map(function (f) {
+      var p = c.add(new Request(f, { cache: "reload" }));
+      return f === "config.js" ? p.catch(function () {}) : p;
+    }));
   }).then(function () { return self.skipWaiting(); }));
 });
 self.addEventListener("activate", function (e) {

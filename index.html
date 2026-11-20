@@ -37,7 +37,7 @@
   --radius-lg:14px; --radius-md:10px; --radius-sm:6px;
   --font-sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC","Noto Sans CJK SC","Segoe UI",Roboto,sans-serif;
   --font-num:"DIN Alternate","DIN Next LT Pro","Bahnschrift","Roboto Condensed",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  --nav-h:64px; color-scheme:light;
+  --nav-h:64px; --fs:1; color-scheme:light;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg-canvas:#090D16; --bg-card:#111827; --bg-subtle:#1E293B;
@@ -61,7 +61,7 @@
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{-webkit-text-size-adjust:100%}
-body{margin:0;background:var(--bg-canvas);color:var(--text-primary);font:17px/1.5 var(--font-sans);-webkit-font-smoothing:antialiased;
+body{margin:0;background:var(--bg-canvas);color:var(--text-primary);font:calc(17px * var(--fs))/1.5 var(--font-sans);-webkit-font-smoothing:antialiased;
   padding-top:calc(56px + env(safe-area-inset-top));
   padding-bottom:calc(var(--nav-h) + 84px + env(safe-area-inset-bottom))}
 .wrap{max-width:600px;margin:0 auto;padding:0 14px}
@@ -78,16 +78,16 @@ header.top{position:fixed;top:0;left:0;right:0;z-index:30;background:var(--bg-ca
   box-shadow:var(--shadow-sm);padding-top:env(safe-area-inset-top)}
 .bar{display:flex;align-items:center;gap:8px;height:56px}
 .logo{width:30px;height:30px;flex:none;display:block}
-.brand{font-weight:800;font-size:19px;letter-spacing:.2px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:8px;min-width:0}
+.brand{font-weight:800;font-size:calc(19px * var(--fs));letter-spacing:.2px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:8px;min-width:0}
 .ibtn{min-height:44px;min-width:44px;padding:0 12px;border-radius:var(--radius-md);background:var(--bg-subtle);border:1px solid var(--border-card);
-  display:inline-flex;align-items:center;justify-content:center;gap:6px;font-weight:700;font-size:17px;white-space:nowrap;flex:none;color:var(--text-primary)}
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;font-weight:700;font-size:calc(17px * var(--fs));white-space:nowrap;flex:none;color:var(--text-primary)}
 .ibtn:active{transform:scale(.97)}
 
 /* ---------- 底部四栏导航 ---------- */
 nav.bnav{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--bg-card);border-top:1px solid var(--border-card);
   box-shadow:0 -2px 10px rgba(0,0,0,.05);padding-bottom:env(safe-area-inset-bottom)}
 .bnav-in{max-width:600px;margin:0 auto;height:var(--nav-h);display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:4px 6px}
-.tab{border-radius:var(--radius-md);color:var(--text-muted);font-size:17px;font-weight:700;line-height:1.1;
+.tab{border-radius:var(--radius-md);color:var(--text-muted);font-size:calc(17px * var(--fs));font-weight:700;line-height:1.1;
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-width:0;white-space:nowrap}
 .tab .ic{width:22px;height:22px}
 .tab[aria-current="page"]{background:var(--bg-subtle);color:var(--text-primary)}
@@ -104,11 +104,11 @@ body.sheet-on .dock{bottom:0;padding-bottom:calc(10px + env(safe-area-inset-bott
   border-radius:var(--radius-lg);padding:6px 6px 6px 16px;min-height:58px;box-shadow:var(--shadow-red)}
 .call:active{background:var(--crimson-press);transform:scale(.99)}
 .call>span:first-child{flex:1;min-width:0;display:flex;align-items:baseline;gap:12px}
-.call .lbl{font-size:17px;font-weight:700;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;order:2;min-width:0}
-.call .num{font-family:var(--font-num);font-size:32px;font-weight:800;letter-spacing:1.5px;line-height:1;font-variant-numeric:tabular-nums;order:1;flex:none}
+.call .lbl{font-size:calc(17px * var(--fs));font-weight:700;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;order:2;min-width:0}
+.call .num{font-family:var(--font-num);font-size:calc(32px * var(--fs));font-weight:800;letter-spacing:1.5px;line-height:1;font-variant-numeric:tabular-nums;order:1;flex:none}
 .call .ico{width:46px;height:46px;border-radius:11px;background:#FFFFFF;color:#DC2626;display:grid;place-items:center;flex:none}
 .snav{display:grid;grid-template-columns:1fr 1.7fr;gap:10px;margin-bottom:10px}
-.snav button{min-height:58px;border-radius:var(--radius-lg);font-size:20px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:4px}
+.snav button{min-height:58px;border-radius:var(--radius-lg);font-size:calc(20px * var(--fs));font-weight:800;display:flex;align-items:center;justify-content:center;gap:4px}
 .snav .pv{background:var(--bg-card);border:1.5px solid var(--border-strong)}
 .snav .pv:disabled{opacity:.4}
 .snav .nx{background:var(--text-primary);color:var(--bg-canvas)}
@@ -116,52 +116,52 @@ body.sheet-on .dock{bottom:0;padding-bottom:calc(10px + env(safe-area-inset-bott
 /* ---------- 卡片（临床卡片体系） ---------- */
 .card{background:var(--bg-card);border:1px solid var(--border-card);border-radius:var(--radius-lg);padding:16px;margin-bottom:12px;box-shadow:var(--shadow-sm)}
 .card.crit{border-left:5px solid var(--crimson-fill)}
-.kick{font-size:17px;font-weight:800;letter-spacing:.3px;color:var(--text-muted);display:flex;align-items:center;gap:6px;flex-wrap:wrap;line-height:1.3}
+.kick{font-size:calc(17px * var(--fs));font-weight:800;letter-spacing:.3px;color:var(--text-muted);display:flex;align-items:center;gap:6px;flex-wrap:wrap;line-height:1.3}
 .kick.red{color:var(--crimson)}
 .kick em{font-style:normal;font-family:var(--font-num);font-variant-numeric:tabular-nums;color:var(--crimson)}
-.secH{font-size:17px;font-weight:800;letter-spacing:.3px;color:var(--text-muted);margin:26px 4px 10px;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
-.secH b{color:var(--text-primary);font-size:20px}
-.badge{display:inline-flex;align-items:center;gap:4px;font-size:17px;font-weight:700;padding:1px 10px 1px 8px;border-radius:99px;white-space:nowrap;border:1px solid}
+.secH{font-size:calc(17px * var(--fs));font-weight:800;letter-spacing:.3px;color:var(--text-muted);margin:26px 4px 10px;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.secH b{color:var(--text-primary);font-size:calc(20px * var(--fs))}
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:calc(17px * var(--fs));font-weight:700;padding:1px 10px 1px 8px;border-radius:99px;white-space:nowrap;border:1px solid}
 .badge .ic{width:16px;height:16px;stroke-width:2.6}
 .badge.A{background:var(--emerald-soft);color:var(--emerald);border-color:var(--emerald-border)}
 .badge.B{background:var(--amber-soft);color:var(--amber);border-color:var(--amber-border)}
 .badge.C{background:var(--crimson-soft);color:var(--crimson);border-color:var(--crimson-border)}
-.mut{color:var(--text-muted);font-size:17px}
-.muted{color:var(--text-muted);font-size:17px}
+.mut{color:var(--text-muted);font-size:calc(17px * var(--fs))}
+.muted{color:var(--text-muted);font-size:calc(17px * var(--fs))}
 
 /* ---------- 红色主信息块（借鉴 OpenCare 血型块的信息层级） ---------- */
 .hrow{display:flex;align-items:stretch;justify-content:space-between;gap:14px}
 .hinfo{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
-.place{font-size:26px;font-weight:900;line-height:1.2;letter-spacing:-.2px;display:flex;align-items:center;gap:8px;word-break:break-word}
-.place span[aria-hidden]{font-size:26px}
+.place{font-size:calc(26px * var(--fs));font-weight:900;line-height:1.2;letter-spacing:-.2px;display:flex;align-items:center;gap:8px;word-break:break-word}
+.place span[aria-hidden]{font-size:calc(26px * var(--fs))}
 .meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px}
-.tbtn{align-self:flex-start;min-height:44px;padding:0 2px;color:var(--link);font-weight:700;font-size:17px;display:inline-flex;align-items:center;gap:2px;margin-top:2px}
+.tbtn{align-self:flex-start;min-height:44px;padding:0 2px;color:var(--link);font-weight:700;font-size:calc(17px * var(--fs));display:inline-flex;align-items:center;gap:2px;margin-top:2px}
 .rblock{width:108px;min-height:108px;flex:none;border-radius:12px;background:var(--crimson-fill);color:var(--on-fill);text-decoration:none;
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:8px 6px;text-align:center;box-shadow:var(--shadow-red)}
 a.rblock:active{background:var(--crimson-press);transform:scale(.98)}
-.rblock .rk{font-size:17px;font-weight:800;letter-spacing:.5px;line-height:1.15}
-.rblock .rv{font-family:var(--font-num);font-size:38px;font-weight:900;line-height:1.05;font-variant-numeric:tabular-nums;letter-spacing:1px;word-break:break-all}
-.rblock .rv.long{font-family:var(--font-sans);font-size:20px;letter-spacing:0;line-height:1.2}
-.rblock .rc{display:flex;align-items:center;gap:4px;font-size:17px;font-weight:700;opacity:.95;white-space:nowrap}
+.rblock .rk{font-size:calc(17px * var(--fs));font-weight:800;letter-spacing:.5px;line-height:1.15}
+.rblock .rv{font-family:var(--font-num);font-size:calc(38px * var(--fs));font-weight:900;line-height:1.05;font-variant-numeric:tabular-nums;letter-spacing:1px;word-break:break-all}
+.rblock .rv.long{font-family:var(--font-sans);font-size:calc(20px * var(--fs));letter-spacing:0;line-height:1.2}
+.rblock .rc{display:flex;align-items:center;gap:4px;font-size:calc(17px * var(--fs));font-weight:700;opacity:.95;white-space:nowrap}
 .rblock .rc svg{width:16px;height:16px}
 .rblock.empty{background:var(--bg-subtle);color:var(--text-muted);border:1.5px dashed var(--border-strong);box-shadow:none}
 
 /* ---------- v0.3.3 位置条（一行，取代首页大红块；拨打统一交给底部呼叫栏） ---------- */
 .lcard{padding:10px 8px 10px 14px}
 .lrow{display:flex;align-items:center;gap:12px}
-.lflag{font-size:32px;line-height:1;flex:none}
+.lflag{font-size:calc(32px * var(--fs));line-height:1;flex:none}
 .linfo{flex:1;min-width:0}
-.lname{font-size:22px;font-weight:900;line-height:1.2;letter-spacing:-.2px;word-break:break-word}
+.lname{font-size:calc(22px * var(--fs));font-weight:900;line-height:1.2;letter-spacing:-.2px;word-break:break-word}
 .lmeta{display:flex;flex-wrap:wrap;align-items:center;gap:2px 8px;margin-top:2px}
 .lrow .tbtn{align-self:center;margin:0;padding:0 8px;flex:none}
 
 /* ---------- 两问分诊 ---------- */
-.tri h1{font-size:30px;line-height:1.22;margin:6px 0 4px;letter-spacing:.2px}
+.tri h1{font-size:calc(30px * var(--fs));line-height:1.22;margin:6px 0 4px;letter-spacing:.2px}
 .tri p{margin:0 0 14px;color:var(--text-secondary)}
 .tri-b{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.big{min-height:96px;border-radius:var(--radius-lg);padding:12px;font-size:22px;font-weight:800;line-height:1.2;
+.big{min-height:96px;border-radius:var(--radius-lg);padding:12px;font-size:calc(22px * var(--fs));font-weight:800;line-height:1.2;
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;transition:transform .08s}
-.big small{font-size:17px;font-weight:600;opacity:.95}
+.big small{font-size:calc(17px * var(--fs));font-weight:600;opacity:.95}
 .big.no{background:var(--crimson-fill);color:var(--on-fill);box-shadow:var(--shadow-red)}
 .big.no:active{background:var(--crimson-press)}
 .big.yes{background:var(--bg-subtle);border:2px solid var(--border-strong);color:var(--text-primary)}
@@ -169,7 +169,7 @@ a.rblock:active{background:var(--crimson-press);transform:scale(.98)}
 .link{color:var(--link);font-weight:700;min-height:48px;padding:0 2px;margin-top:6px;display:inline-flex;align-items:center;gap:4px}
 
 /* ---------- 提示条 ---------- */
-.note{display:flex;gap:10px;font-size:17px;line-height:1.5;background:var(--amber-soft);border:1px solid var(--amber-border);border-left:4px solid var(--amber-bar);
+.note{display:flex;gap:10px;font-size:calc(17px * var(--fs));line-height:1.5;background:var(--amber-soft);border:1px solid var(--amber-border);border-left:4px solid var(--amber-bar);
   border-radius:var(--radius-md);padding:12px 14px;margin:0 0 12px;color:var(--text-primary)}
 .note .ic{color:var(--amber);margin-top:2px}
 
@@ -180,12 +180,12 @@ a.rblock:active{background:var(--crimson-press);transform:scale(.98)}
 .tile:active{transform:scale(.98);border-color:var(--border-strong)}
 .sg{width:44px;height:44px;border-radius:10px;background:var(--emerald-fill);color:#FFFFFF;display:grid;place-items:center;flex:none}
 .sg .ic{width:26px;height:26px}
-.tile b{font-size:18px;line-height:1.3;display:block;font-weight:800}
-.tile small{color:var(--text-muted);font-size:17px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-top:2px}
+.tile b{font-size:calc(18px * var(--fs));line-height:1.3;display:block;font-weight:800}
+.tile small{color:var(--text-muted);font-size:calc(17px * var(--fs));line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-top:2px}
 .tile.top{grid-column:1/-1;background:var(--crimson-fill);border-color:var(--crimson-fill);color:var(--on-fill);flex-direction:row;align-items:center;min-height:92px;gap:16px;box-shadow:var(--shadow-red)}
 .tile.top .sg{width:56px;height:56px;border-radius:14px;background:#FFFFFF;color:#DC2626}
 .tile.top .sg .ic{width:32px;height:32px;stroke-width:2.2}
-.tile.top b{font-size:20px}
+.tile.top b{font-size:calc(20px * var(--fs))}
 .tile.top small{color:#FFFFFF;opacity:.95}
 .tile.top .chev{margin-left:auto}
 
@@ -194,42 +194,42 @@ a.rblock:active{background:var(--crimson-press);transform:scale(.98)}
 .n{display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:2px;text-decoration:none;color:var(--text-primary);
   border:1px solid var(--border-card);border-radius:var(--radius-md);padding:10px 14px;min-height:64px;background:var(--bg-subtle)}
 .n:active{border-color:var(--border-strong)}
-.n span{font-size:17px;color:var(--text-muted);line-height:1.25}
-.n b{font-family:var(--font-num);font-size:24px;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:.5px}
-.notes{margin:12px 0 0;padding:0;list-style:none;font-size:17px}
+.n span{font-size:calc(17px * var(--fs));color:var(--text-muted);line-height:1.25}
+.n b{font-family:var(--font-num);font-size:calc(24px * var(--fs));font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:.5px}
+.notes{margin:12px 0 0;padding:0;list-style:none;font-size:calc(17px * var(--fs))}
 .notes li{padding-left:18px;position:relative;margin-top:8px}
 .notes li:before{content:"";position:absolute;left:2px;top:.68em;width:7px;height:7px;border-radius:2px;background:var(--emerald-fill)}
 .say{margin:0;padding:0;list-style:none;counter-reset:s}
-.say li{counter-increment:s;display:flex;gap:12px;padding:10px 0;font-size:17px;border-bottom:1px solid var(--border-card)}
+.say li{counter-increment:s;display:flex;gap:12px;padding:10px 0;font-size:calc(17px * var(--fs));border-bottom:1px solid var(--border-card)}
 .say li:last-child{border-bottom:0}
 .say li:before{content:counter(s);flex:none;width:28px;height:28px;border-radius:99px;background:var(--crimson-fill);color:#FFFFFF;
-  font-family:var(--font-num);font-weight:800;font-size:17px;display:grid;place-items:center}
+  font-family:var(--font-num);font-weight:800;font-size:calc(17px * var(--fs));display:grid;place-items:center}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:54px;padding:0 16px;border-radius:var(--radius-md);
   background:var(--text-primary);color:var(--bg-canvas);font-weight:800;width:100%;margin-top:12px;text-decoration:none;text-align:center}
 .btn:active{opacity:.9}
 .btn.ghost{background:var(--bg-subtle);color:var(--text-primary);border:1px solid var(--border-strong)}
 .btn.red{background:var(--crimson-fill);color:#FFFFFF}
 .btn.grn{background:var(--emerald-fill);color:#FFFFFF}
-.loc{font-family:var(--font-num);font-size:24px;font-weight:800;font-variant-numeric:tabular-nums;margin:12px 0 2px;word-break:break-all;
+.loc{font-family:var(--font-num);font-size:calc(24px * var(--fs));font-weight:800;font-variant-numeric:tabular-nums;margin:12px 0 2px;word-break:break-all;
   background:var(--bg-subtle);border:1px solid var(--border-card);border-radius:8px;padding:10px 12px}
-.src{font-size:17px;color:var(--text-muted);margin-top:14px;word-break:break-word}
+.src{font-size:calc(17px * var(--fs));color:var(--text-muted);margin-top:14px;word-break:break-word}
 
 /* ---------- 我的卡 ---------- */
-.pname{font-size:26px;font-weight:900;line-height:1.2;letter-spacing:-.2px;word-break:break-word}
+.pname{font-size:calc(26px * var(--fs));font-weight:900;line-height:1.2;letter-spacing:-.2px;word-break:break-word}
 .pname.ph{color:var(--text-muted);font-weight:700}
-.fv{font-size:22px;font-weight:700;line-height:1.35;margin-top:4px;word-break:break-word}
-.fv.none{color:var(--text-muted);font-size:17px;font-weight:600}
+.fv{font-size:calc(22px * var(--fs));font-weight:700;line-height:1.35;margin-top:4px;word-break:break-word}
+.fv.none{color:var(--text-muted);font-size:calc(17px * var(--fs));font-weight:600}
 .frow{padding:10px 0;border-bottom:1px solid var(--border-card)}
 .frow:last-child{border-bottom:0;padding-bottom:0}
 .frow:first-child{padding-top:0}
 .duo{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
 .duo .card{margin:0}
 @media (max-width:520px){.duo{grid-template-columns:1fr}}
-label{display:block;font-size:17px;font-weight:700;color:var(--text-secondary);margin-top:12px}
+label{display:block;font-size:calc(17px * var(--fs));font-weight:700;color:var(--text-secondary);margin-top:12px}
 input,textarea{width:100%;font:inherit;font-weight:600;color:var(--text-primary);background:var(--bg-canvas);border:1px solid var(--border-strong);border-radius:9px;padding:12px;margin-top:4px;min-height:50px}
 input:focus,textarea:focus{outline:2px solid var(--crimson-fill);outline-offset:0;border-color:var(--crimson-fill)}
 .bgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:6px}
-.bchoice{min-height:46px;border-radius:8px;border:1px solid var(--border-strong);background:var(--bg-canvas);font-size:17px;font-weight:800;color:var(--text-primary)}
+.bchoice{min-height:46px;border-radius:8px;border:1px solid var(--border-strong);background:var(--bg-canvas);font-size:calc(17px * var(--fs));font-weight:800;color:var(--text-primary)}
 .bchoice[aria-pressed="true"]{background:var(--crimson-fill);color:#FFFFFF;border-color:var(--crimson-fill)}
 .tip{border-top:1px solid var(--border-card);padding-top:14px;margin-top:14px}
 .tip b{display:flex;align-items:center;gap:8px;margin-bottom:6px}
@@ -237,21 +237,21 @@ input:focus,textarea:focus{outline:2px solid var(--crimson-fill);outline-offset:
 .tip p{margin:8px 0 0}
 .ml{display:flex;gap:12px;align-items:flex-start}
 .ml .ic{color:var(--crimson);margin-top:3px}
-.ml b{display:block;font-size:18px}
+.ml b{display:block;font-size:calc(18px * var(--fs))}
 
 /* ---------- 反馈 / 设置 ---------- */
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-.chip2{min-height:46px;padding:0 16px;border-radius:99px;border:1px solid var(--border-strong);background:var(--bg-subtle);font-weight:700;font-size:17px;color:var(--text-primary)}
+.chip2{min-height:46px;padding:0 16px;border-radius:99px;border:1px solid var(--border-strong);background:var(--bg-subtle);font-weight:700;font-size:calc(17px * var(--fs));color:var(--text-primary)}
 .chip2[aria-pressed="true"]{background:var(--text-primary);color:var(--bg-canvas);border-color:var(--text-primary)}
 .mlq{border:1px solid var(--crimson-border);background:var(--crimson-soft);border-radius:var(--radius-md);padding:12px 14px;margin-top:12px}
 .mlq p{margin:6px 0 0}
 .seg3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
-.seg3 button{min-height:50px;border-radius:var(--radius-md);border:2px solid var(--border-card);background:var(--bg-card);font-weight:800;font-size:17px;display:flex;align-items:center;justify-content:center;gap:6px}
+.seg3 button{min-height:50px;border-radius:var(--radius-md);border:2px solid var(--border-card);background:var(--bg-card);font-weight:800;font-size:calc(17px * var(--fs));display:flex;align-items:center;justify-content:center;gap:6px}
 .seg3 button[aria-pressed="true"]{border-color:var(--crimson-fill);background:var(--crimson-soft)}
 details.sl summary{min-height:48px;font-weight:800;cursor:pointer;display:flex;align-items:center}
-.srcs{font-size:17px;color:var(--text-muted);padding-left:26px;margin:8px 0 0}
+.srcs{font-size:calc(17px * var(--fs));color:var(--text-muted);padding-left:26px;margin:8px 0 0}
 .srcs li{margin-top:6px;word-break:break-word}
-footer{font-size:17px;color:var(--text-muted);margin:22px 4px 0;line-height:1.6}
+footer{font-size:calc(17px * var(--fs));color:var(--text-muted);margin:22px 4px 0;line-height:1.6}
 
 /* ---------- 全屏层（急救步骤、选国家、首次确认） ---------- */
 .sheet{position:fixed;inset:0;z-index:40;background:var(--bg-canvas);overflow:auto;display:none;padding-bottom:calc(200px + env(safe-area-inset-bottom))}
@@ -259,12 +259,12 @@ footer{font-size:17px;color:var(--text-muted);margin:22px 4px 0;line-height:1.6}
 .shead{position:sticky;top:0;background:var(--bg-card);border-bottom:1px solid var(--border-card);box-shadow:var(--shadow-sm);
   padding:calc(6px + env(safe-area-inset-top)) 14px 6px;margin:0 -14px;z-index:2;display:flex;align-items:center;gap:8px}
 .shead .sp{flex:1}
-.back,.chip{min-height:48px;padding:0 14px;border-radius:var(--radius-md);background:var(--bg-subtle);border:1px solid var(--border-card);font-weight:700;font-size:17px;white-space:nowrap;
+.back,.chip{min-height:48px;padding:0 14px;border-radius:var(--radius-md);background:var(--bg-subtle);border:1px solid var(--border-card);font-weight:700;font-size:calc(17px * var(--fs));white-space:nowrap;
   display:inline-flex;align-items:center;gap:6px;color:var(--text-primary)}
 .back{padding-left:8px}
 .chip[aria-pressed="true"]{background:var(--crimson-fill);color:#FFFFFF;border-color:var(--crimson-fill)}
 .seg{display:inline-flex;background:var(--bg-subtle);border:1px solid var(--border-card);border-radius:var(--radius-md);padding:3px;min-height:50px}
-.seg span{display:inline-flex;align-items:center;padding:0 12px;border-radius:8px;font-weight:700;font-size:17px;color:var(--text-muted);white-space:nowrap}
+.seg span{display:inline-flex;align-items:center;padding:0 12px;border-radius:8px;font-weight:700;font-size:calc(17px * var(--fs));color:var(--text-muted);white-space:nowrap}
 .seg.wide{display:flex;width:100%;margin-top:14px}
 .seg.wide span{flex:1;justify-content:center}
 .seg span.on{background:var(--bg-card);color:var(--text-primary);box-shadow:var(--shadow-sm);border:1px solid var(--border-card)}
@@ -272,15 +272,15 @@ footer{font-size:17px;color:var(--text-muted);margin:22px 4px 0;line-height:1.6}
 .ttl .sg{width:52px;height:52px;border-radius:12px}
 .ttl .sg .ic{width:30px;height:30px}
 .ttl .sg.red{background:var(--crimson-fill)}
-.sheet h1{font-size:26px;line-height:1.22;margin:0;font-weight:900}
-.when{background:var(--amber-soft);border:1px solid var(--amber-border);color:var(--text-primary);border-radius:var(--radius-md);padding:12px 14px;font-size:17px;font-weight:700}
-.status{display:flex;align-items:center;flex-wrap:wrap;gap:6px;color:var(--text-muted);font-size:17px;margin-top:10px}
+.sheet h1{font-size:calc(26px * var(--fs));line-height:1.22;margin:0;font-weight:900}
+.when{background:var(--amber-soft);border:1px solid var(--amber-border);color:var(--text-primary);border-radius:var(--radius-md);padding:12px 14px;font-size:calc(17px * var(--fs));font-weight:700}
+.status{display:flex;align-items:center;flex-wrap:wrap;gap:6px;color:var(--text-muted);font-size:calc(17px * var(--fs));margin-top:10px}
 .status .ic{color:var(--emerald)}
 .prog{display:flex;gap:4px;margin:16px 0 14px}
 .prog i{flex:1;height:6px;border-radius:3px;background:var(--border-card)}
 .prog i.d{background:var(--crimson-fill)}
-.stepK{font-size:17px;font-weight:800;color:var(--text-muted);font-variant-numeric:tabular-nums}
-.stepTxt{font-size:27px;line-height:1.4;font-weight:800;margin:6px 0 0;letter-spacing:.2px}
+.stepK{font-size:calc(17px * var(--fs));font-weight:800;color:var(--text-muted);font-variant-numeric:tabular-nums}
+.stepTxt{font-size:calc(27px * var(--fs));line-height:1.4;font-weight:800;margin:6px 0 0;letter-spacing:.2px}
 .stepTxt b{color:var(--crimson);font-family:var(--font-num);font-size:1.2em;font-variant-numeric:tabular-nums}
 .fig{display:block;width:100%;max-width:360px;height:auto;margin:16px auto 2px;border-radius:12px;border:1px solid var(--border-card)}
 details.dd{margin-top:16px;background:var(--bg-card);border:1px solid var(--border-card);border-left:5px solid var(--crimson-fill);border-radius:var(--radius-lg)}
@@ -292,16 +292,16 @@ details.dd ul{margin:0;padding:0 16px 16px 38px}
 details.dd li{margin-top:6px}
 .steps{list-style:none;margin:16px 0 0;padding:0;counter-reset:st}
 .steps li{counter-increment:st;display:flex;gap:14px;background:var(--bg-card);border:1px solid var(--border-card);border-radius:var(--radius-lg);
-  padding:16px 14px;margin-bottom:8px;font-size:18px;line-height:1.5;font-weight:600}
+  padding:16px 14px;margin-bottom:8px;font-size:calc(18px * var(--fs));line-height:1.5;font-weight:600}
 .steps li:before{content:counter(st);flex:none;width:34px;height:34px;border-radius:99px;background:var(--crimson-fill);color:#FFFFFF;
-  font-family:var(--font-num);font-weight:800;font-size:19px;display:grid;place-items:center}
+  font-family:var(--font-num);font-weight:800;font-size:calc(19px * var(--fs));display:grid;place-items:center}
 .steps li>span{flex:1;min-width:0}
 .steps li b{color:var(--crimson);font-family:var(--font-num)}
 .dont{background:var(--crimson-soft);border:1px solid var(--crimson-border);border-left:5px solid var(--crimson-fill);border-radius:var(--radius-lg);padding:14px 16px;margin-top:12px}
 .dont b{color:var(--crimson);display:flex;align-items:center;gap:8px;margin-bottom:4px}
 .dont ul{margin:0;padding-left:22px}
 .dont li{margin-top:4px}
-.extra{background:var(--bg-card);border:1px solid var(--border-card);border-radius:var(--radius-lg);padding:14px 16px;margin-top:12px;font-size:17px}
+.extra{background:var(--bg-card);border:1px solid var(--border-card);border-radius:var(--radius-lg);padding:14px 16px;margin-top:12px;font-size:calc(17px * var(--fs))}
 .metro{display:flex;align-items:center;gap:14px;margin-top:12px;background:var(--bg-card);border:1px solid var(--border-card);border-radius:var(--radius-lg);padding:12px 12px 12px 14px}
 .metro .ml{flex:1;font-weight:800;line-height:1.25;display:block}
 .dot{width:48px;height:48px;border-radius:50%;background:var(--crimson-fill);flex:none;position:relative;display:grid;place-items:center;color:#fff}
@@ -315,44 +315,71 @@ details.dd li{margin-top:6px}
 .cf{text-align:center;padding-top:calc(24px + env(safe-area-inset-top))}
 .cf .mk{display:flex;align-items:center;justify-content:center;gap:8px;color:var(--text-muted);font-weight:700}
 .cf .mk svg{width:26px;height:26px}
-.cf .flag{width:104px;height:104px;margin:24px auto 14px;border-radius:50%;background:var(--bg-card);border:1px solid var(--border-card);box-shadow:var(--shadow-sm);display:grid;place-items:center;font-size:56px;line-height:1}
-.cf h1{font-size:22px!important;font-weight:700!important;color:var(--text-muted)}
-.cf .cn{font-size:32px;font-weight:900;line-height:1.2;margin:4px 0 14px}
+.cf .flag{width:104px;height:104px;margin:24px auto 14px;border-radius:50%;background:var(--bg-card);border:1px solid var(--border-card);box-shadow:var(--shadow-sm);display:grid;place-items:center;font-size:calc(56px * var(--fs));line-height:1}
+.cf h1{font-size:calc(22px * var(--fs))!important;font-weight:700!important;color:var(--text-muted)}
+.cf .cn{font-size:calc(32px * var(--fs));font-weight:900;line-height:1.2;margin:4px 0 14px}
 .cf .rblock{margin:0 auto;width:132px;min-height:120px}
 .cf p.muted{margin:16px 8px 6px}
-.cf .btn{min-height:62px;font-size:19px}
+.cf .btn{min-height:62px;font-size:calc(19px * var(--fs))}
 
 .list{margin-top:10px;background:var(--bg-card);border:1px solid var(--border-card);border-radius:var(--radius-lg);overflow:hidden}
-.opt{display:flex;justify-content:space-between;align-items:center;width:100%;min-height:58px;padding:12px 16px;border-bottom:1px solid var(--border-card);text-align:left;font-size:18px;gap:10px}
+.opt{display:flex;justify-content:space-between;align-items:center;width:100%;min-height:58px;padding:12px 16px;border-bottom:1px solid var(--border-card);text-align:left;font-size:calc(18px * var(--fs));gap:10px}
 .opt:last-child{border-bottom:0}
 .opt:active{background:var(--bg-subtle)}
-.opt b{font-family:var(--font-num);font-size:20px;font-variant-numeric:tabular-nums;color:var(--crimson)}
+.opt b{font-family:var(--font-num);font-size:calc(20px * var(--fs));font-variant-numeric:tabular-nums;color:var(--crimson)}
 .pickh{margin-top:14px!important}
 
 /* ---------- v0.4.0：路人大字卡 / 锁屏图片 / 清除数据 ---------- */
 .helpbtn{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--bg-card);border:2px solid var(--crimson-fill);border-radius:var(--radius-lg);
   padding:14px;min-height:72px;margin:6px 0 12px;box-shadow:var(--shadow-sm);color:var(--text-primary)}
-.helpbtn b{display:block;font-size:20px;line-height:1.25}
-.helpbtn small{display:block;color:var(--text-muted);font-size:17px}
+.helpbtn b{display:block;font-size:calc(20px * var(--fs));line-height:1.25}
+.helpbtn small{display:block;color:var(--text-muted);font-size:calc(17px * var(--fs))}
 .helpbtn .sg{background:var(--crimson-fill)}
 .helpbtn .chev{margin-left:auto;color:var(--text-muted)}
 .pb{margin-top:14px;background:#FFFFFF;color:#111111;border:4px solid #DC2626;border-radius:18px;padding:20px 18px;text-align:center}
-.pb .pbl{font-size:30px;line-height:1.3;font-weight:900;margin:0}
+.pb .pbl{font-size:calc(30px * var(--fs));line-height:1.3;font-weight:900;margin:0}
 .pb .pbl+.pbl{margin-top:14px;padding-top:14px;border-top:2px solid #E5E7EB}
-.pb .pbn{font-family:var(--font-num);font-size:84px;line-height:1;font-weight:900;color:#B91C1C;letter-spacing:4px;margin:18px 0 6px;font-variant-numeric:tabular-nums;word-break:break-all}
-.pb .pbc{font-size:20px;font-weight:800;color:#374151}
+.pb .pbn{font-family:var(--font-num);font-size:calc(84px * var(--fs));line-height:1;font-weight:900;color:#B91C1C;letter-spacing:4px;margin:18px 0 6px;font-variant-numeric:tabular-nums;word-break:break-all}
+.pb .pbc{font-size:calc(20px * var(--fs));font-weight:800;color:#374151}
 .n.nolink{cursor:default}
-.n .nh{font-size:17px;color:var(--amber);font-weight:700}
+.n .nh{font-size:calc(17px * var(--fs));color:var(--amber);font-weight:700}
 .wallimg{display:block;width:100%;max-width:300px;margin:12px auto 0;border-radius:22px;border:1px solid var(--border-card);box-shadow:var(--shadow-md)}
 .seg2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
-.seg2 button{min-height:50px;border-radius:var(--radius-md);border:2px solid var(--border-card);background:var(--bg-card);font-weight:800;font-size:17px}
+.seg2 button{min-height:50px;border-radius:var(--radius-md);border:2px solid var(--border-card);background:var(--bg-card);font-weight:800;font-size:calc(17px * var(--fs))}
 .seg2 button[aria-pressed="true"]{border-color:var(--crimson-fill);background:var(--crimson-soft)}
-.urlbox{font-family:var(--font-num);font-size:17px;word-break:break-all;background:var(--bg-subtle);border:1px solid var(--border-card);border-radius:8px;padding:10px 12px;margin-top:10px}
+.urlbox{font-family:var(--font-num);font-size:calc(17px * var(--fs));word-break:break-all;background:var(--bg-subtle);border:1px solid var(--border-card);border-radius:8px;padding:10px 12px;margin-top:10px}
 .btn.warn{background:var(--bg-subtle);color:var(--crimson);border:1.5px solid var(--crimson-border)}
 .btn.warn[data-armed="1"]{background:var(--crimson-fill);color:#FFFFFF;border-color:var(--crimson-fill)}
 
-@media (max-width:350px){.pb .pbl{font-size:26px}.pb .pbn{font-size:68px}}
-@media (max-width:350px){.tri h1{font-size:26px}.big{font-size:20px}.stepTxt{font-size:24px}.call .num{font-size:30px}.seg span{padding:0 9px}.rblock{width:96px}.rblock .rv{font-size:32px}.place{font-size:22px}.tab{font-size:15px}.lname{font-size:20px}.lflag{font-size:28px}}
+
+/* ---------- v0.4.1 ---------- */
+.lp{margin:0 0 14px;padding:0 0 14px;border-bottom:2px solid #E5E7EB}
+.lp .lpk{font-size:calc(17px * var(--fs));font-weight:800;color:#B91C1C;letter-spacing:.3px}
+.lp .lpt{font-size:calc(34px * var(--fs));line-height:1.3;margin-top:6px}
+.lp .lpr{font-size:calc(18px * var(--fs));color:#374151;margin-top:4px;font-style:italic}
+.lp .lps{font-size:calc(15px * var(--fs));color:#4B5563;margin-top:8px;line-height:1.4;word-break:break-word}
+.lp .lps a{color:#1D4ED8}
+.lp .pend{display:inline-block;font-weight:800;color:#92400E;background:#FFFBEB;border:1px solid #FDE68A;border-radius:6px;padding:0 6px}
+.about .vrow{display:flex;flex-wrap:wrap;gap:4px 14px;align-items:baseline;margin-top:4px}
+.about .vrow b{font-size:calc(22px * var(--fs));font-family:var(--font-num)}
+.about .vrow span{color:var(--text-muted)}
+.diag{font-family:var(--font-num);line-height:1.6;word-break:break-all;padding-bottom:6px}
+.seg4{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px}
+.seg4 button{min-height:50px;border-radius:var(--radius-md);border:2px solid var(--border-card);background:var(--bg-card);font-weight:800;font-size:calc(16px * var(--fs));padding:0 4px;line-height:1.15}
+.seg4 button[aria-pressed="true"]{border-color:var(--crimson-fill);background:var(--crimson-soft)}
+.wallfull{position:fixed;inset:0;z-index:60;background:#000;display:flex;flex-direction:column;overflow:auto}
+.wallfull .wfbar{display:flex;align-items:center;gap:10px;padding:calc(8px + env(safe-area-inset-top)) 12px 8px;background:#111827;color:#fff}
+.wallfull img{display:block;width:100%;max-width:520px;margin:0 auto;height:auto}
+html.bigtext .grid{grid-template-columns:1fr}
+html.bigtext .tri-b{grid-template-columns:1fr}
+html.bigtext .seg4{grid-template-columns:1fr 1fr}
+html.bigtext .tab{font-size:17px}
+html.bigtext .lrow{flex-wrap:wrap}
+html.bigtext .lrow .tbtn{margin-left:auto}
+html.bigtext .call .num{font-size:32px}
+body{padding-bottom:calc(var(--nav-h) + 110px + env(safe-area-inset-bottom))}
+@media (max-width:350px){.pb .pbl{font-size:calc(26px * var(--fs))}.pb .pbn{font-size:calc(68px * var(--fs))}}
+@media (max-width:350px){.tri h1{font-size:calc(26px * var(--fs))}.big{font-size:calc(20px * var(--fs))}.stepTxt{font-size:calc(24px * var(--fs))}.call .num{font-size:calc(30px * var(--fs))}.seg span{padding:0 9px}.rblock{width:96px}.rblock .rv{font-size:calc(32px * var(--fs))}.place{font-size:calc(22px * var(--fs))}.tab{font-size:calc(15px * var(--fs))}.lname{font-size:calc(20px * var(--fs))}.lflag{font-size:calc(28px * var(--fs))}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media print{header.top,nav.bnav,.dock,.btn,.ibtn,.shead,#fb{display:none!important}body{background:#fff;padding:0}}
 </style>
@@ -370,15 +397,18 @@ details.dd li{margin-top:6px}
 <div class="dock" id="dock"></div>
 <nav class="bnav" id="nav"><div class="bnav-in" id="navIn"></div></nav>
 
+<script src="config.js"></script>
 <script>
 /* ===================== 配置 CONFIG ===================== */
 // 反馈表单：两个都可以填。中国大陆访问不了 Google，所以大陆用户优先显示腾讯问卷，其他地区优先显示 Google 表单。
 // 两个都留空时，页面使用"复制/分享反馈文字"。
-var FEEDBACK_GOOGLE = "";    // Google 表单链接，例如 https://docs.google.com/forms/d/e/xxxx/viewform
-var FEEDBACK_TENCENT = "";   // 腾讯问卷链接，例如 https://wj.qq.com/s2/xxxx/xxxx/
+// v0.4.1 起：两个表单链接写在单独的小文件 config.js 里（在 GitHub 网页上就能改，不用动本文件）。
+var _CFG=window.EC_CFG||{};
+var FEEDBACK_GOOGLE = _CFG.google||"";    // Google 表单链接，例如 https://docs.google.com/forms/d/e/xxxx/viewform
+var FEEDBACK_TENCENT = _CFG.tencent||"";  // 腾讯问卷链接，例如 https://wj.qq.com/s2/xxxx/xxxx/
 // 可选：Google 表单里"版本/国家/语言"那道简答题的编号（形如 entry.123456789）。填了以后会自动带入，留空也能用。
-var GOOGLE_PREFILL_ENTRY = "";
-var VERSION = "MVP v0.4.0";
+var GOOGLE_PREFILL_ENTRY = _CFG.googleEntry||"";
+var VERSION = "MVP v0.4.2";
 var VERIFIED_ON = "2026-11-17";   // 全部国家号码的统一核实日期；某国单独复核后，在该国数据里加 v:"YYYY-MM-DD"
 // 固定的正式网址：分享、锁屏图片一律用它，不用当前地址栏（避免分享出 file:// 或预览地址）。分享链接里永远不放任何个人信息。
 var SITE_URL = "https://jackyyhhxjyxn.github.io/emergency-card/";
@@ -608,59 +638,78 @@ var CARDS=[
  dont:[["不要喂水喂药。","Give nothing by mouth."],["不要独自留下患者。","Do not leave them alone."]],src:[27]}
 ];
 
-/* 来源 SOURCES（核实日期见 VERIFIED_ON） */
+/* 来源 SOURCES：[中文标题, English title, 网址]。编号只追加不删改。52 起为当地语言求助句来源（v0.4.1） */
 var SRC={
-1:["国家卫健委英文站：Emergency numbers in the Chinese mainland","https://en.nhc.gov.cn/2019-03/05/c_74520.htm"],
-2:["上海市政府英文站：What to do in an emergency","https://english.shanghai.gov.cn/en-EmergencyNumbers/20241210/cbc5280b9f96440a93234bfc5e0c1023.html"],
-3:["東京都中央区 Emergency contact（110 / 119 / #7119）","https://www.city.chuo.lg.jp/en/introuble.html"],
-4:["東京都豊島区 Hotlines","https://www.city.toshima.lg.jp/info/en/hotlines.html"],
-5:["Ewha Womans University: Emergency Numbers in Korea","https://cmsfox.ewha.ac.kr/winter/student-services/health03.do"],
-6:["SeoulStart: Korea emergency room guide（1339 职能变更）","https://seoulstart.com/guides/korea-emergency-room-guide"],
-7:["澳大利亚政府 Smartraveller — Thailand","https://smartraveller.gov.au/destinations/asia/thailand"],
-8:["ExpatDen: Emergencies in Thailand","https://expatden.com/thailand/emergencies-in-thailand-what-to-do-and-who-to-call"],
-9:["SCDF Emergency Medical Services","https://scdf.gov.sg/home/about-us/information-on-ems/scdf-emergency-medical-services"],
-10:["新加坡卫生部：1777 hotline to cease from 1 Jan 2027","https://www.moh.gov.sg/newsroom/1777-non-emergency-ambulance-hotline-to-cease--from-1-january-2027/"],
-11:["Seasia: Southeast Asia emergency numbers (2026-09)","https://seasia.co/2026/09/14/southeast-asia-emergency-numbers-what-to-call-instead-of-911"],
-12:["NHS: Act FAST（中风）/ 冠心病与心梗","https://www.nhs.uk/actfast/"],
-13:["GOV.UK: 999 and 112 — the UK's national emergency numbers","https://www.gov.uk/guidance/999-and-112-the-uks-national-emergency-numbers"],
-14:["HSE Ireland: Heart attack","https://www2.hse.ie/conditions/heart-attack/"],
-15:["EENA: What's 112 all about","https://eena.org/about-112/whats-112-all-about/"],
-16:["Australian Government: Triple Zero — other emergency numbers","https://www.triplezero.gov.au/triple-zero/other-emergency-numbers"],
-17:["Australian Government: Using other emergency numbers（含 911 用于美加的说明）","https://www.infrastructure.gov.au/media-communications/phone/triple-zero/using-other-emergency-numbers"],
-18:["2025 AHA Guidelines for CPR & ECC（概览）","https://laerdal.com/information/2025-aha-guidelines/"],
-19:["St John Ambulance (UK): Stroke / Heart attack / Life-threatening bleed","https://www.sja.org.uk/get-advice/first-aid-advice/stroke"],
-20:["Wikipedia: 112 (emergency telephone number) / List of emergency telephone numbers","https://simple.wikipedia.com/wiki/112_(emergency_telephone_number)"],
-21:["ATCOG: International Emergency Services Numbers Map 2026","https://atcog.org/wp-content/uploads/2026/08/International-Emergency-Services-Numbers-Map-2026-hi-res-v2.pdf"],
-22:["St John Ambulance Australia: Severe bleeding fact sheet","https://stjohn.org.au/fact-sheet/severe-bleeding/"],
-23:["GOV.UK / MHRA: Adrenaline auto-injector advice for patients","https://www.gov.uk/drug-safety-update/adrenaline-auto-injector-advice-for-patients"],
-24:["American Red Cross: emergencies reference（seizure / stroke）","https://www.gvsu.edu/cms5/asset/708e9274-3f35-495e-9a6f-61cbe5addf67/af8837cb-b1f1-40e8-be80-31e899b8ea21/rm_manual-_other_emergencies.pdf"],
-25:["NHS: Burns and scalds — treatment","https://www.nhs.uk/conditions/burns-and-scalds/treatment/"],
-26:["NHS: Heat exhaustion and heatstroke","https://www.nhs.uk/conditions/heat-exhaustion-and-heatstroke/"],
-27:["NHS: Poisoning","https://www.nhs.uk/conditions/poisoning/"],
-28:["香港消防处：How to call an ambulance","https://www.hkfsd.gov.hk/eng/source/safety/uambu.htm"],
-29:["澳门特区政府入口网站：消防局紧急报案热线 119、120、28572222","https://www.gov.mo/en/preset-notice-post/271128"],
-30:["澳门特区政府 / 卫生局：急诊服务（需救护车可致电 999）","https://www.gov.mo/zh-hans/wp-content/uploads/sites/5/2018/01/%E6%80%A5%E8%A8%BA%E6%9C%8D%E5%8B%99%E6%94%B6%E8%B2%BB%E6%BA%96%E5%89%87.pdf"],
-31:["台中市西屯区公所（转载消防署）：119 报案宣导","https://www.xitun.taichung.gov.tw/media/674565/%E8%81%BD%E8%AA%9E%E9%9A%9C%E4%BA%BA%E5%A3%AB119%E5%A0%B1%E6%A1%88%E5%AE%A3%E5%B0%8E.pdf"],
-32:["台湾事实查核中心（引消防署、警政署）：119 / 110 / 112","https://tfc-taiwan.org.tw/?p=108722"],
-33:["釜山广域市政府：Emergency call service for foreigners (119)","https://www.busan.go.kr/eng/bsnews01/796823"],
-34:["韩国政府政策简报 korea.kr：119 短信 / 视频报警","https://www.korea.kr/news/reporterView.do?newsId=148929801"],
-35:["马来西亚政府入口网站：MERS 999 Emergency Line","https://www.malaysia.gov.my/en/categories/safety-and-community/public-safety/mers-999-emergency-line"],
-36:["马来西亚民防部队：999 Emergency Services","https://www.civildefence.gov.my/999-emergency-services/?lang=en"],
-37:["Thư Viện Pháp Luật（引越南电信号码法规）：111、113、114、115","https://thuvienphapluat.vn/hoi-dap-phap-luat/111-113-114-115-la-so-dien-thoai-gi-138013545.html"],
-38:["印尼卫生部 Kemenkes：医疗急救拨 119","https://kemkes.go.id/eng/terjadi-darurat-kesehatan-saat-mudik-hubungi-119"],
-39:["印尼通信与数字部法规库：统一紧急号码 112（2016 年第 10 号部长条例）","https://jdih.komdigi.go.id/produk_hukum/unduh-abstrak/278"],
-40:["菲律宾内政与地方政府部 DILG：Unified 911","https://calabarzon.dilg.gov.ph/one-number-for-all-emergencies-unified-911-to-launch-nationwide/"],
-41:["印度政府：Emergency Response Support System 112","https://112.gov.in/about"],
-42:["阿联酋政府门户 u.ae：Handling emergencies","https://u.ae/en/information-and-services/justice-safety-and-the-law/handling-emergencies"],
-43:["德国联邦政府：Notrufnummern 110 und 112","https://www.bundesregierung.de/breg-de/aktuelles/notrufnummer-50-jahre-2224394"],
-44:["意大利卫生部：Numero unico europeo per le emergenze (NUE) 112","https://www.salute.gov.it/new/it/tema/112-118-e-pronto-soccorso/numero-unico-europeo-le-emergenze-nue-112/"],
-45:["西班牙政府 administracion.gob.es：Números de urgencia","https://administracion.gob.es/pag_Home/Tu-espacio-europeo/derechos-obligaciones/ciudadanos/asistencia-sanitaria/numeros-urgencia.html"],
-46:["新西兰政府 Govt.nz：111 emergency service","https://www.govt.nz/browse/law-crime-and-justice/crimes-and-emergencies/111-emergency-service/"],
-47:["LuatVietnam（越南总理决定）：112 号码使用规定","https://luatvietnam.vn/tai-nguyen/quyet-dinh-2024-qd-ttg-2025-quy-che-su-dung-so-dien-thoai-112-tiep-nhan-thong-tin-su-co-thien-tai-411548-d1.html"],
-48:["Apple 支持：在 iPhone 的“健康”App 中设置医疗急救卡","https://support.apple.com/105072"],
-49:["Google Android 帮助：Get help during an emergency with your Android phone","https://support.google.com/android/answer/9319337"],
-50:["Apple Developer：Phone Links（含 * 或 # 的号码不会从网页链接拨出）","https://developer.apple.com/library/archive/featuredarticles/iPhoneURLScheme_Reference/PhoneLinks/PhoneLinks.html"],
-51:["GitHub Docs：What is GitHub Pages?（Data collection：访问者 IP 会被记录）","https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages"]
+1:["国家卫健委英文站：Emergency numbers in the Chinese mainland","China NHC (English site): Emergency numbers in the Chinese mainland","https://en.nhc.gov.cn/2019-03/05/c_74520.htm"],
+2:["上海市政府英文站：What to do in an emergency","Shanghai Government (English site): What to do in an emergency","https://english.shanghai.gov.cn/en-EmergencyNumbers/20241210/cbc5280b9f96440a93234bfc5e0c1023.html"],
+3:["東京都中央区 Emergency contact（110 / 119 / #7119）","Chuo City, Tokyo: Emergency contact (110 / 119 / #7119)","https://www.city.chuo.lg.jp/en/introuble.html"],
+4:["東京都豊島区 Hotlines","Toshima City, Tokyo: Hotlines","https://www.city.toshima.lg.jp/info/en/hotlines.html"],
+5:["Ewha Womans University: Emergency Numbers in Korea","Ewha Womans University: Emergency Numbers in Korea","https://cmsfox.ewha.ac.kr/winter/student-services/health03.do"],
+6:["SeoulStart: Korea emergency room guide（1339 职能变更）","SeoulStart: Korea emergency room guide (new role of 1339)","https://seoulstart.com/guides/korea-emergency-room-guide"],
+7:["澳大利亚政府 Smartraveller — Thailand","Australian Government Smartraveller: Thailand","https://smartraveller.gov.au/destinations/asia/thailand"],
+8:["ExpatDen: Emergencies in Thailand","ExpatDen: Emergencies in Thailand","https://expatden.com/thailand/emergencies-in-thailand-what-to-do-and-who-to-call"],
+9:["SCDF Emergency Medical Services","SCDF: Emergency Medical Services","https://scdf.gov.sg/home/about-us/information-on-ems/scdf-emergency-medical-services"],
+10:["新加坡卫生部：1777 hotline to cease from 1 Jan 2027","Singapore Ministry of Health: 1777 hotline to cease from 1 Jan 2027","https://www.moh.gov.sg/newsroom/1777-non-emergency-ambulance-hotline-to-cease--from-1-january-2027/"],
+11:["Seasia: Southeast Asia emergency numbers (2026-09)","Seasia: Southeast Asia emergency numbers (Sept 2026)","https://seasia.co/2026/09/14/southeast-asia-emergency-numbers-what-to-call-instead-of-911"],
+12:["NHS: Act FAST（中风）/ 冠心病与心梗","NHS: Act FAST (stroke) / heart attack","https://www.nhs.uk/actfast/"],
+13:["GOV.UK: 999 and 112 — the UK's national emergency numbers","GOV.UK: 999 and 112 — the UK's national emergency numbers","https://www.gov.uk/guidance/999-and-112-the-uks-national-emergency-numbers"],
+14:["HSE Ireland: Heart attack","HSE Ireland: Heart attack","https://www2.hse.ie/conditions/heart-attack/"],
+15:["EENA: What's 112 all about","EENA: What's 112 all about","https://eena.org/about-112/whats-112-all-about/"],
+16:["Australian Government: Triple Zero — other emergency numbers","Australian Government: Triple Zero — other emergency numbers","https://www.triplezero.gov.au/triple-zero/other-emergency-numbers"],
+17:["Australian Government: Using other emergency numbers（含 911 用于美加的说明）","Australian Government: Using other emergency numbers (incl. 911 in the US and Canada)","https://www.infrastructure.gov.au/media-communications/phone/triple-zero/using-other-emergency-numbers"],
+18:["2025 AHA Guidelines for CPR & ECC（概览）","2025 AHA Guidelines for CPR & ECC (overview)","https://laerdal.com/information/2025-aha-guidelines/"],
+19:["St John Ambulance (UK): Stroke / Heart attack / Life-threatening bleed","St John Ambulance (UK): Stroke / Heart attack / Life-threatening bleed","https://www.sja.org.uk/get-advice/first-aid-advice/stroke"],
+20:["Wikipedia: 112 (emergency telephone number) / List of emergency telephone numbers","Wikipedia: 112 (emergency telephone number) / List of emergency telephone numbers","https://simple.wikipedia.com/wiki/112_(emergency_telephone_number)"],
+21:["ATCOG: International Emergency Services Numbers Map 2026","ATCOG: International Emergency Services Numbers Map 2026","https://atcog.org/wp-content/uploads/2026/08/International-Emergency-Services-Numbers-Map-2026-hi-res-v2.pdf"],
+22:["St John Ambulance Australia: Severe bleeding fact sheet","St John Ambulance Australia: Severe bleeding fact sheet","https://stjohn.org.au/fact-sheet/severe-bleeding/"],
+23:["GOV.UK / MHRA: Adrenaline auto-injector advice for patients","GOV.UK / MHRA: Adrenaline auto-injector advice for patients","https://www.gov.uk/drug-safety-update/adrenaline-auto-injector-advice-for-patients"],
+24:["American Red Cross: emergencies reference（seizure / stroke）","American Red Cross: emergencies reference (seizure / stroke)","https://www.gvsu.edu/cms5/asset/708e9274-3f35-495e-9a6f-61cbe5addf67/af8837cb-b1f1-40e8-be80-31e899b8ea21/rm_manual-_other_emergencies.pdf"],
+25:["NHS: Burns and scalds — treatment","NHS: Burns and scalds — treatment","https://www.nhs.uk/conditions/burns-and-scalds/treatment/"],
+26:["NHS: Heat exhaustion and heatstroke","NHS: Heat exhaustion and heatstroke","https://www.nhs.uk/conditions/heat-exhaustion-and-heatstroke/"],
+27:["NHS: Poisoning","NHS: Poisoning","https://www.nhs.uk/conditions/poisoning/"],
+28:["香港消防处：How to call an ambulance","Hong Kong Fire Services Department: How to call an ambulance","https://www.hkfsd.gov.hk/eng/source/safety/uambu.htm"],
+29:["澳门特区政府入口网站：消防局紧急报案热线 119、120、28572222","Macao Government portal: Fire Services emergency lines 119, 120, 2857 2222","https://www.gov.mo/en/preset-notice-post/271128"],
+30:["澳门特区政府 / 卫生局：急诊服务（需救护车可致电 999）","Macao Government / Health Bureau: emergency services (call 999 for an ambulance)","https://www.gov.mo/zh-hans/wp-content/uploads/sites/5/2018/01/%E6%80%A5%E8%A8%BA%E6%9C%8D%E5%8B%99%E6%94%B6%E8%B2%BB%E6%BA%96%E5%89%87.pdf"],
+31:["台中市西屯区公所（转载消防署）：119 报案宣导","Xitun District Office, Taichung (from the National Fire Agency): how to report on 119","https://www.xitun.taichung.gov.tw/media/674565/%E8%81%BD%E8%AA%9E%E9%9A%9C%E4%BA%BA%E5%A3%AB119%E5%A0%B1%E6%A1%88%E5%AE%A3%E5%B0%8E.pdf"],
+32:["台湾事实查核中心（引消防署、警政署）：119 / 110 / 112","Taiwan FactCheck Center (citing fire and police agencies): 119 / 110 / 112","https://tfc-taiwan.org.tw/?p=108722"],
+33:["釜山广域市政府：Emergency call service for foreigners (119)","Busan Metropolitan City: Emergency call service for foreigners (119)","https://www.busan.go.kr/eng/bsnews01/796823"],
+34:["韩国政府政策简报 korea.kr：119 短信 / 视频报警","Korea.kr policy briefing: 119 by text or video","https://www.korea.kr/news/reporterView.do?newsId=148929801"],
+35:["马来西亚政府入口网站：MERS 999 Emergency Line","Malaysian Government portal: MERS 999 Emergency Line","https://www.malaysia.gov.my/en/categories/safety-and-community/public-safety/mers-999-emergency-line"],
+36:["马来西亚民防部队：999 Emergency Services","Malaysia Civil Defence Force: 999 Emergency Services","https://www.civildefence.gov.my/999-emergency-services/?lang=en"],
+37:["Thư Viện Pháp Luật（引越南电信号码法规）：111、113、114、115","Thu Vien Phap Luat (Vietnamese telecom number rules): 111, 113, 114, 115","https://thuvienphapluat.vn/hoi-dap-phap-luat/111-113-114-115-la-so-dien-thoai-gi-138013545.html"],
+38:["印尼卫生部 Kemenkes：医疗急救拨 119","Indonesian Ministry of Health (Kemenkes): call 119 for medical emergencies","https://kemkes.go.id/eng/terjadi-darurat-kesehatan-saat-mudik-hubungi-119"],
+39:["印尼通信与数字部法规库：统一紧急号码 112（2016 年第 10 号部长条例）","Indonesian Ministry of Communication and Digital, legal database: single emergency number 112 (Ministerial Regulation 10/2016)","https://jdih.komdigi.go.id/produk_hukum/unduh-abstrak/278"],
+40:["菲律宾内政与地方政府部 DILG：Unified 911","Philippine Department of the Interior (DILG): Unified 911","https://calabarzon.dilg.gov.ph/one-number-for-all-emergencies-unified-911-to-launch-nationwide/"],
+41:["印度政府：Emergency Response Support System 112","Government of India: Emergency Response Support System 112","https://112.gov.in/about"],
+42:["阿联酋政府门户 u.ae：Handling emergencies","UAE Government portal u.ae: Handling emergencies","https://u.ae/en/information-and-services/justice-safety-and-the-law/handling-emergencies"],
+43:["德国联邦政府：Notrufnummern 110 und 112","German Federal Government: emergency numbers 110 and 112","https://www.bundesregierung.de/breg-de/aktuelles/notrufnummer-50-jahre-2224394"],
+44:["意大利卫生部：Numero unico europeo per le emergenze (NUE) 112","Italian Ministry of Health: single European emergency number (NUE) 112","https://www.salute.gov.it/new/it/tema/112-118-e-pronto-soccorso/numero-unico-europeo-le-emergenze-nue-112/"],
+45:["西班牙政府 administracion.gob.es：Números de urgencia","Spanish Government (administracion.gob.es): emergency numbers","https://administracion.gob.es/pag_Home/Tu-espacio-europeo/derechos-obligaciones/ciudadanos/asistencia-sanitaria/numeros-urgencia.html"],
+46:["新西兰政府 Govt.nz：111 emergency service","New Zealand Government (Govt.nz): 111 emergency service","https://www.govt.nz/browse/law-crime-and-justice/crimes-and-emergencies/111-emergency-service/"],
+47:["LuatVietnam（越南总理决定）：112 号码使用规定","LuatVietnam (Prime Minister's decision): rules for the 112 number","https://luatvietnam.vn/tai-nguyen/quyet-dinh-2024-qd-ttg-2025-quy-che-su-dung-so-dien-thoai-112-tiep-nhan-thong-tin-su-co-thien-tai-411548-d1.html"],
+48:["Apple 支持：在 iPhone 的“健康”App 中设置医疗急救卡","Apple Support: Set up your Medical ID in the Health app on iPhone","https://support.apple.com/105072"],
+49:["Google Android 帮助：Get help during an emergency with your Android phone","Google Android Help: Get help during an emergency with your Android phone","https://support.google.com/android/answer/9319337"],
+50:["Apple Developer：Phone Links（含 * 或 # 的号码不会从网页链接拨出）","Apple Developer: Phone Links (numbers with * or # are not dialled from web links)","https://developer.apple.com/library/archive/featuredarticles/iPhoneURLScheme_Reference/PhoneLinks/PhoneLinks.html"],
+51:["GitHub Docs：What is GitHub Pages?（Data collection：访问者 IP 会被记录）","GitHub Docs: What is GitHub Pages? (Data collection: visitor IP addresses are logged)","https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages"],
+52:["Mondly 短语手册：日语“请叫救护车”","Mondly phrasebook: “Please call an ambulance” in Japanese","https://www.mondly.com/phrasebook/japanese-phrases/category/health/please-call-an-ambulance"],
+53:["JapanesePod101 Survival Phrases #18（叫救护车）","JapanesePod101 Survival Phrases #18 (calling an ambulance)","https://www.japanesepod101.com/lesson/survival-phrases-18-pharmacy"],
+54:["KoreanClass101 Survival Phrases #47（医疗求助）","KoreanClass101 Survival Phrases #47 (medical assistance)","https://www.koreanclass101.com/lesson/survival-phrases-47-medical-assistance"],
+55:["Speechling：101 个韩国旅行基础词句","Speechling: 101 basic Korean words for travel","https://speechling.com/blog/101-basic-korean-words-for-travel-in-south-korea"],
+56:["Mondly 短语手册：泰语“请叫救护车”","Mondly phrasebook: “Please call an ambulance” in Thai","https://www.mondly.com/phrasebook/thai-phrases/category/health/please-call-an-ambulance"],
+57:["ThaiPod101 Survival Phrases #47（医疗求助）","ThaiPod101 Survival Phrases #47 (medical assistance)","https://www.thaipod101.com/lesson/survival-phrases-47-medical-assistance"],
+58:["VietnamTourism.com：越南 115 叫救护车（含越南语求助句）","VietnamTourism.com: Vietnam emergency number 115 (with Vietnamese phrases)","https://www.vietnamtourism.com/en/vietnam-emergency-number-115-how-to-call-an-ambulance"],
+59:["IndonesianPod101 Lower Beginner #17（叫救护车）","IndonesianPod101 Lower Beginner #17 (calling an ambulance)","https://www.indonesianpod101.com/lesson/lower-beginner-17-do-you-need-a-doctor-in-indonesia"],
+60:["iLanguages：马来语常用句（求助）","iLanguages: Malay phrases (asking for help)","https://ilanguages.org/malay_phrases.php"],
+61:["Preply：阿拉伯语旅行必备句","Preply: Essential Arabic travel phrases","https://preply.com/en/blog/essential-arabic-travel-phrases"],
+62:["KSA Expats：沙特阿拉伯语常用句（紧急情况）","KSA Expats: Saudi Arabic phrases (emergencies)","https://ksaexpats.com/arabic-phrases/"],
+63:["Mondly 短语手册：法语“请叫救护车”","Mondly phrasebook: “Please call an ambulance” in French","https://www.mondly.com/phrasebook/french-phrases/category/health/please-call-an-ambulance"],
+64:["GermanPod101 Survival Phrases #49（医疗求助）","GermanPod101 Survival Phrases #49 (getting medical help)","https://www.germanpod101.com/lesson/survival-phrases-49-using-german-to-get-medical-help"],
+65:["SimpleStudy：德语紧急求助词句","SimpleStudy: German phrases for seeking help","https://simplestudy.com/ie/leaving-cert/german/revision-notes/vocabulary/emergencies/seeking-help-giving-an-account"],
+66:["Dummies：意大利语紧急求助","Dummies: Getting help for emergencies in Italian","https://www.dummies.com/article/getting-help-for-emergencies-in-italian-187177"],
+67:["Triptipedia：意大利语旅行基础句","Triptipedia: Italian basic holiday phrases","https://triptipedia.com/tip/pY4tKtj/italian-basic-holiday-phrases"],
+68:["SpanishPod101 Survival Phrases #48（医疗求助）","SpanishPod101 Survival Phrases #48 (getting medical assistance)","https://www.spanishpod101.com/lesson/survival-phrases-48-getting-medical-assistance-in-spanish"],
+69:["Spanish Academy：西班牙语紧急情况用语","Spanish Academy: How to deal with an emergency in Spanish","https://www.spanish.academy/blog/how-to-deal-with-an-emergency-in-spanish/"],
+70:["Rocket Languages：印地语健康用语","Rocket Languages: Health in Hindi","https://www.rocketlanguages.com/hindi/learn/health-in-hindi"]
 };
 
 /* ===================== 界面文字 UI STRINGS ===================== */
@@ -752,7 +801,11 @@ function tel(n){return "tel:"+encodeURIComponent(n)}
 function $(id){return document.getElementById(id)}
 function digits(n){return String(n).split("").join(" ")}
 function phoneIco(){return '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>'}
-function srcLine(ids){return ids.map(function(i){return '<a href="'+SRC[i][1]+'" target="_blank" rel="noopener">'+esc(SRC[i][0])+'</a>'}).join(" · ")}
+function srcA(i){return '<a href="'+SRC[i][2]+'" target="_blank" rel="noopener">'+esc(SRC[i][lang==="zh"?0:1])+'</a>'}
+function srcLine(ids){return ids.map(srcA).join(" · ")}
+function CO(){return lang==="zh"?"：":": "}
+function SEP(){return lang==="zh"?"，":", "}
+function PL(n){return lang==="zh"?"（"+n+"）":" ("+n+")"}
 function callBtn(c){var d=C[c];
   return '<a class="call" href="'+tel(d.amb)+'" aria-label="'+esc(t("callAmb")+"，"+nm(c)+"，"+digits(d.amb))+'"><span aria-hidden="true"><span class="lbl">'+t("callShort")+'</span><span class="num">'+esc(d.amb)+'</span></span><span class="ico" aria-hidden="true">'+phoneIco()+'</span></a>'}
 function emo(s){return '<span aria-hidden="true">'+s+'</span>'}
@@ -914,6 +967,28 @@ aboutT:["关于本卡","About this card"],ver:["版本","Version"]
 };
 for(var _k in T2)T[_k]=T2[_k];
 
+
+/* ===================== v0.4.1：路人卡的当地语言求助句 =====================
+   规则：每句都从下面列出的来源逐字照抄（不自己翻译），附来源编号；全部标“待母语者核对”，
+   母语者核对通过后把 ok 改为 1（页面上的“待核对”标记会自动消失）。查不到可靠来源的语言不显示。
+   l = 朗读用的语言代码；r = 来源里给出的读音（来源没给就不写）；dir:"rtl" = 从右往左书写。 */
+var LP={
+JP:{l:"ja-JP",n:["日语","Japanese"],t:"救急車を呼んでください。",r:"Kyūkyūsha o yonde kudasai",src:[52,53],ok:0},
+KR:{l:"ko-KR",n:["韩语","Korean"],t:"구급차를 불러 주세요.",r:"Gugeupchareul bulleo juseyo",src:[54,55],ok:0},
+TH:{l:"th-TH",n:["泰语","Thai"],t:"ช่วยเรียกรถพยาบาลหน่อย",r:"",src:[56,57],ok:0},
+VN:{l:"vi-VN",n:["越南语","Vietnamese"],t:"Gọi xe cấp cứu giúp tôi",r:"",src:[58],ok:0},
+ID:{l:"id-ID",n:["印尼语","Indonesian"],t:"Tolong panggilkan ambulans.",r:"",src:[59],ok:0},
+MY:{l:"ms-MY",n:["马来语","Malay"],t:"Panggil ambulans!",r:"",src:[60],ok:0},
+AE:{l:"ar-AE",n:["阿拉伯语","Arabic"],t:"اتصل بالإسعاف",r:"Ittiṣil bi-l-isʿāf",src:[61,62],ok:0,dir:"rtl"},
+FR:{l:"fr-FR",n:["法语","French"],t:"S'il vous plaît, appelez une ambulance.",r:"",src:[63],ok:0},
+DE:{l:"de-DE",n:["德语","German"],t:"Rufen Sie bitte einen Krankenwagen.",r:"",src:[64,65],ok:0},
+IT:{l:"it-IT",n:["意大利语","Italian"],t:"Chiamate un'ambulanza!",r:"",src:[66,67],ok:0},
+ES:{l:"es-ES",n:["西班牙语","Spanish"],t:"Por favor, llame a una ambulancia.",r:"",src:[68,69],ok:0},
+IN:{l:"hi-IN",n:["印地语","Hindi"],t:"एम्बुलेन्स को बुलाइए।",r:"Embulens ko bulaayiye",src:[70],ok:0}
+};
+/* 港澳台显示繁体字（由上面的简体中文句逐字转换，不是新翻译） */
+var ZHT={HK:"zh-HK",MO:"zh-HK",TW:"zh-TW"};
+
 /* ===================== v0.4.0：新增界面文字（只涉及界面与求助用语，不新增医学内容） ===================== */
 var T3={
 autoTz:["按手机时区 {z} 自动识别","Detected from device time zone {z}"],
@@ -950,6 +1025,38 @@ clrBtn:["清除本机数据","Clear data"],clrArm:["再点一次，确认清除"
 contentVer:["内容版本","Content version"]
 };
 for(var _k3 in T3)T[_k3]=T3[_k3];
+/* ===================== v0.4.1：新增界面文字 ===================== */
+var T4={
+pbZhT:["我需要急救。請幫我撥打 {N} 叫救護車。","我需要急救。請幫我撥打 {N} 叫救護車。"],
+lpLbl:["当地语言","Local language"],
+lpPend:["待母语者核对","Pending native-speaker check"],
+lpSrc:["句子来源","Phrase source"],
+lZhT:["繁体中文","Traditional Chinese"],
+autoNow:["自动识别","Auto-detected"],
+manualAuto:["手动选择（自动识别结果：{c}）","Chosen manually (auto-detected: {c})"],
+backAuto:["恢复自动识别","Use auto-detection"],
+autoNone:["未识别","not detected"],
+pickTz:["手机时区：{z}；自动识别结果：{c}","Device time zone: {z}; auto-detected: {c}"],
+aboutVer:["版本","Version"],
+diagT:["国家识别诊断（截图发给我们可帮助排查）","Country detection details (screenshot this if something looks wrong)"],
+diagTz:["手机时区","Device time zone"],diagDet:["自动识别结果","Auto-detected"],diagUse:["当前使用","Now using"],
+diagMode:["方式","Mode"],diagAuto:["自动","Automatic"],diagMan:["手动","Manual"],
+fsT:["文字大小","Text size"],
+fsSys:["跟随手机","Phone setting"],fsM:["标准","Standard"],fsL:["大","Large"],fsXL:["特大","Extra large"],
+fsHint:["“跟随手机”：iPhone 读取 设置 › 显示与亮度 › 文字大小（或 辅助功能 › 更大字体）。安卓若不跟随，请直接选“大”或“特大”。","“Phone setting” follows iPhone Settings › Display & Brightness › Text Size (or Accessibility › Larger Text). If Android does not follow it, choose Large or Extra large here."],
+wallSave:["保存到相册","Save to Photos"],
+wallOpen:["全屏打开图片","Open image full screen"],
+wallHowI:["iPhone：点“保存到相册”→ 在弹出的菜单里选“存储图像”。没有这一项时：点“全屏打开图片”→ 长按图片 → “存储到照片”。然后在“照片”里打开它 → 分享 → “用作墙纸”。","iPhone: tap “Save to Photos” → choose “Save Image”. If it is not there: tap “Open image full screen” → long-press the image → “Save to Photos”. Then open it in Photos → Share → “Use as Wallpaper”."],
+wallHowA:["安卓：点“保存到相册”（或“下载图片”），再到相册里设为锁屏。","Android: tap “Save to Photos” (or “Download image”), then set it as the lock screen from your gallery."],
+wallFull:["长按图片 → 存储到照片","Long-press the image → Save to Photos"],
+shareSys:["用系统分享","Share via apps"],
+shareCopy:["复制网址（发微信用）","Copy link (for WeChat)"],
+shareWx:["发到微信：点“复制网址”→ 打开微信聊天 → 长按输入框“粘贴”→ 发送。","To send on WeChat: tap “Copy link” → open a WeChat chat → long-press the text box → Paste → Send."],
+shareInWx:["你正在微信里打开本页：点右上角“···”→“发送给朋友”。","You are inside WeChat: tap “···” at the top right → “Send to Friend”."],
+shareTxt:["急救卡：按所在国家显示急救电话和急救步骤（中文 / English）","Emergency Card: local emergency numbers and first-aid steps for the country you are in (Chinese / English)"]
+};
+for(var _k4 in T4)T[_k4]=T4[_k4];
+
 function verOf(c){return C[c].v||VERIFIED_ON}
 function staleDays(c){var ms=Date.parse(verOf(c)+"T00:00:00Z");if(isNaN(ms))return 0;var d=Math.floor((Date.now()-ms)/86400000);return d>STALE_DAYS?d:0}
 function staleNote(c){return staleDays(c)?'<div class="note" role="note">'+I("alert")+'<div>'+esc(t("stale").replace("{d}",verOf(c)).replace("{n}",STALE_DAYS))+'</div></div>':""}
@@ -982,6 +1089,19 @@ function applyTheme(){
 }
 if(mq){var _mqf=function(){if(theme==="auto")applyTheme()};if(mq.addEventListener)mq.addEventListener("change",_mqf);else if(mq.addListener)mq.addListener(_mqf)}
 
+
+/* ===================== v0.4.1：文字大小 =====================
+   iPhone 的 Safari 默认不跟随系统“文字大小”。这里读取 -apple-system-body 的字号（会随系统设置变化，标准为 17px），
+   按比例放大全部文字（--fs）；安卓或其他浏览器读不到时按“标准”。也可以手动选 大 / 特大。 */
+var fsMode=(function(){var m=load("ec_fs");return m==="m"||m==="l"||m==="xl"?m:"sys"})();
+function sysScale(){try{if(!(window.CSS&&CSS.supports&&CSS.supports("font","-apple-system-body")))return 1;
+  var p=document.createElement("span");p.style.cssText="position:absolute;visibility:hidden;font:-apple-system-body";p.textContent="x";
+  document.body.appendChild(p);var px=parseFloat(getComputedStyle(p).fontSize)||17;p.remove();
+  if(!isIOS())return 1;return px/17}catch(e){return 1}}
+function applyFs(){var k=fsMode==="l"?1.15:fsMode==="xl"?1.3:fsMode==="m"?1:sysScale();
+  k=Math.max(1,Math.min(1.45,k));k=Math.round(k*100)/100;
+  var r=document.documentElement;r.style.setProperty("--fs",String(k));r.classList.toggle("bigtext",k>=1.12)}
+
 /* ===================== 底部四栏 ===================== */
 var TABS=[["home","","aid","tabHome"],["sos","sos","sos","tabSos"],["me","me","user","tabMe"],["more","more","dots","tabMore"]];
 var TABN={"":"home",sos:"sos",me:"me",more:"more"};
@@ -1002,13 +1122,15 @@ function triHtml(){
     '<div class="tri-b"><button class="big no" data-tri="1">'+t("t1n")+'</button><button class="big yes" data-tri="2">'+t("t1y")+'</button></div>';
 }
 function heroHtml(c){var d=C[c];
-  return '<section class="card lcard" aria-label="'+esc(t("youAre")+"："+nm(c))+'"><div class="lrow">'+
+  return '<section class="card lcard" aria-label="'+esc(t("youAre")+CO()+nm(c))+'"><div class="lrow">'+
     '<span class="lflag" aria-hidden="true">'+d.f+'</span>'+
     '<div class="linfo"><div class="lname">'+esc(nm(c))+'</div>'+
-    '<div class="lmeta"><span class="badge '+d.lvl+'">'+I(d.lvl==="A"?"check":"info")+t("lvl"+d.lvl)+'</span><span class="mut">'+(manual?t("manual"):esc(t("autoTz").replace("{z}",tzLabel())))+'</span></div></div>'+
-    '<button class="tbtn" id="chg" aria-label="'+esc(t("change")+"："+t("pick"))+'">'+t("change")+I("chevR","s")+'</button>'+
+    '<div class="lmeta"><span class="badge '+d.lvl+'">'+I(d.lvl==="A"?"check":"info")+t("lvl"+d.lvl)+'</span><span class="mut">'+(manual?esc(t("manualAuto").replace("{c}",DET==="XX"?t("autoNone"):nm(DET))):esc(t("autoTz").replace("{z}",tzLabel())))+'</span></div>'+
+    (manual?'<button class="link" data-pick="" style="margin-top:0;min-height:44px">'+I("pin","s")+t("backAuto")+'</button>':'')+'</div>'+
+    '<button class="tbtn" id="chg" aria-label="'+esc(t("change")+CO()+t("pick"))+'">'+t("change")+I("chevR","s")+'</button>'+
     '</div></section>'}
 
+function inWx(){return /MicroMessenger/i.test(navigator.userAgent||"")}
 function standalone(){try{return (window.matchMedia&&matchMedia("(display-mode: standalone)").matches)||navigator.standalone===true}catch(e){return false}}
 var dip=null;
 window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();dip=e;var b=$("instBtn");if(b)b.hidden=false});
@@ -1032,9 +1154,9 @@ function viewSos(c){var d=C[c],h="";
   h+='<h2 class="secH" style="margin-top:6px"><b>'+t("local")+'</b>'+esc(nm(c))+'</h2><section class="card">';
   if(d.nums.length){h+='<div class="nums">'+d.nums.map(function(n){var lb=lang==="zh"?n[1]:n[2];
      if(noTel(n[0]))return '<div class="n nolink"><span>'+esc(lb)+'</span><b>'+esc(n[0])+'</b><span class="nh">'+t("manualDial")+'</span></div>';
-     return '<a class="n" href="'+tel(n[0])+'" aria-label="'+esc(lb+"，"+digits(n[0]))+'"><span aria-hidden="true">'+esc(lb)+'</span><b aria-hidden="true">'+esc(n[0])+'</b></a>'}).join("")+'</div>'}
+     return '<a class="n" href="'+tel(n[0])+'" aria-label="'+esc(lb+SEP()+digits(n[0]))+'"><span aria-hidden="true">'+esc(lb)+'</span><b aria-hidden="true">'+esc(n[0])+'</b></a>'}).join("")+'</div>'}
   h+='<ul class="notes"'+(d.nums.length?'':' style="margin-top:0"')+'>'+d.notes.map(function(n){return '<li>'+esc(L(n))+'</li>'}).join("")+'</ul>';
-  if(d.src.length)h+='<div class="src">'+t("srcT")+'：'+srcLine(d.src)+'<br>'+t("verOn")+'：'+esc(verOf(c))+'</div>';
+  if(d.src.length)h+='<div class="src">'+t("srcT")+CO()+srcLine(d.src)+'<br>'+t("verOn")+CO()+esc(verOf(c))+'</div>';
   h+='</section>';
   h+='<h2 class="secH"><b>'+t("say")+'</b></h2><section class="card crit"><ol class="say">'+["s1","s2","s3","s4","s5"].map(function(k){return '<li>'+t(k)+'</li>'}).join("")+'</ol>'+
      '<div id="locOut" aria-live="polite"></div><button class="btn ghost" id="locBtn">'+I("pin")+t("locBtn")+'</button></section>';
@@ -1044,9 +1166,15 @@ function viewMe(){
   return '<div id="idBox"></div>'+
     '<section class="card"><div class="ml">'+I("globe")+'<div><b>'+t("mlT")+'</b><div class="mut" style="margin-top:4px">'+t("mlS")+'</div>'+
     '<button class="link" id="mlGo">'+t("mlGo")+I("chevR","s")+'</button></div></div></section>'+
-    '<section class="card"><div class="tip" style="border:0;padding:0;margin:0"><b>'+I("phone")+t("midT")+'</b>'+t("midWhy")+'<p>'+t("midIOS")+'</p><p>'+t("midAnd")+'</p><div class="src" style="margin-top:8px">'+t("srcT")+'：'+srcLine([48,49])+'</div></div></section>'}
+    '<section class="card"><div class="tip" style="border:0;padding:0;margin:0"><b>'+I("phone")+t("midT")+'</b>'+t("midWhy")+'<p>'+t("midIOS")+'</p><p>'+t("midAnd")+'</p><div class="src" style="margin-top:8px">'+t("srcT")+CO()+srcLine([48,49])+'</div></div></section>'}
 
-function viewMore(c){var h="";
+function aboutHtml(c){
+  return '<section class="card about"><div class="kick">'+t("aboutT")+'</div>'+
+    '<div class="vrow"><b>'+esc(VERSION)+'</b><span>'+t("contentVer")+CO()+CONTENT_VER+'</span><span>'+t("verOn")+CO()+esc(verOf(c))+'</span></div>'+
+    '<details class="sl"><summary>'+t("diagT")+'</summary><div class="muted diag">'+
+    t("diagTz")+CO()+esc(tzLabel())+'<br>'+t("diagDet")+CO()+esc(DET==="XX"?t("autoNone"):nm(DET))+' ('+DET+')<br>'+
+    t("diagUse")+CO()+esc(nm(c))+' ('+c+')<br>'+t("diagMode")+CO()+(manual?t("diagMan"):t("diagAuto"))+'<br>'+esc(VERSION)+' · '+esc(navigator.language||"")+'</div></details></section>'}
+function viewMore(c){var h=aboutHtml(c);
   if(!standalone()){
     var ios=/iPhone|iPad|iPod/.test(navigator.userAgent||"")||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
     var and=/Android/.test(navigator.userAgent||"");
@@ -1057,17 +1185,23 @@ function viewMore(c){var h="";
   h+='<h2 class="secH"'+(standalone()?' style="margin-top:6px"':'')+'><b>'+t("wallT")+'</b></h2><section class="card"><div>'+t("wallS")+'</div>'+
      '<button class="btn red" id="wallGo">'+I("phone")+t("wallBtn")+'</button></section>';
   h+='<h2 class="secH"><b>'+t("shareT")+'</b></h2><section class="card"><div>'+t("shareS")+'</div><div class="urlbox">'+esc(SITE_URL)+'</div>'+
-     '<button class="btn ghost" id="shareBtn">'+t("shareBtn")+'</button><div class="muted" id="shareMsg" role="status"></div></section>';
+     (inWx()?'<div class="note" role="note" style="margin:12px 0 0">'+I("info")+'<div>'+t("shareInWx")+'</div></div>':'')+
+     '<button class="btn" id="copyUrl">'+t("shareCopy")+'</button><div class="muted" id="shareMsg" role="status"></div>'+
+     (navigator.share&&!inWx()?'<button class="btn ghost" id="shareBtn">'+t("shareSys")+'</button>':'')+
+     '<p class="muted">'+t("shareWx")+'</p></section>';
   h+='<h2 class="secH"><b>'+t("thT")+'</b></h2><section class="card"><div class="seg3" role="group" aria-label="'+esc(t("thT"))+'">'+
-     [["auto","thAuto","auto"],["light","thLight","sun"],["dark","thDark","moon"]].map(function(x){return '<button data-th="'+x[0]+'" aria-pressed="'+(theme===x[0])+'">'+I(x[2],"s")+t(x[1])+'</button>'}).join("")+'</div></section>';
+     [["auto","thAuto","auto"],["light","thLight","sun"],["dark","thDark","moon"]].map(function(x){return '<button data-th="'+x[0]+'" aria-pressed="'+(theme===x[0])+'">'+I(x[2],"s")+t(x[1])+'</button>'}).join("")+'</div>'+
+     '<div class="kick" style="margin-top:16px">'+t("fsT")+'</div><div class="seg4" role="group" aria-label="'+esc(t("fsT"))+'">'+
+     [["sys","fsSys"],["m","fsM"],["l","fsL"],["xl","fsXL"]].map(function(x){return '<button data-fs="'+x[0]+'" aria-pressed="'+(fsMode===x[0])+'">'+t(x[1])+'</button>'}).join("")+'</div>'+
+     '<p class="muted">'+t("fsHint")+'</p></section>';
   h+='<h2 class="secH" id="fb" tabindex="-1"><b>'+t("fbT")+'</b></h2><section class="card"><div>'+t("fbQ")+'</div>'+fbBlock(c)+'</section>';
   var ks=Object.keys(SRC);
-  h+='<h2 class="secH"><b>'+t("srcAll")+'</b></h2><section class="card"><div class="muted">'+t("verified")+'：'+VERIFIED_ON+'<br>A = '+t("lvlA")+'，B = '+t("lvlB")+'，C = '+t("lvlC")+'</div>'+
+  h+='<h2 class="secH"><b>'+t("srcAll")+'</b></h2><section class="card"><div class="muted">'+t("verified")+CO()+VERIFIED_ON+'<br>A = '+t("lvlA")+SEP()+'B = '+t("lvlB")+SEP()+'C = '+t("lvlC")+'</div>'+
      '<details class="sl"><summary>'+t("srcN")+'（'+ks.length+'）</summary><ol class="srcs">'+
-     ks.map(function(i){return '<li><a href="'+SRC[i][1]+'" target="_blank" rel="noopener">'+esc(SRC[i][0])+'</a></li>'}).join("")+'</ol></details></section>';
+     ks.map(function(i){return '<li>'+srcA(i)+'</li>'}).join("")+'</ol></details></section>';
   h+='<h2 class="secH"><b>'+t("clrT")+'</b></h2><section class="card"><div>'+t("clrS")+'</div>'+
      '<button class="btn warn" id="clrBtn">'+t("clrBtn")+'</button></section>';
-  h+='<footer>'+t("disc")+' '+srcLine([51])+'<br>'+t("offline")+'<br>'+t("ver")+'：'+VERSION+' · '+t("contentVer")+'：'+CONTENT_VER+'</footer>';
+  h+='<footer>'+t("disc")+' '+srcLine([51])+'<br>'+t("offline")+'<br><b>'+t("ver")+CO()+VERSION+' · '+t("contentVer")+CO()+CONTENT_VER+'</b></footer>';
   return h}
 
 function renderMain(){
@@ -1101,8 +1235,9 @@ function fbBlock(c){
   if(g&&GOOGLE_PREFILL_ENTRY)g+=(g.indexOf("?")<0?"?":"&")+"usp=pp_url&"+encodeURIComponent(GOOGLE_PREFILL_ENTRY)+"="+encodeURIComponent(fbCtx(c));
   var bg=g?'<a class="btn{K}" href="'+esc(g)+'" target="_blank" rel="noopener">'+t("fbG")+'</a>':"";
   var bq=q?'<a class="btn{K}" href="'+esc(q)+'" target="_blank" rel="noopener">'+t("fbT2")+'</a>':"";
-  var list=(c==="CN")?[bq,bg]:[bg,bq];
-  list=list.filter(function(x){return x});
+  /* v0.4.2 按界面语言分流：中文只给腾讯问卷，英文只给 Google 表单；英文界面在中国大陆（Google 打不开）也给腾讯；缺哪个就用另一个 */
+  var pick=(lang==="zh"||c==="CN")?(bq||bg):(bg||bq);
+  var list=[pick];
   var h=list.map(function(x,i){return x.replace("{K}",i?" ghost":"")}).join("");
   return h+'<div class="muted" style="margin-top:10px">'+t("fbCtx")+'：<b>'+esc(fbCtx(c))+'</b><br>'+t("fbNoPII")+'</div>';
 }
@@ -1130,13 +1265,13 @@ function renderId(editing){
     var bl=d.blood||"",lg=bl.length>4;
     h+='<section class="card"><div class="hrow"><div class="hinfo"><div class="kick red">'+t("idK")+'</div>'+
        '<div class="pname'+(d.name?'':' ph')+'">'+esc(d.name||t("nameNone"))+'</div><div class="mut">'+t("idHint")+'</div></div>'+
-       '<div class="rblock'+(bl?'':' empty')+'" role="img" aria-label="'+esc(t("fBlood")+"："+(bl||t("none")))+'"><span class="rk" aria-hidden="true">'+t("bloodK")+'</span><span class="rv'+(lg?' long':'')+'" aria-hidden="true">'+esc(bl||"?")+'</span></div></div></section>';
+       '<div class="rblock'+(bl?'':' empty')+'" role="img" aria-label="'+esc(t("fBlood")+CO()+(bl||t("none")))+'"><span class="rk" aria-hidden="true">'+t("bloodK")+'</span><span class="rv'+(lg?' long':'')+'" aria-hidden="true">'+esc(bl||"?")+'</span></div></div></section>';
     if(!has){box.innerHTML=h+'<button class="btn red" id="idEdit" style="margin:0 0 12px">'+t("edit")+'</button>';return}
     h+='<section class="card crit"><div class="kick red">'+I("alert","s")+bi("fAll")+'</div>'+fval(d.allergy)+'</section>';
     h+='<section class="card"><div class="frow"><div class="kick">'+bi("fCond")+'</div>'+fval(d.cond)+'</div><div class="frow"><div class="kick">'+bi("fMed")+'</div>'+fval(d.med)+'</div></section>';
     var ph=phoneIn(d.ice);
     h+='<section class="card"><div class="kick">'+bi("fIce")+'</div>'+fval(d.ice)+
-       (ph?'<a class="btn grn" href="'+tel(ph)+'" aria-label="'+esc(t("iceCall")+"，"+digits(ph))+'">'+phoneIco()+t("iceCall")+'</a>':'')+'</section>';
+       (ph?'<a class="btn grn" href="'+tel(ph)+'" aria-label="'+esc(t("iceCall")+SEP()+digits(ph))+'">'+phoneIco()+t("iceCall")+'</a>':'')+'</section>';
     h+='<button class="btn ghost" id="idEdit" style="margin:0 0 12px">'+t("edit")+'</button>';
   }
   box.innerHTML=h;
@@ -1191,18 +1326,18 @@ function renderCard(keep){
       h+='<div aria-live="polite" aria-atomic="true"><div class="stepK">'+t("stepOf").replace("{a}",i+1).replace("{b}",n)+'</div>'+
          '<p class="stepTxt">'+fill(L(k.steps[i]))+'</p></div>'+fig(k.id,i)+
          (i===0?'<div class="when" style="margin-top:16px">'+esc(L(k.when))+'</div>':'')+
-         '<details class="dd"><summary>'+I("xc")+t("dontT")+'（'+k.dont.length+'）'+I("chevR","s chev")+'</summary>'+dont+'</details>';
+         '<details class="dd"><summary>'+I("xc")+t("dontT")+PL(k.dont.length)+I("chevR","s chev")+'</summary>'+dont+'</details>';
     }else{
       h+='<div class="dont" aria-live="polite"><b>'+I("xc")+t("dontT")+'</b>'+dont+'</div>'+
          (k.extra?'<div class="extra">'+esc(L(k.extra))+'</div>':'')+
-         '<div class="src">'+t("srcT")+'：'+srcLine(k.src)+'</div>';
+         '<div class="src">'+t("srcT")+CO()+srcLine(k.src)+'</div>';
     }
   }else{
     h+='<div class="when" style="margin-top:12px">'+esc(L(k.when))+'</div>'+
       '<ol class="steps">'+k.steps.map(function(s,j){return '<li><span>'+fill(L(s))+fig(k.id,j)+'</span></li>'}).join("")+'</ol>'+
       '<div class="dont"><b>'+I("xc")+t("dontT")+'</b>'+dont+'</div>'+
       (k.extra?'<div class="extra">'+esc(L(k.extra))+'</div>':'')+
-      '<div class="src">'+t("srcT")+'：'+srcLine(k.src)+'</div>';
+      '<div class="src">'+t("srcT")+CO()+srcLine(k.src)+'</div>';
   }
   var nav=step?'<div class="snav"><button class="pv" id="pv"'+(i===0?' disabled':'')+'>'+I("chevL")+t("prev")+'</button>'+
     '<button class="nx" id="nx">'+(i<n?t("next")+I("chevR"):t("finish"))+'</button></div>':'';
@@ -1220,7 +1355,8 @@ function go(d){if(!cur)return;var n=cur.k.steps.length,i=cur.i+d;
 function openPicker(){
   metroStop();hush();cur=null;
   var h='<div class="shead"><button class="back" id="bk">'+I("chevL")+t("back")+'</button></div><h1 id="sheetT" class="pickh" tabindex="-1">'+t("pick")+'</h1>'+
-    (DET!=="XX"?'<button class="btn ghost" data-pick="">'+t("useAuto")+'：'+emo(C[DET].f)+' '+esc(nm(DET))+'</button>':'')+'<div class="list">'+
+    '<button class="btn ghost" data-pick="">'+t("useAuto")+CO()+emo(C[DET].f)+' '+esc(nm(DET))+'</button>'+
+    '<p class="muted">'+esc(t("pickTz").replace("{z}",tzLabel()).replace("{c}",DET==="XX"?t("autoNone"):nm(DET)))+'</p><div class="list">'+
     ORDER.map(function(c){return '<button class="opt" data-pick="'+c+'"><span>'+emo(C[c].f)+' '+esc(nm(c))+'</span><b>'+esc(C[c].amb)+'</b></button>'}).join("")+'</div>';
   showSheet(h,callBtn(cc()));
 }
@@ -1229,7 +1365,7 @@ function openConfirm(){
   var h='<div class="cf"><div class="mk">'+LOGO_SVG+t("brand")+'</div><div class="flag" aria-hidden="true">'+d.f+'</div>'+
     '<h1 id="sheetT" tabindex="-1">'+(x?t("cfX"):t("cfQ"))+'</h1>'+
     (x?'':'<div class="cn">'+esc(nm(c))+'</div>')+
-    '<a class="rblock" href="'+tel(d.amb)+'" aria-label="'+esc(t("callAmb")+"，"+digits(d.amb))+'"><span class="rk" aria-hidden="true">'+t("ambLbl")+'</span><span class="rv" aria-hidden="true">'+esc(d.amb)+'</span><span class="rc" aria-hidden="true">'+t("callTap")+'</span></a><p class="muted">'+t("cfS")+'<br>'+esc(t("cfTz").replace("{z}",tzLabel()))+'</p>'+
+    '<a class="rblock" href="'+tel(d.amb)+'" aria-label="'+esc(t("callAmb")+SEP()+digits(d.amb))+'"><span class="rk" aria-hidden="true">'+t("ambLbl")+'</span><span class="rv" aria-hidden="true">'+esc(d.amb)+'</span><span class="rc" aria-hidden="true">'+t("callTap")+'</span></a><p class="muted">'+t("cfS")+'<br>'+esc(t("cfTz").replace("{z}",tzLabel()))+'</p>'+
     (x?'<button class="btn" id="cfN">'+t("cfXN")+'</button><button class="btn ghost" id="cfY">'+t("cfXY")+'</button>'
       :'<button class="btn" id="cfY">'+t("cfY")+'</button><button class="btn ghost" id="cfN">'+t("cfN")+'</button>')+
     '<p style="margin-top:18px"><button class="ibtn" id="langBtn2" aria-label="Switch language / 切换语言">'+(lang==="zh"?"English":"中文")+'</button></p></div>';
@@ -1237,16 +1373,23 @@ function openConfirm(){
 }
 /* ===================== v0.4.0：路人大字求助卡（中英双语固定显示，每种语言用对应语音朗读） ===================== */
 function awkHtml(){return '<div class="status" id="awk"'+(wl?'':' hidden')+'>'+I("sun","s")+t("awake")+'</div><details class="when" id="noawk" style="margin-top:8px;padding:6px 12px"'+(wlFail?'':' hidden')+'><summary style="min-height:36px;display:flex;align-items:center;gap:6px;cursor:pointer">'+I("alert","s")+t("noAwakeS")+'</summary><div style="padding-bottom:6px">'+t("noAwake")+'</div></details>'}
-function pbText(c){var N=C[c].amb;return {zh:T.pbZh[0].replace("{N}",N),en:T.pbEn[0].replace("{N}",N),zhS:T.pbZh[0].replace("{N}",digits(N)),enS:T.pbEn[0].replace("{N}",digits(N))}}
+function pbText(c){var N=C[c].amb,z=ZHT[c]?T.pbZhT[0]:T.pbZh[0];return {zh:z.replace("{N}",N),en:T.pbEn[0].replace("{N}",N),zhS:z.replace("{N}",digits(N)),enS:T.pbEn[0].replace("{N}",digits(N)),zl:ZHT[c]||"zh-CN"}}
+function lpHtml(c){var p=LP[c];if(!p)return "";
+  return '<div class="lp"><div class="lpk">'+t("lpLbl")+' · '+esc(p.n[lang==="zh"?0:1])+'</div>'+
+    '<p class="pbl lpt" lang="'+p.l+'"'+(p.dir?' dir="rtl"':'')+'>'+esc(p.t)+'</p>'+(p.r?'<div class="lpr">'+esc(p.r)+'</div>':'')+
+    '<div class="lps">'+(p.ok?'':'<span class="pend">'+t("lpPend")+'</span> ')+t("lpSrc")+CO()+srcLine(p.src)+'</div></div>'}
+/* 朗读顺序：当地语言（若有）→ 本地常用语 → 另一种 */
+function pbSeq(c){var pt=pbText(c),z=[pt.zhS,pt.zl],e=[pt.enS,"en-GB"],q=pbZhFirst(c)?[z,e]:[e,z];
+  if(LP[c])q.unshift([LP[c].t,LP[c].l]);return q}
 function pbZhFirst(c){return /^(CN|HK|MO|TW)$/.test(c)}
 function openHelp(){
   metroStop();hush();cur=null;
   var c=cc(),d=C[c],p=pbText(c);
-  var lz='<p class="pbl" lang="zh-CN">'+esc(p.zh)+'</p>',le='<p class="pbl" lang="en">'+esc(p.en)+'</p>';
+  var lz='<p class="pbl" lang="'+p.zl+'">'+esc(p.zh)+'</p>',le='<p class="pbl" lang="en">'+esc(p.en)+'</p>';
   var h='<div class="shead"><button class="back" id="bk">'+I("chevL")+t("back")+'</button><span class="sp"></span>'+
     '<button class="chip" id="readBtn" aria-pressed="false">'+I("vol","s")+t("readA")+'</button></div>'+
-    '<h1 id="sheetT" tabindex="-1" class="pickh" style="font-size:20px;color:var(--crimson)">'+t("pbK")+'</h1>'+
-    '<div class="pb">'+(pbZhFirst(c)?lz+le:le+lz)+
+    '<h1 id="sheetT" tabindex="-1" class="pickh" style="font-size:calc(20px * var(--fs));color:var(--crimson)">'+t("pbK")+'</h1>'+
+    '<div class="pb">'+lpHtml(c)+(pbZhFirst(c)?lz+le:le+lz)+
     '<div class="pbn" role="img" aria-label="'+esc(digits(d.amb))+'">'+esc(d.amb)+'</div><div class="pbc">'+esc(d.zh+" · "+d.en)+'</div></div>'+
     awkHtml()+'<div class="muted" id="readMsg" role="status" style="margin-top:8px"></div>';
   showSheet(h,callBtn(c));
@@ -1258,12 +1401,16 @@ function speakSeq(list,onEnd){
   if(!("speechSynthesis" in window))return null;
   try{speechSynthesis.cancel();var vs=speechSynthesis.getVoices()||[],skipped=[],last=null;
     list.forEach(function(x){var v=voiceFor(x[1]);if(vs.length&&!v){skipped.push(x[1]);return}
-      var u=new SpeechSynthesisUtterance(x[0]);u.lang=x[1]==="zh"?"zh-CN":"en-GB";if(v)u.voice=v;u.rate=.9;last=u;speechSynthesis.speak(u)});
+      var u=new SpeechSynthesisUtterance(x[0]);u.lang=x[1]==="zh"?"zh-CN":x[1]==="en"?"en-GB":x[1];if(v)u.voice=v;u.rate=.9;last=u;speechSynthesis.speak(u)});
     if(last)last.onend=last.onerror=onEnd;else if(onEnd)onEnd();
     return skipped}catch(e){return null}}
 
 /* ===================== v0.4.0：锁屏图片（只含当地急救号码，不含任何个人或健康信息） ===================== */
 var wallSz="ios",wallTh="dark";
+function openWallFull(){var u=wallUrl||($("wallImg")||{}).src;if(!u)return;
+  var d=document.createElement("div");d.id="wallFullBox";d.className="wallfull";
+  d.innerHTML='<div class="wfbar"><button class="back" id="wallFullBk">'+I("chevL")+t("back")+'</button><b>'+t("wallFull")+'</b></div><img src="'+u+'" alt="'+esc(t("wallT"))+'">';
+  document.body.appendChild(d)}
 function todayStr(){var d=new Date();return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2)}
 function openWall(){
   metroStop();hush();cur=null;
@@ -1273,10 +1420,21 @@ function openWall(){
     '<div class="seg2" role="group" aria-label="iPhone / Android">'+[["ios","iPhone"],["and","Android"]].map(function(x){return '<button data-wsz="'+x[0]+'" aria-pressed="'+(wallSz===x[0])+'">'+x[1]+'</button>'}).join("")+'</div>'+
     '<div class="seg2" role="group" aria-label="'+esc(t("thT"))+'">'+[["light","wallLight"],["dark","wallDark"]].map(function(x){return '<button data-wth="'+x[0]+'" aria-pressed="'+(wallTh===x[0])+'">'+t(x[1])+'</button>'}).join("")+'</div>'+
     '<img class="wallimg" id="wallImg" alt="'+esc(t("wallAlt").replace("{c}",nm(c)).replace("{n}",C[c].amb))+'">'+
-    '<p class="muted">'+t("wallHow")+'</p><button class="btn" id="wallDl">'+I("dl")+t("wallDl")+'</button>';
+    '<button class="btn red" id="wallSave">'+I("dl")+t("wallSave")+'</button>'+
+    '<button class="btn ghost" id="wallFull">'+t("wallOpen")+'</button>'+
+    (isIOS()?'':'<button class="btn ghost" id="wallDl">'+I("dl")+t("wallDl")+'</button>')+
+    '<div class="muted" id="wallMsg" role="status"></div>'+
+    '<p class="muted">'+(isIOS()?t("wallHowI"):t("wallHowA"))+'</p>';
   showSheet(h,callBtn(c));
-  var img=$("wallImg");if(img)img.src=drawWall(c).url;
+  wallRefresh();
 }
+/* 生成图片：页面显示用 blob 网址（长按保存更可靠），同时留一份 PNG 文件供“保存到相册” */
+var wallBlob=null,wallUrl=null;
+function wallRefresh(){var r=drawWall(cc()),img=$("wallImg");wallBlob=null;
+  if(r.canvas&&r.canvas.toBlob){r.canvas.toBlob(function(b){if(!b){if(img)img.src=r.url;return}wallBlob=b;if(wallUrl)try{URL.revokeObjectURL(wallUrl)}catch(e){}wallUrl=URL.createObjectURL(b);if(img)img.src=wallUrl},"image/png")}
+  else if(img)img.src=r.url}
+function wallName(){return "emergency-numbers-"+cc()+"-"+wallSz+"-"+todayStr()+".png"}
+function wallDownload(){var a=document.createElement("a");a.href=wallUrl||($("wallImg")||{}).src;a.download=wallName();document.body.appendChild(a);a.click();a.remove()}
 /* 绘制锁屏图：所有内容放在"安全区"（屏高 30%–66%），避开顶部时钟与底部通知/快捷按钮；内容太多时整体等比缩小，绝不溢出 */
 function drawWall(c){
   var W=wallSz==="ios"?1170:1080,H=wallSz==="ios"?2532:2400,dark=wallTh==="dark";
@@ -1306,7 +1464,7 @@ function drawWall(c){
   x.beginPath();if(x.roundRect)x.roundRect(bx,by,bw,boxH,40);else x.rect(bx,by,bw,boxH);x.fill();x.stroke();
   var y=by+ip*k;rows.forEach(function(r){r.f(y,k);y+=r.h*k});
   x.textAlign="left";
-  return {url:cv.toDataURL("image/png"),top:by,bottom:by+boxH,safeTop:top,safeBottom:bot,scale:k,W:W,H:H};
+  return {canvas:cv,url:cv.toDataURL("image/png"),top:by,bottom:by+boxH,safeTop:top,safeBottom:bot,scale:k,W:W,H:H};
 }
 
 function route(){var h=location.hash.slice(1);
@@ -1335,7 +1493,10 @@ function beat(){
 function metroStart(){if(mt)return;if(snd)audio();beat();mt=setInterval(beat,60000/110)}
 function metroStop(){if(mt){clearInterval(mt);mt=null}}
 
-function voiceFor(l){l=l||lang;try{var want=l==="zh"?/^zh[-_](CN|Hans)/i:/^en[-_]GB/i,alt=l==="zh"?/^zh/i:/^en/i,vs=speechSynthesis.getVoices()||[],v=null;
+function voiceFor(l){l=l||lang;try{var want,alt;
+  if(l==="zh"){want=/^zh[-_](CN|Hans)/i;alt=/^zh/i}else if(l==="en"){want=/^en[-_]GB/i;alt=/^en/i}
+  else{var b=l.split("-")[0];want=new RegExp("^"+l.replace("-","[-_]"),"i");alt=new RegExp("^"+b+"([-_]|$)","i")}
+  var vs=speechSynthesis.getVoices()||[],v=null;
   for(var i=0;i<vs.length&&!v;i++)if(want.test(vs[i].lang))v=vs[i];for(i=0;i<vs.length&&!v;i++)if(alt.test(vs[i].lang))v=vs[i];return v}catch(e){return null}}
 function say(s){try{if(!("speechSynthesis" in window))return;speechSynthesis.cancel();
   var u=new SpeechSynthesisUtterance(s);u.lang=lang==="zh"?"zh-CN":"en-GB";var v=voiceFor();if(v)u.voice=v;u.rate=.95;speechSynthesis.speak(u)}catch(e){}}
@@ -1393,24 +1554,33 @@ document.addEventListener("click",function(e){
   if(el.id==="wallGo"){goHash("wall");return}
   if(el.id==="readBtn"){var rm=$("readMsg");if(rm)rm.textContent="";
     if(el.getAttribute("aria-pressed")==="true"){hush();readShow(false);return}
-    var pc=cc(),pt=pbText(pc),seq=pbZhFirst(pc)?[[pt.zhS,"zh"],[pt.enS,"en"]]:[[pt.enS,"en"],[pt.zhS,"zh"]];
+    var pc=cc(),seq=pbSeq(pc);
     var sk=speakSeq(seq,function(){readShow(false)});
     if(sk===null){if(rm)rm.textContent=t("noTts");return}
     readShow(true);
-    if(sk.length&&rm)rm.textContent=sk.map(function(l){return t("noVoice").replace("{l}",t(l==="zh"?"lZh":"lEn"))}).join(" ");
+    if(sk.length&&rm)rm.textContent=sk.map(function(l){var nmL=/^zh-(HK|TW)/.test(l)?t("lZhT"):/^zh/.test(l)?t("lZh"):/^en/.test(l)?t("lEn"):(LP[pc]&&LP[pc].l===l?LP[pc].n[lang==="zh"?0:1]:l);return t("noVoice").replace("{l}",nmL)}).join(" ");
     return}
   if(el.dataset.wsz||el.dataset.wth){if(el.dataset.wsz)wallSz=el.dataset.wsz;if(el.dataset.wth)wallTh=el.dataset.wth;
     document.querySelectorAll("[data-wsz]").forEach(function(b){b.setAttribute("aria-pressed",b.dataset.wsz===wallSz?"true":"false")});
     document.querySelectorAll("[data-wth]").forEach(function(b){b.setAttribute("aria-pressed",b.dataset.wth===wallTh?"true":"false")});
-    var wi=$("wallImg");if(wi)wi.src=drawWall(cc()).url;return}
-  if(el.id==="wallDl"){var wimg=$("wallImg");if(!wimg||!wimg.src)return;var a=document.createElement("a");a.href=wimg.src;
-    a.download="emergency-numbers-"+cc()+"-"+wallSz+"-"+todayStr()+".png";document.body.appendChild(a);a.click();a.remove();return}
+    wallRefresh();return}
+  if(el.id==="wallDl"){wallDownload();return}
+  if(el.id==="wallSave"){var wm=$("wallMsg");
+    try{var f=wallBlob&&new File([wallBlob],wallName(),{type:"image/png"});
+      if(f&&navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f]}).catch(function(){});return}}catch(x){}
+    if(isIOS()){openWallFull();return}
+    wallDownload();return}
+  if(el.id==="wallFull"){openWallFull();return}
+  if(el.id==="wallFullBk"){$("wallFullBox").remove();return}
   if(el.id==="shareBtn"){var sm=$("shareMsg");
-    if(navigator.share){navigator.share({title:t("brand"),url:SITE_URL}).catch(function(){})}
+    if(navigator.share){navigator.share({title:t("brand"),text:t("shareTxt"),url:SITE_URL}).catch(function(){})}
     else copyText(SITE_URL,function(){if(sm)sm.textContent=t("shareDone")});return}
+  if(el.id==="copyUrl"){var sm2=$("shareMsg");copyText(SITE_URL,function(){if(sm2)sm2.textContent=t("shareDone")});return}
+  if(el.dataset.fs){fsMode=el.dataset.fs;store("ec_fs",fsMode==="sys"?null:fsMode);applyFs();
+    document.querySelectorAll("[data-fs]").forEach(function(x){x.setAttribute("aria-pressed",x.dataset.fs===fsMode?"true":"false")});return}
   if(el.id==="clrBtn"){
     if(el.dataset.armed!=="1"){el.dataset.armed="1";el.textContent=t("clrArm");setTimeout(function(){if(document.contains(el)){el.dataset.armed="";el.textContent=t("clrBtn")}},6000);return}
-    ["ec_id","ec_geo","ec_lang","ec_theme","ec_mode","ec_voice","ec_snd"].forEach(function(k){store(k,null)});
+    ["ec_id","ec_geo","ec_lang","ec_theme","ec_mode","ec_voice","ec_snd","ec_fs"].forEach(function(k){store(k,null)});
     hush();location.replace(location.pathname);return}
   if(el.id==="pv"){go(-1);return}
   if(el.id==="nx"){go(1);return}
@@ -1455,6 +1625,9 @@ document.addEventListener("keydown",function(e){
   else if(cur&&cur.mode==="step"){if(e.key==="ArrowRight")go(1);else if(e.key==="ArrowLeft")go(-1)}
 });
 
+applyFs();
+window.addEventListener("pageshow",function(){if(fsMode==="sys")applyFs()});
+document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible"&&fsMode==="sys")applyFs()});
 render();
 if("serviceWorker" in navigator && (location.protocol==="https:"||location.hostname==="localhost")){try{navigator.serviceWorker.register("sw.js").catch(function(){})}catch(e){}}
 </script>
