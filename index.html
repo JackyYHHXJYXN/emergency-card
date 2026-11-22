@@ -435,6 +435,80 @@ html.hugetext .ibtn{padding:0 8px}
 @media (max-width:350px){.tri h1{font-size:calc(26px * var(--fs))}.big{font-size:calc(20px * var(--fs))}.stepTxt{font-size:calc(24px * var(--fs))}.call .num{font-size:calc(30px * var(--fs))}.seg span{padding:0 9px}.rblock{width:96px}.rblock .rv{font-size:calc(32px * var(--fs))}.place{font-size:calc(22px * var(--fs))}.tab{font-size:calc(15px * var(--fs))}.lname{font-size:calc(20px * var(--fs))}.lflag{font-size:calc(28px * var(--fs))}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media print{header.top,nav.bnav,.dock,.btn,.ibtn,.shead,#fb{display:none!important}body{background:#fff;padding:0}}
+
+/* ---------- v0.6.0：帮别人呼救 / 发病时间 / 高危勾选 / 多档案 / 交接页 / 打印 ---------- */
+.rkgrid{display:grid;grid-template-columns:1fr;gap:8px;margin-top:8px}
+.rkc{min-height:50px;text-align:left;padding:10px 14px;border-radius:10px;border:1.5px solid var(--border-strong);background:var(--bg-canvas);font-weight:700;font-size:calc(17px * var(--fs));color:var(--text-primary);display:flex;align-items:center;gap:12px;line-height:1.3}
+.rkc:before{content:"";width:22px;height:22px;border-radius:6px;border:2px solid var(--border-strong);flex:none;background:var(--bg-card)}
+.rkc[aria-pressed="true"]{border-color:var(--crimson-fill);background:var(--crimson-soft)}
+.rkc[aria-pressed="true"]:before{background:var(--crimson-fill);border-color:var(--crimson-fill);box-shadow:inset 0 0 0 3px var(--bg-card)}
+.rkl{list-style:none;margin:6px 0 0;padding:0}
+.rkl li{padding:8px 0;border-bottom:1px solid var(--border-card)}
+.rkl li:last-child{border-bottom:0}
+.rkl b{display:block;font-size:calc(20px * var(--fs));line-height:1.3;word-break:break-word}
+.rkl span{display:block;color:var(--text-muted);font-size:calc(17px * var(--fs));line-height:1.35}
+.mc .rkl li{border-bottom-color:#E5E7EB}.mc .rkl b{color:#B91C1C;font-size:calc(24px * var(--fs))}.mc .rkl span{color:#4B5563}
+.idacts{display:grid;gap:8px;margin:0 0 12px}.idacts .btn{margin-top:0}
+.pfbar .chips{margin-top:8px}
+.brbox{font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:800;font-size:calc(18px * var(--fs));background:var(--bg-subtle);border:1px solid var(--border-card);border-radius:8px;padding:10px 12px;margin-top:10px;white-space:pre-wrap;word-break:break-word;line-height:1.45}
+.ho .kick{gap:8px}
+.hon{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:99px;background:var(--text-primary);color:var(--bg-canvas);font-family:var(--font-num);font-weight:800;font-size:calc(17px * var(--fs));flex:none}
+.ho.crit .hon{background:var(--crimson-fill);color:#FFFFFF}
+.tmr{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:12px 0;border-bottom:1px solid var(--border-card)}
+.tmr:first-child{padding-top:0}.tmr:last-child{border-bottom:0;padding-bottom:0}
+.tml{flex:1 1 170px;min-width:0}
+.tml b{display:block;line-height:1.3}
+.tmv{font-family:var(--font-num);font-size:calc(36px * var(--fs));font-weight:900;font-variant-numeric:tabular-nums;line-height:1.1;margin-top:2px}
+.tmv.none{font-family:var(--font-sans);font-size:calc(17px * var(--fs));color:var(--text-muted);font-weight:600}
+.tma{color:var(--crimson);font-weight:800;font-variant-numeric:tabular-nums;font-size:calc(17px * var(--fs))}
+.tmb{display:flex;flex-direction:column;gap:6px;flex:1 1 130px;max-width:100%;min-width:0}
+.tmb .btn{margin:0;min-height:50px}
+.tmset{margin:0;font-size:calc(17px * var(--fs))}
+.tmset input{min-height:44px;padding:6px 8px;margin-top:2px;min-width:0;max-width:100%;width:100%;font-size:calc(17px * var(--fs))}
+.note.red{background:var(--crimson-soft);border-color:var(--crimson-border);border-left-color:var(--crimson-fill)}
+.note.red .ic{color:var(--crimson)}
+.hlc{font-size:calc(22px * var(--fs));font-weight:900;line-height:1.3;margin:12px 0 4px;display:flex;align-items:flex-start;gap:8px;color:var(--text-primary)}
+.hlc .ic{color:var(--crimson);margin-top:4px}
+.prv{overflow-x:auto;background:var(--bg-subtle);border:1px solid var(--border-card);border-radius:12px;padding:12px;-webkit-overflow-scrolling:touch}
+/* 打印件：固定白底黑字 */
+.wcard{display:flex;flex-wrap:wrap;gap:4mm;color:#111;font-family:var(--font-sans);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.wface{width:85.6mm;height:54mm;border:0.3mm dashed #6B7280;border-radius:3mm;background:#fff;color:#111;padding:2.5mm 3mm;overflow:hidden;position:relative;font-size:7pt;line-height:1.28;box-sizing:border-box;flex:none}
+.wface .wh{background:#B91C1C;color:#fff;font-weight:800;font-size:7.5pt;padding:1mm 3mm;margin:-2.5mm -3mm 1.5mm;letter-spacing:.3px;display:flex;justify-content:space-between;align-items:center;gap:2mm;min-height:5.5mm;box-sizing:border-box}
+.wname{font-size:11pt;font-weight:900;line-height:1.2;min-height:4mm}
+.wbt{background:#fff;color:#B91C1C;font-weight:900;font-size:10pt;line-height:1.1;padding:0 1.5mm;border-radius:1mm;font-family:var(--font-num);letter-spacing:0}
+.wrk{font-weight:800;color:#B91C1C;margin-top:.6mm}
+.wl{font-weight:700;color:#4B5563}
+.wt{margin-top:.8mm;word-break:break-word;margin-right:0}
+.wqr{position:absolute;right:3mm;bottom:5mm;width:19mm;height:19mm}
+.wqr svg,.fqr svg{width:100%;height:100%;display:block}
+.wqrc{position:absolute;right:23mm;bottom:5mm;width:30mm;font-size:6pt;color:#4B5563;text-align:right}
+.wdate{position:absolute;left:3mm;bottom:1.2mm;font-size:5.5pt;color:#6B7280}
+.fsheet{width:100%;max-width:186mm;background:#fff;color:#111;padding:6mm;font-size:11pt;line-height:1.4;border:0.3mm solid #D1D5DB;box-sizing:border-box;font-family:var(--font-sans);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.fh{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap;border-bottom:1mm solid #B91C1C;padding-bottom:2mm}
+.fh b{font-size:14pt;color:#B91C1C}.fh span{font-size:9pt;color:#4B5563}
+.fname{font-size:18pt;font-weight:900;margin-top:3mm}
+.fbt{display:inline-block;border:0.6mm solid #B91C1C;color:#B91C1C;border-radius:1.5mm;padding:0 2mm;font-size:15pt}
+.frk{margin-top:3mm;border:0.5mm solid #B91C1C;border-radius:2mm;padding:2mm 3mm;color:#7F1D1D}
+.frk .fk{font-weight:800;color:#B91C1C}
+.fr{display:grid;grid-template-columns:42mm 1fr;gap:3mm;border-bottom:0.2mm solid #D1D5DB;padding:2mm 0;break-inside:avoid}
+.fk{font-weight:800;color:#374151;font-size:9.5pt;line-height:1.3}
+.fv2{font-weight:700;white-space:pre-wrap;word-break:break-word}
+.famb{display:flex;justify-content:space-between;align-items:center;gap:4mm;margin-top:3mm;background:#FEF2F2;border:0.4mm solid #FECACA;border-radius:2mm;padding:2mm 3mm}
+.famb b{font-family:var(--font-num);font-size:24pt;color:#B91C1C}
+.fqrw{display:flex;align-items:center;gap:3mm;margin-top:3mm;font-size:9pt;color:#4B5563}.fqr{width:22mm;height:22mm;flex:none}
+.ffoot{margin-top:3mm;font-size:9pt;color:#4B5563}
+.fstk{display:flex;align-items:center;gap:4mm;width:95mm;max-width:100%;margin-top:6mm;border:1mm solid #047857;border-radius:4mm;padding:4mm;background:#fff;color:#111;break-inside:avoid;box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.fstk svg{width:16mm;height:16mm;flex:none}.fstk b{display:block;font-size:13pt;line-height:1.25}.fstk small{display:block;color:#4B5563;font-size:8pt;margin-top:1mm}
+#printArea{display:none}
+@page{size:A4;margin:12mm}
+@media print{
+  html.printing body>*:not(#printArea){display:none!important}
+  html.printing #printArea{display:block!important}
+  html.printing body{padding:0!important;margin:0!important;background:#fff!important}
+  html.printing .wcard{margin-bottom:6mm}
+  html.printing .wface,html.printing .fstk{break-inside:avoid}
+  html.printing .fsheet{border:0;padding:0;max-width:none}
+}
 </style>
 </head>
 <body>
@@ -461,7 +535,7 @@ var FEEDBACK_GOOGLE = _CFG.google||"";    // Google 表单链接，例如 https:
 var FEEDBACK_TENCENT = _CFG.tencent||"";  // 腾讯问卷链接，例如 https://wj.qq.com/s2/xxxx/xxxx/
 // 可选：Google 表单里"版本/国家/语言"那道简答题的编号（形如 entry.123456789）。填了以后会自动带入，留空也能用。
 var GOOGLE_PREFILL_ENTRY = _CFG.googleEntry||"";
-var VERSION = "MVP v0.5.2";
+var VERSION = "MVP v0.6.0";
 var VERIFIED_ON = "2026-11-17";   // 全部国家号码的统一核实日期；某国单独复核后，在该国数据里加 v:"YYYY-MM-DD"
 // 固定的正式网址：分享、锁屏图片一律用它，不用当前地址栏（避免分享出 file:// 或预览地址）。分享链接里永远不放任何个人信息。
 var SITE_URL = "https://jackyyhhxjyxn.github.io/emergency-card/";
@@ -1302,6 +1376,7 @@ function viewHome(c){var h="";
   if(c==="XX")h+='<div class="note" role="note">'+I("alert")+'<div>'+esc(t("xxNote").replace("{z}",tzLabel()))+'</div></div>';
   h+=staleNote(c);
   h+='<section class="card crit tri" id="tri" aria-labelledby="triQ">'+triHtml()+'</section>';
+  h+='<button class="helpbtn" id="helperGo"><span class="sg" aria-hidden="true">'+I("phone")+'</span><span><b>'+t("helpOT")+'</b><small>'+t("helpOS")+'</small></span>'+I("chevR","chev")+'</button>';
   h+='<div class="hentry"><button class="btn ghost" id="hospGo">'+I("pin")+t("hospGo")+'</button></div>';
   h+='<div class="note" role="note">'+I("info")+'<div>'+t("beta")+'</div></div>';
   h+='<h2 class="secH" id="cardsH" tabindex="-1"><b>'+t("cards")+'</b></h2><div class="grid">'+CARDS.map(function(k){
@@ -1341,6 +1416,7 @@ function hospHtml(c){var N=C[c].amb,cn=c==="CN",b=[];
     '<div class="src">'+t("srcT")+CO()+srcLine(srcs)+'</div></section>'}
 
 function viewSos(c){var d=C[c],h="";
+  h+='<button class="helpbtn" id="helperGo"><span class="sg" aria-hidden="true">'+I("phone")+'</span><span><b>'+t("helpOT")+'</b><small>'+t("helpOS")+'</small></span>'+I("chevR","chev")+'</button>';
   h+='<button class="helpbtn" id="helpGo"><span class="sg" aria-hidden="true">'+I("sos")+'</span><span><b>'+t("helpT")+'</b><small>'+t("helpS")+'</small></span>'+I("chevR","chev")+'</button>';
   if(c==="XX")h+='<div class="note" role="note">'+I("alert")+'<div>'+esc(t("xxNote").replace("{z}",tzLabel()))+'</div></div>';
   h+=staleNote(c);
@@ -1360,7 +1436,7 @@ function viewMe(){
   return '<div id="idBox"></div>'+
     '<section class="card"><div class="ml">'+I("globe")+'<div><b>'+t("mlT")+'</b><div class="mut" style="margin-top:4px">'+t("mlS")+'</div>'+
     '<button class="link" id="mlGo">'+t("mlGo")+I("chevR","s")+'</button></div></div></section>'+
-    '<section class="card"><div class="tip" style="border:0;padding:0;margin:0"><b>'+I("phone")+t("midT")+'</b>'+t("midWhy")+'<p>'+t("midIOS")+'</p><p>'+t("midAnd")+'</p><div class="src" style="margin-top:8px">'+t("srcT")+CO()+srcLine([48,49])+'</div></div></section>'}
+    '<section class="card"><div class="tip" style="border:0;padding:0;margin:0"><b>'+I("phone")+t("midT")+'</b>'+t("midWhy")+'<p>'+t("midIOS")+'</p><p class="mcs" style="margin-top:6px"><b>'+t("midShare")+'</b></p><p>'+t("midAnd")+'</p><div class="src" style="margin-top:8px">'+t("srcT")+CO()+srcLine([48,104,49])+'</div></div></section>'}
 
 function aboutHtml(c){
   return '<section class="card about"><div class="kick">'+t("aboutT")+'</div>'+
@@ -1441,36 +1517,7 @@ var BT=["A+","A-","B+","B-","AB+","AB-","O+","O-"];
 function bi(k){return lang==="zh"?T[k][0]+" · "+T[k][1]:T[k][1]+" · "+T[k][0]}
 function phoneIn(s){var m=/\+?\d[\d\s\-()]{4,}\d/.exec(s||"");if(!m)return "";var n=m[0].replace(/[^\d+]/g,"");return n.length>=6?n:""}
 function fval(v){return v?'<div class="fv">'+esc(v)+'</div>':'<div class="fv none">'+t("none")+'</div>'}
-function renderId(editing){
-  var box=$("idBox");if(!box)return;
-  var d={};try{d=JSON.parse(load("ec_id")||"{}")}catch(e){}
-  var F=[["name","fName"],["blood","fBlood"],["allergy","fAll"],["cond","fCond"],["med","fMed"],["ice","fIce"]];
-  var has=F.some(function(f){return d[f[0]]});
-  var h="";
-  if(editing){
-    h+='<section class="card"><div class="kick red">'+I("idc","s")+t("idK")+'</div><div class="muted" style="margin-top:4px">'+t("idHint")+'</div><div class="muted" style="margin-top:6px"><b>'+t("idEnHint")+'</b></div>'+
-       '<label>'+t("fName")+'<input data-f="name" value="'+esc(d.name||"")+'" autocomplete="off"></label>'+
-       '<label id="bLbl">'+t("fBlood")+'</label><div class="muted">'+t("bHint")+'</div><div class="bgrid" role="group" aria-labelledby="bLbl">'+
-       BT.concat([t("bUnk")]).map(function(b){return '<button class="bchoice" data-bt="'+esc(b)+'" aria-pressed="'+(d.blood===b)+'">'+esc(b)+'</button>'}).join("")+'</div>'+
-       '<input data-f="blood" id="bIn" value="'+esc(d.blood||"")+'" autocomplete="off" aria-label="'+esc(t("fBlood"))+'">'+
-       [["allergy","fAll"],["cond","fCond"],["med","fMed"],["ice","fIce"]].map(function(f){return '<label>'+t(f[1])+'<input data-f="'+f[0]+'" value="'+esc(d[f[0]]||"")+'" autocomplete="off"></label>'}).join("")+
-       '<button class="btn red" id="idSave">'+t("save")+'</button><button class="btn ghost" id="idClear">'+t("clear")+'</button></section>';
-  }else{
-    var bl=d.blood||"",lg=bl.length>4;
-    if(has)h+='<button class="btn red" id="mcGo" style="margin:0 0 12px">'+I("globe")+t("mcBtn")+'</button>';
-    h+='<section class="card"><div class="hrow"><div class="hinfo"><div class="kick red">'+t("idK")+'</div>'+
-       '<div class="pname'+(d.name?'':' ph')+'">'+esc(d.name||t("nameNone"))+'</div><div class="mut">'+t("idHint")+'</div></div>'+
-       '<div class="rblock'+(bl?'':' empty')+'" role="img" aria-label="'+esc(t("fBlood")+CO()+(bl||t("none")))+'"><span class="rk" aria-hidden="true">'+t("bloodK")+'</span><span class="rv'+(lg?' long':'')+'" aria-hidden="true">'+esc(bl||"?")+'</span></div></div></section>';
-    if(!has){box.innerHTML=h+'<button class="btn red" id="idEdit" style="margin:0 0 12px">'+t("edit")+'</button>';return}
-    h+='<section class="card crit"><div class="kick red">'+I("alert","s")+bi("fAll")+'</div>'+fval(d.allergy)+'</section>';
-    h+='<section class="card"><div class="frow"><div class="kick">'+bi("fCond")+'</div>'+fval(d.cond)+'</div><div class="frow"><div class="kick">'+bi("fMed")+'</div>'+fval(d.med)+'</div></section>';
-    var ph=phoneIn(d.ice);
-    h+='<section class="card"><div class="kick">'+bi("fIce")+'</div>'+fval(d.ice)+
-       (ph?'<a class="btn grn" href="'+tel(ph)+'" aria-label="'+esc(t("iceCall")+SEP()+digits(ph))+'">'+phoneIco()+t("iceCall")+'</a>':'')+'</section>';
-    h+='<button class="btn ghost" id="idEdit" style="margin:0 0 12px">'+t("edit")+'</button>';
-  }
-  box.innerHTML=h;
-}
+/* renderId：v0.6.0 起移到下方 v0.6.0 区块（多档案 + 高危勾选） */
 
 /* ===================== 全屏层 ===================== */
 var cur=null,lastFocus=null;
@@ -1507,6 +1554,7 @@ function renderCard(keep){
   function fill(s){return esc(s).replace(/\{N\}/g,'<b>'+esc(N)+'</b>')}
   var dont='<ul>'+k.dont.map(function(s){return '<li>'+esc(L(s))+'</li>'}).join("")+'</ul>';
   var h='<div class="shead"><button class="back" id="bk">'+I("chevL")+t("back")+'</button><span class="sp"></span>'+
+    (/^(stroke|seiz|cpr)$/.test(k.id)?'<button class="chip" id="tmGo">'+I("clock","s")+t("tmShort")+'</button>':'')+
     '<button class="chip" id="voiceBtn" aria-pressed="'+(cur.voice?"true":"false")+'" aria-label="'+esc(cur.voice?t("voiceOnA"):t("voiceOffA"))+'">'+I(cur.voice?"vol":"mute")+'</button>'+
     '</div>'+
     '<div class="ttl">'+sign(k.id,k.top?"red":"")+'<h1 id="sheetT" tabindex="-1">'+esc(k[lang])+'</h1></div>'+
@@ -1594,7 +1642,7 @@ function openHelp(){
 function mcPick(c){var m=load("ec_mlang");if(m==="en")return "en";if(m&&MCL[m])return m;if(ZHT[c])return "zht";if(c==="CN")return "zhs";return MCC[c]||""}
 function openMed(){
   metroStop();hush();cur=null;
-  var c=cc(),d={};try{d=JSON.parse(load("ec_id")||"{}")}catch(e){}
+  var c=cc(),d=getId(),rk=riskOf(d);
   var lk=mcPick(c),P=MCL[lk]||null,m=load("ec_mlang");
   var autoK=ZHT[c]?"zht":c==="CN"?"zhs":(MCC[c]||"");
   var autoN=autoK==="zht"?"繁體中文":autoK==="zhs"?"简体中文":autoK?MCL[autoK].own:"English";
@@ -1608,11 +1656,12 @@ function openMed(){
 
   if(!m&&MCMULTI[c])h+='<div class="note" role="note" style="margin-top:12px">'+I("info")+'<div>'+esc(t("mcMulti").replace("{c}",nm(c)))+'</div></div>';
   if(!m&&!autoK&&MCNOSRC[c])h+='<div class="note" role="note" style="margin-top:12px">'+I("info")+'<div>'+esc(t("mcNoSrc").replace("{c}",nm(c)))+'</div></div>';
-  var F=[["name","fName"],["blood","fBlood"],["allergy","fAll",1],["med","fMed"],["cond","fCond"],["ice","fIce"]];
-  var has=F.some(function(f){return d[f[0]]});
+  var F=[["name","fName"],["blood","fBlood"],["allergy","fAll",1],["med","fMed"],["cond","fCond"],["ice","fIce"],["ins","fIns",0,1],["insTel","fInsTel",0,1]];
+  var has=idHas(d);
   if(!has){h+='<div class="note" role="note" style="margin-top:12px">'+I("info")+'<div>'+t("mcEmpty")+'</div></div>'+pk;showSheet(h,callBtn(c));return}
   h+='<div class="mc"><div class="mcf"><div class="kick red" style="color:#B91C1C">'+t("mcK")+'</div></div>';
-  F.forEach(function(f){var k=f[0],v=d[k]||"";
+  if(rk.length)h+='<div class="mcf crit"><div class="mcl">HIGH-RISK</div><div class="mce">'+esc(T.rkK[0])+'</div><ul class="rkl">'+rk.map(function(x){return rkLi(x,lk)}).join("")+'</ul>'+rkNotes(rk)+'</div>';
+  F.forEach(function(f){var k=f[0],v=d[k]||"";if(f[3]&&!v)return;
     var zh=lk==="zht"||lk==="zhs";
     var loc=lk==="zht"?MCZT[k]:lk==="zhs"?T[f[1]][0]:(P&&P.f[k])||"";
     var both=zh?T[f[1]][1]:lang==="zh"?T[f[1]][0]+" · "+T[f[1]][1]:T[f[1]][1]+" · "+T[f[1]][0];
@@ -1625,6 +1674,7 @@ function openMed(){
   h+='</div>';
   h+='<div class="mcs"><b>'+t("mcAsIs")+'</b> '+t("mcPriv")+'</div>';
   if(lk==="zht")h+='<div class="mcs">'+t("mcZht")+'</div>';
+  if(rk.some(function(x){return rkLoc(x,lk)}))h+='<div class="mcs"><span class="pend">'+t("lpPend")+'</span> '+t("rkLocN")+' '+t("mcLblSrc")+CO()+srcLine(RK_SRC[lk])+'</div>';
   if(P)h+='<div class="mcs">'+(P.ok?'':'<span class="pend">'+t("lpPend")+'</span> ')+(P.fix?esc(t("mcFix"))+' ':'')+(P.ng?esc(t("mcNg"))+' ':'')+t("mcLblSrc")+CO()+srcLine([71].concat(P.src))+'</div>';
   h+=pk+awkHtml();
   showSheet(h,callBtn(c),!!openMed.keep);openMed.keep=false;
@@ -1708,6 +1758,10 @@ function route(){var h=location.hash.slice(1);
   if(h==="help"){openHelp();return}
   if(h==="wall"){openWall();return}
   if(h==="med"){openMed();return}
+  if(h==="helper"){openHelper();return}
+  if(h==="timer"){openTimer();return}
+  if(h==="hand"){openHand();return}
+  if(h==="print"){openPrint();return}
   if(h in TABN){var nt=TABN[h];closeSheet();if(nt!==tab){tab=nt;renderMain();window.scrollTo(0,0)}return}
   openCard(h)}
 var skipHash=null;
@@ -1760,6 +1814,355 @@ function copyText(s,done){
   if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(s).then(ok,fallback)}else fallback();
   function fallback(){try{var a=document.createElement("textarea");a.value=s;document.body.appendChild(a);a.select();document.execCommand("copy");a.remove();ok()}catch(e){}}
 }
+
+/* ===================== v0.6.0：病人用不了自己的手机时 =====================
+   帮别人呼救、发病时间记录、打印钱包卡 + 冰箱单、手环刻字建议、高危勾选项、家人代管多档案、交接页、保险与救援热线。
+   规则不变：所有数据只存在本机（localStorage），从不进网址、分享、锁屏图片、二维码或反馈；打印在本机浏览器完成，不经过任何服务器。
+   新来源 98–113（编号只追加不删改）。 */
+SRC[98]=["英国 NICE TA264：阿替普酶（溶栓）须在中风症状开始后 4.5 小时内尽早开始","UK NICE TA264: alteplase must start as early as possible within 4.5 hours of stroke symptom onset","https://www.nice.org.uk/guidance/ta264/chapter/1-Guidance"];
+SRC[99]=["NHS：有人抽搐时怎么办（记下开始和结束时间；不知道平时多久时超过 5 分钟要叫救护车）","NHS: What to do if someone has a seizure (note start and end time; over 5 minutes if you don't know their usual length)","https://www.nhs.uk/symptoms/what-to-do-if-someone-has-a-seizure-fit"];
+SRC[100]=["英国东北救护车服务（NHS）：Message in a Bottle（表放冰箱门里，贴纸贴冰箱门和大门内侧）","North East Ambulance Service (NHS): Message in a Bottle (form in the fridge door; stickers on the fridge and inside the front door)","https://www.neas.nhs.uk/community-learning/message-bottle"];
+SRC[101]=["MedicAlert 基金会（引美国急诊医师学会 ACEP）：手环信息的优先顺序","MedicAlert Foundation (citing ACEP): priority order of information on a medical ID","https://www.medicalert.org/medical-id/bracelets"];
+SRC[102]=["美国 Nationwide 儿童医院：Medical Identification（急救人员受训先看手腕）","Nationwide Children's Hospital: Medical Identification (emergency providers are trained to look at wrists first)","https://www.nationwidechildrens.org/-/media/nch/family-resources/helping-hands/documents/hh47.pdf"];
+SRC[103]=["美国国家医学图书馆 MedlinePlus：医疗警示手环（糖尿病、癫痫、心脏病患者应佩戴）","US National Library of Medicine MedlinePlus: medical alert bracelet (people with diabetes, seizure disorders or heart disease)","https://medlineplus.gov/ency/patientimages/000264.htm"];
+SRC[104]=["Apple Watch 使用手册：拨打急救电话时共享医疗急救卡（仅限美国和加拿大）","Apple Watch User Guide: share Medical ID when calling emergency services (U.S. and Canada only)","https://support.apple.com/bn-in/guide/watch/apd58cd0b3f4/11.0"];
+SRC[105]=["英国西米德兰兹救护车服务（NHS）：拨打 999 时会被问什么（呼吸、清醒、地址、电话；情况或位置变化再打）","West Midlands Ambulance Service (NHS): what happens when you call 999 (breathing, conscious, address, number; call back if things change)","https://wmas.nhs.uk/advice-resources/calling-999/"];
+SRC[106]=["健康中国（新华网转载，2026-09-12）：120 急救电话怎么打（地址、病情、呼救者电话；保持畅通；派人接应）","Healthy China (via Xinhua, 12 Sept 2026): how to call 120 (address, condition, caller's number; keep the line free; send someone to meet the ambulance)","https://www.news.cn/politics/20260912/48f7796e84f543248b8e1fe407be885d/c.html"];
+SRC[107]=["英国红十字会：How to call an ambulance（尽量派人去接应救护车）","British Red Cross: How to call an ambulance (send someone to meet the ambulance)","https://www.redcross.org.uk/stories/health-and-social-care/first-aid/how-to-call-an-ambulance"];
+SRC[108]=["澳大利亚政府 Triple Zero：Advanced Mobile Location（拨打时手机自动发送位置）","Australian Government Triple Zero: Advanced Mobile Location (the phone sends its location automatically)","https://triplezero.gov.au/triple-zero/How-to-Call-000/advanced-mobile-location"];
+SRC[109]=["欧洲紧急号码协会 EENA：Advanced Mobile Location（AML）","European Emergency Number Association (EENA): Advanced Mobile Location (AML)","https://eena.org/advanced-mobile-location/"];
+SRC[110]=["英国格洛斯特郡医院（NHS）：住院请带上家里所有的药（原包装，含胰岛素、吸入剂、药盒、中草药）","Gloucestershire Hospitals (NHS): bring all your medicines to hospital in original containers (incl. insulin, inhalers, pill boxes, herbal)","https://gloshospitals.nhs.uk/your-visit/patient-information-leaflets/going-hospital-please-take-your-medicines-you-ghpi0928_02_19"];
+SRC[111]=["英国心脏基金会 BHF：起搏器与 MRI（任何检查或操作前告诉医护并出示起搏器卡）","British Heart Foundation: pacemakers and MRI (tell staff and show your pacemaker card before any test or procedure)","https://www.bhf.org.uk/informationsupport/heart-matters-magazine/medical/ask-the-experts/pacemaker-and-mri-scan"];
+SRC[112]=["NHS England：Steroid Emergency Card（激素依赖者随身携带并出示）","NHS England: Steroid Emergency Card (carried by steroid-dependent patients)","https://www.england.nhs.uk/2020/08/steroid-emergency-card-to-support-early-recognition-and-treatment-of-adrenal-crisis/"];
+SRC[113]=["日本厚生劳动省：外国患者受理手册（诊疗申请书含民间医疗保险信息栏）","Japan MHLW: guide for receiving foreign patients (registration form includes private medical insurance details)","https://www.mhlw.go.jp/content/000927892.pdf"];
+
+/* 二维码：只编码固定首页网址 SITE_URL，不含任何个人信息。版本 4、纠错 M、整数像素（每格 1 个单位，crispEdges），生成后已用 OpenCV 解码核对。 */
+var QR_SVG='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 41 41" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M4 4h7v1h-7zM12 4h1v1h-1zM14 4h2v1h-2zM17 4h2v1h-2zM21 4h2v1h-2zM24 4h2v1h-2zM30 4h7v1h-7zM4 5h1v1h-1zM10 5h1v1h-1zM13 5h2v1h-2zM16 5h1v1h-1zM25 5h1v1h-1zM28 5h1v1h-1zM30 5h1v1h-1zM36 5h1v1h-1zM4 6h1v1h-1zM6 6h3v1h-3zM10 6h1v1h-1zM12 6h6v1h-6zM21 6h1v1h-1zM25 6h4v1h-4zM30 6h1v1h-1zM32 6h3v1h-3zM36 6h1v1h-1zM4 7h1v1h-1zM6 7h3v1h-3zM10 7h1v1h-1zM13 7h1v1h-1zM19 7h1v1h-1zM23 7h1v1h-1zM25 7h4v1h-4zM30 7h1v1h-1zM32 7h3v1h-3zM36 7h1v1h-1zM4 8h1v1h-1zM6 8h3v1h-3zM10 8h1v1h-1zM14 8h2v1h-2zM19 8h1v1h-1zM23 8h1v1h-1zM26 8h1v1h-1zM30 8h1v1h-1zM32 8h3v1h-3zM36 8h1v1h-1zM4 9h1v1h-1zM10 9h1v1h-1zM12 9h1v1h-1zM19 9h1v1h-1zM21 9h3v1h-3zM28 9h1v1h-1zM30 9h1v1h-1zM36 9h1v1h-1zM4 10h7v1h-7zM12 10h1v1h-1zM14 10h1v1h-1zM16 10h1v1h-1zM18 10h1v1h-1zM20 10h1v1h-1zM22 10h1v1h-1zM24 10h1v1h-1zM26 10h1v1h-1zM28 10h1v1h-1zM30 10h7v1h-7zM13 11h3v1h-3zM18 11h3v1h-3zM23 11h2v1h-2zM26 11h1v1h-1zM4 12h1v1h-1zM6 12h1v1h-1zM10 12h2v1h-2zM13 12h2v1h-2zM20 12h1v1h-1zM24 12h1v1h-1zM27 12h1v1h-1zM31 12h1v1h-1zM34 12h1v1h-1zM36 12h1v1h-1zM7 13h1v1h-1zM9 13h1v1h-1zM13 13h1v1h-1zM17 13h1v1h-1zM19 13h1v1h-1zM21 13h1v1h-1zM23 13h2v1h-2zM27 13h2v1h-2zM30 13h1v1h-1zM33 13h1v1h-1zM36 13h1v1h-1zM4 14h1v1h-1zM6 14h1v1h-1zM8 14h1v1h-1zM10 14h1v1h-1zM13 14h1v1h-1zM19 14h2v1h-2zM23 14h3v1h-3zM27 14h1v1h-1zM33 14h2v1h-2zM36 14h1v1h-1zM4 15h1v1h-1zM6 15h3v1h-3zM11 15h2v1h-2zM14 15h2v1h-2zM17 15h1v1h-1zM19 15h1v1h-1zM21 15h1v1h-1zM27 15h1v1h-1zM30 15h4v1h-4zM35 15h1v1h-1zM5 16h2v1h-2zM10 16h2v1h-2zM15 16h3v1h-3zM19 16h1v1h-1zM21 16h1v1h-1zM26 16h1v1h-1zM28 16h1v1h-1zM30 16h2v1h-2zM36 16h1v1h-1zM8 17h2v1h-2zM11 17h1v1h-1zM13 17h2v1h-2zM16 17h2v1h-2zM25 17h1v1h-1zM27 17h2v1h-2zM30 17h2v1h-2zM33 17h4v1h-4zM4 18h1v1h-1zM6 18h1v1h-1zM8 18h1v1h-1zM10 18h3v1h-3zM14 18h2v1h-2zM17 18h3v1h-3zM23 18h1v1h-1zM25 18h3v1h-3zM32 18h1v1h-1zM34 18h1v1h-1zM36 18h1v1h-1zM5 19h3v1h-3zM12 19h2v1h-2zM16 19h3v1h-3zM22 19h1v1h-1zM27 19h1v1h-1zM29 19h3v1h-3zM33 19h1v1h-1zM4 20h4v1h-4zM9 20h2v1h-2zM15 20h2v1h-2zM19 20h2v1h-2zM23 20h1v1h-1zM27 20h2v1h-2zM30 20h2v1h-2zM33 20h1v1h-1zM35 20h1v1h-1zM5 21h1v1h-1zM7 21h1v1h-1zM12 21h2v1h-2zM17 21h1v1h-1zM19 21h2v1h-2zM23 21h3v1h-3zM27 21h2v1h-2zM30 21h1v1h-1zM33 21h1v1h-1zM36 21h1v1h-1zM5 22h1v1h-1zM7 22h5v1h-5zM13 22h3v1h-3zM17 22h3v1h-3zM21 22h3v1h-3zM27 22h1v1h-1zM29 22h3v1h-3zM33 22h2v1h-2zM36 22h1v1h-1zM4 23h1v1h-1zM6 23h1v1h-1zM9 23h1v1h-1zM12 23h1v1h-1zM15 23h4v1h-4zM20 23h1v1h-1zM22 23h1v1h-1zM26 23h2v1h-2zM29 23h2v1h-2zM32 23h2v1h-2zM35 23h2v1h-2zM7 24h5v1h-5zM16 24h7v1h-7zM24 24h5v1h-5zM30 24h2v1h-2zM7 25h2v1h-2zM12 25h1v1h-1zM16 25h3v1h-3zM20 25h3v1h-3zM24 25h2v1h-2zM27 25h5v1h-5zM33 25h1v1h-1zM36 25h1v1h-1zM4 26h3v1h-3zM10 26h4v1h-4zM16 26h2v1h-2zM20 26h3v1h-3zM24 26h4v1h-4zM29 26h1v1h-1zM34 26h1v1h-1zM36 26h1v1h-1zM7 27h1v1h-1zM11 27h2v1h-2zM15 27h2v1h-2zM19 27h2v1h-2zM22 27h3v1h-3zM28 27h1v1h-1zM30 27h2v1h-2zM33 27h1v1h-1zM35 27h2v1h-2zM4 28h2v1h-2zM8 28h4v1h-4zM14 28h1v1h-1zM18 28h1v1h-1zM28 28h5v1h-5zM12 29h15v1h-15zM28 29h1v1h-1zM32 29h1v1h-1zM36 29h1v1h-1zM4 30h7v1h-7zM12 30h1v1h-1zM14 30h1v1h-1zM16 30h2v1h-2zM19 30h2v1h-2zM23 30h2v1h-2zM28 30h1v1h-1zM30 30h1v1h-1zM32 30h5v1h-5zM4 31h1v1h-1zM10 31h1v1h-1zM13 31h4v1h-4zM18 31h1v1h-1zM21 31h1v1h-1zM23 31h1v1h-1zM25 31h1v1h-1zM27 31h2v1h-2zM32 31h2v1h-2zM35 31h2v1h-2zM4 32h1v1h-1zM6 32h3v1h-3zM10 32h1v1h-1zM14 32h2v1h-2zM17 32h2v1h-2zM21 32h1v1h-1zM25 32h1v1h-1zM27 32h6v1h-6zM4 33h1v1h-1zM6 33h3v1h-3zM10 33h1v1h-1zM13 33h2v1h-2zM25 33h1v1h-1zM27 33h1v1h-1zM29 33h1v1h-1zM31 33h2v1h-2zM36 33h1v1h-1zM4 34h1v1h-1zM6 34h3v1h-3zM10 34h1v1h-1zM12 34h1v1h-1zM14 34h3v1h-3zM18 34h2v1h-2zM21 34h1v1h-1zM23 34h1v1h-1zM25 34h5v1h-5zM31 34h3v1h-3zM35 34h2v1h-2zM4 35h1v1h-1zM10 35h1v1h-1zM17 35h2v1h-2zM28 35h1v1h-1zM30 35h4v1h-4zM4 36h7v1h-7zM12 36h1v1h-1zM14 36h1v1h-1zM19 36h2v1h-2zM23 36h2v1h-2zM27 36h2v1h-2zM30 36h4v1h-4zM36 36h1v1h-1z"/></svg>';
+
+var T6={
+helpOT:["我在帮别人","I'm helping someone"],helpOS:["用你的手机为病人呼救：电话里说什么、位置、接应救护车","Call for someone else on your phone: what to say, your location, meeting the ambulance"],
+hlT:["帮别人呼救","Calling for someone else"],
+hlCall:["先拨打 {N}，开免提，边说边照顾病人。","Call {N} first, on speaker, so you can keep helping."],
+hlSayT:["接线员通常会问这几件事","The call handler will usually ask"],
+hl1:["在哪里：详细地址，或附近的地标、路口","Where: the exact address, or a nearby landmark or junction"],
+hl2:["发生了什么：主要症状或原因","What happened: the main symptom or reason"],
+hl3:["他（她）清醒吗？","Are they conscious?"],
+hl4:["他（她）有呼吸吗？","Are they breathing?"],
+hl5:["你的电话号码（断线时对方能打回来）","Your phone number (so they can call back if cut off)"],
+hlAfterT:["挂断以后","After the call"],
+hlA1:["保持电话畅通，接线员可能会打回来。","Keep your phone free — they may call you back."],
+hlA2:["条件允许时，派人到门口、路口或显眼的地标接应救护车。","If you can, send someone to the door, a junction or a clear landmark to meet the ambulance."],
+hlA3:["病人情况变化，或你换了位置：再打一次。","If their condition or your location changes, call again."],
+hlLoc:["你的位置（备用）","Your location (backup)"],
+hlAml:["在英国、欧洲多国和澳大利亚等地，很多手机拨打急救电话时会自动把位置发给急救中心（AML）。下面的坐标只作备用，需要时念给接线员听。","In the UK, much of Europe, Australia and elsewhere, many phones send their location automatically when you call (AML). The coordinates below are only a backup to read out if asked."],
+hlTm:["记录发病时间","Record the times"],hlCards:["看急救步骤","See first-aid steps"],
+tmShort:["记时间","Times"],
+tmT:["发病时间记录","Time record"],
+tmS:["点“现在”记下时间，或用“改时间”补记更早的时间。只存在本手机。急救人员到了，把这一页给他们看。","Tap “Now” to record a time, or use “Set time” for an earlier one. Saved on this phone only. Show this page to the ambulance crew."],
+tmOn:["症状开始","Symptoms started"],tmWell:["最后一次看到他正常","Last seen well"],tmSz:["抽搐开始","Seizure started"],tmSe:["抽搐结束","Seizure ended"],tmCpr:["开始按压（心肺复苏）","CPR started"],tmCall:["拨打急救电话","Emergency call made"],
+tmNow:["现在","Now"],tmSet:["改时间","Set time"],tmAgo:["已过 {t}","{t} ago"],tmNone:["未记录","Not recorded"],
+tmClr:["清除全部时间记录","Clear all times"],
+tmStroke:["中风：溶栓治疗要在症状开始后 4.5 小时内尽早开始（英国 NICE）。请把上面的时间告诉急救人员。","Stroke: clot-busting treatment must start as early as possible within 4.5 hours of symptoms starting (UK NICE). Tell the ambulance crew the times above."],
+tmSeiz:["抽搐：记下开始和结束的时间。如果不知道他平时发作多久，超过 5 分钟就要拨打 {N}（NHS）。","Seizure: note when it starts and ends. If you don’t know how long their seizures usually last, call {N} if it lasts more than 5 minutes (NHS)."],
+tmSeizOver:["抽搐已超过 5 分钟。如果不知道他平时发作多久，请立即拨打 {N}。","The seizure has lasted more than 5 minutes. If you don’t know how long their seizures usually last, call {N} now."],
+tmNoDx:["本页只记录时间，不做任何诊断，也不给用药建议。","This page only records times — no diagnosis and no medicine advice."],
+prT:["打印：钱包卡 + 冰箱单","Print: wallet card + fridge sheet"],
+prS:["手机锁着、没电或丢了时，急救人员还能看到纸上的信息。打印在本机浏览器里完成，不经过服务器。","If the phone is locked, flat or lost, responders can still read the paper. Printing happens in this browser; nothing goes to a server."],
+prW:["钱包卡（信用卡大小，正反两面，剪下后对折）","Wallet card (credit-card size, front and back — cut out and fold)"],
+prF:["冰箱单（A4）+ 大门内侧提示贴","Fridge sheet (A4) + front-door sticker"],
+prGo:["打印 / 存为 PDF","Print / save as PDF"],
+prWx:["微信里不能打印：点右上角“···”→“在浏览器打开”，再打印。","WeChat can’t print: tap “···” → “Open in browser”, then print."],
+prPriv:["纸上有健康信息，看到的人都能读到。钱包卡随身带，冰箱单只放在家里。信息变了请重新打印。","The paper shows health details to anyone who sees it. Keep the wallet card on you and the fridge sheet at home. Reprint whenever something changes."],
+prQr:["二维码只打开急救卡网站首页，不含任何个人信息。","The QR code only opens the Emergency Card home page — it contains no personal information."],
+prQrS:["扫码：急救卡网站（不含个人信息）","Scan: Emergency Card website (no personal data)"],
+prHow:["Message in a Bottle 的做法：把冰箱单放在冰箱门里（可装进瓶子或袋子），把提示贴贴在大门内侧，急救人员看到会去冰箱找。","The Message in a Bottle approach: keep the fridge sheet in the fridge door (in a bottle or bag) and put the sticker inside your front door so responders know to look in the fridge."],
+prStk:["急救信息在冰箱里","Medical information in the fridge"],
+prDate:["打印日期","Printed"],prMore:["另有 {n} 项，见手机或冰箱单","+{n} more — see phone or fridge sheet"],
+prEmpty:["还没有填写急救信息。先在“我的卡”填写。","No medical information yet. Fill in My card first."],
+prWho:["打印的是当前档案：{p}。要打印家人的，先在“我的卡”切换档案。","Printing the current profile: {p}. To print a family member’s, switch profile in My card first."],
+prOver:["钱包卡放不下全部文字，打印出来会被截掉。请缩短“我的卡”里的文字，或以冰箱单为准。","Not everything fits on the wallet card and the printout will be cut off. Shorten the text in My card, or rely on the fridge sheet."],
+prBtn:["打印钱包卡 / 冰箱单","Print wallet card / fridge sheet"],
+brT:["医疗手环刻字建议","Medical ID bracelet: what to engrave"],
+brS:["急救人员受训会先看手腕。你勾选了急救人员需要马上知道的情况，可以考虑戴医疗手环或项链。","Emergency staff are trained to look at the wrist first. You ticked something responders need to know at once, so consider a medical ID bracelet or necklace."],
+brOrder:["按美国急诊医师学会（ACEP）建议的顺序：严重过敏 → 药物（如抗凝药）→ 疾病 → 体内器械。空间不够时保留前面几行。","In the order suggested by the American College of Emergency Physicians: severe allergies → medicines (e.g. blood thinners) → conditions → implanted devices. If space runs out, keep the top lines."],
+brNote:["下面用英文大写，方便各国急救人员看；具体写什么，请和你的医生确认。","Shown in English capitals for responders anywhere; check the exact wording with your doctor."],
+brCopy:["复制刻字文字","Copy engraving text"],
+rkT:["高危情况（点选）","High-risk conditions (tap to tick)"],
+rkS:["勾选的项目会按重要性排在最前面，并显示英文；有可靠来源的语言还会显示当地语言。具体药名请写在下面的栏里。","Ticked items are shown first, in order of importance, in English — plus the local language where a reliable source exists. Write drug names in the fields below."],
+rkK:["高危情况","High-risk"],
+rkPm:["做任何检查或操作（包括 MRI）前，先告诉医护有起搏器 / ICD，并出示器械卡。","Before any test or procedure (including MRI), tell staff about the pacemaker/ICD and show the device card."],
+rkSt:["有激素急救卡（如英国 NHS Steroid Emergency Card）的，请一并出示。","If you carry a steroid emergency card (e.g. the NHS Steroid Emergency Card), show it too."],
+rkLocN:["当地语言词取自日本厚生劳动省问诊票（多数从问句中截取），待母语者核对；没有来源的项目只显示英文和中文。","Local-language terms come from Japan MHLW questionnaires (mostly taken from questions), pending native-speaker check; items without a source show English and Chinese only."],
+pfK:["档案","Profiles"],pfMe:["本人","Me"],pfAdd:["添加家人","Add family member"],pfFam:["家人 {n}","Family {n}"],
+pfHint:["可以给父母、孩子各存一份，只存在本手机。需要时切换到那份，打开给医生看。最多 6 份。","Keep a profile for each parent or child, on this phone only. Switch to it and show the doctor when needed. Up to 6."],
+pfName:["档案名称（例如：妈妈、孩子）","Profile name (e.g. Mum, child)"],
+pfDel:["删除这份档案","Delete this profile"],pfDelArm:["再点一次，确认删除","Tap again to confirm"],
+fBase:["平时的状态","Usual state"],fBaseP:["例如：能自己走路、说话清楚","e.g. walks unaided, speaks clearly"],
+fMedLoc:["药放在哪里","Where the medicines are kept"],fMedLocP:["例如：厨房左边抽屉里的蓝色药盒","e.g. blue box in the left kitchen drawer"],
+fIns:["境外医疗保险（保险公司、保单号）","Travel medical insurance (insurer, policy no.)"],fInsP:["保险公司名称和保单号","Insurer name and policy number"],
+fInsTel:["保险公司 24 小时救援热线","Insurer 24-hour assistance line"],fInsTelP:["保险卡或保单上的救援电话","The assistance number on your card or policy"],
+insCall:["拨打救援热线","Call assistance line"],
+insWhy:["日本厚生劳动省给医院的外国患者诊疗申请书样本里，就有民间医疗保险信息栏。","Japan’s MHLW sample registration form for foreign patients includes a private medical insurance section."],
+insPriv:["保单号只存在本手机；打印的钱包卡上会显示，注意保管。","The policy number is stored on this phone only; it appears on the printed wallet card, so keep it safe."],
+hoBtn:["交给医生（交接页）","Hand over to the doctor"],
+hoT:["交给医生 · HANDOVER","HANDOVER · 交给医生"],
+hoS:["按急救人员最先需要知道的顺序排列。","In the order responders need it."],
+hoDev:["体内器械","Implanted device"],hoTimes:["记录的时间","Recorded times"],
+hoBring:["药放在：{x}。请把家里所有的药带去医院，用原包装，包括胰岛素、吸入剂、药盒和中草药。","Medicines are kept: {x}. Bring all medicines from home to hospital in their original packaging, including insulin, inhalers, pill boxes and herbal remedies."],
+hoBringN:["请把家里所有的药带去医院，用原包装，包括胰岛素、吸入剂、药盒和中草药。","Bring all medicines from home to hospital in their original packaging, including insulin, inhalers, pill boxes and herbal remedies."],
+hoNone:["未勾选","None ticked"],
+midShare:["iPhone 的“紧急呼叫时共享”（Share During Emergency Call）只在美国和加拿大有效；在其他国家，请务必打开“锁定时显示”。","iPhone’s “Share During Emergency Call” only works in the US and Canada; elsewhere, make sure “Show When Locked” is on."],
+clrS:["删除本机保存的全部档案（含家人）、发病时间记录、国家选择、语言和显示设置。","Deletes all profiles (including family), time records, country choice, language and display settings saved on this phone."]
+};
+for(var _k6 in T6)T[_k6]=T6[_k6];
+
+ICO.clock='<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/>';
+ICO.print='<path d="M7 9V3.5h10V9"/><rect x="3.5" y="9" width="17" height="8" rx="2"/><path d="M7 14h10v6.5H7z"/>';
+ICO.users='<circle cx="9" cy="8" r="3.3"/><path d="M2.8 20a6.2 6.2 0 0 1 12.4 0"/><path d="M16 4.8a3.3 3.3 0 0 1 0 6.4M18 14.2a6.2 6.2 0 0 1 3.2 5.8"/>';
+
+/* ---------- 家人代管：多份档案（localStorage "ec_prof"；旧版单份 "ec_id" 在第一次保存时自动并入第 1 份） ---------- */
+var PF_MAX=6;
+function profs(){var p=null;try{p=JSON.parse(load("ec_prof")||"null")}catch(e){}
+  if(!p||!p.list||!p.list.length){var d={};try{d=JSON.parse(load("ec_id")||"{}")||{}}catch(e){}p={cur:0,list:[{n:"",d:d}]}}
+  if(!(p.cur>=0&&p.cur<p.list.length))p.cur=0;return p}
+function saveProfs(p){store("ec_prof",JSON.stringify(p));store("ec_id",null)}
+function getId(){var p=profs();return p.list[p.cur].d||{}}
+function setId(d){var p=profs();p.list[p.cur].d=d;saveProfs(p)}
+function pfLabel(p,i){var x=p.list[i];return x.n||(i===0?t("pfMe"):t("pfFam").replace("{n}",i+1))}
+function pfBar(P){
+  return '<section class="card pfbar"><div class="kick">'+I("users","s")+t("pfK")+'</div><div class="chips" role="group" aria-label="'+esc(t("pfK"))+'">'+
+    P.list.map(function(x,i){return '<button class="chip2" data-pf="'+i+'" aria-pressed="'+(i===P.cur)+'">'+esc(pfLabel(P,i))+'</button>'}).join("")+
+    (P.list.length<PF_MAX?'<button class="chip2" id="pfAdd">+ '+t("pfAdd")+'</button>':'')+'</div><div class="muted" style="margin-top:8px">'+t("pfHint")+'</div></section>'}
+
+/* ---------- 高危勾选项 ----------
+   顺序 p 按美国急诊医师学会（ACEP，经 MedicAlert 转述，来源 101）：1 严重过敏 → 2 药物 → 3 疾病 → 4 体内器械。
+   en / zh 为界面文字（不是医学步骤）。loc = 当地语言词，只收有来源的：取自日本厚生劳动省内科问诊票（ja/ko 来源 72，es 74，vi 76，id 78），
+   多数从问句中截取名词；全部待母语者核对。没有来源的语言不显示当地语言（不自己翻译）。tag = 手环刻字建议用的英文大写。 */
+var RISK=[
+ {k:"ana",p:1,zh:"严重过敏（曾发生过敏性休克）",en:"Severe allergy (anaphylaxis)",tag:"SEVERE ALLERGY - ANAPHYLAXIS"},
+ {k:"drug",p:1,zh:"药物过敏（药名写在“过敏”栏）",en:"Drug allergy (see Allergies)",tag:"DRUG ALLERGY"},
+ {k:"latex",p:1,zh:"乳胶过敏",en:"Latex allergy",tag:"LATEX ALLERGY"},
+ {k:"anticoag",p:2,zh:"正在用抗凝药 / 抗血栓药（出血风险）",en:"Takes blood thinners (bleeding risk)",tag:"ON BLOOD THINNERS"},
+ {k:"insulin",p:2,zh:"使用胰岛素",en:"Uses insulin",tag:"INSULIN DEPENDENT"},
+ {k:"steroid",p:2,zh:"依赖激素（类固醇）治疗",en:"Steroid dependent",tag:"STEROID DEPENDENT"},
+ {k:"dm",p:3,zh:"糖尿病",en:"Diabetes",tag:"DIABETES",loc:{ja:"糖尿病",ko:"당뇨병",es:"Diabetes",vi:"Đái tháo đường",id:"Diabetes mellitus"}},
+ {k:"epi",p:3,zh:"癫痫",en:"Epilepsy",tag:"EPILEPSY",loc:{ja:"てんかん",ko:"전간",es:"Epilepsia",vi:"Động kinh",id:"Epilepsi"}},
+ {k:"preg",p:3,zh:"怀孕",en:"Pregnant",loc:{ja:"妊娠",ko:"임신",es:"Embarazada",vi:"Mang thai",id:"Hamil"}},
+ {k:"g6pd",p:3,zh:"G6PD 缺乏症（蚕豆病）",en:"G6PD deficiency",tag:"G6PD DEFICIENCY"},
+ {k:"pm",p:4,zh:"心脏起搏器 / 植入式除颤器（ICD）",en:"Pacemaker / ICD (implanted)",tag:"PACEMAKER / ICD"}
+];
+var RK_SRC={ja:[72],ko:[72],es:[74],vi:[76],id:[78]};
+/* 建议戴手环的情况：严重过敏（ACEP 列第一）、糖尿病 / 癫痫 / 心脏器械（MedlinePlus），以及需要马上知道的用药 */
+var BR_KEYS={ana:1,drug:1,latex:1,anticoag:1,insulin:1,steroid:1,dm:1,epi:1,pm:1};
+function riskOf(d){var r=(d&&d.risk)||[];return RISK.filter(function(x){return r.indexOf(x.k)>=0})}
+function rkHas(rk,k){return rk.some(function(x){return x.k===k})}
+function rkLoc(x,lk){return (x.loc&&RK_SRC[lk]&&x.loc[lk])||""}
+/* 一项：当地语言（有来源时）大字，下面 English · 中文；中文界面的国家用中文大字 */
+function rkLi(x,lk){var lo=rkLoc(x,lk),zh=lk==="zht"||lk==="zhs"||(!lo&&lang==="zh"&&!lk);
+  if(lo)return '<li><b lang="'+lk+'">'+esc(lo)+'</b><span>'+esc(x.en)+' · '+esc(x.zh)+'</span></li>';
+  if(zh)return '<li><b>'+esc(x.zh)+'</b><span>'+esc(x.en)+'</span></li>';
+  return '<li><b>'+esc(x.en)+'</b><span>'+esc(x.zh)+'</span></li>'}
+function rkNotes(rk){var n=[];if(rkHas(rk,"pm"))n.push(t("rkPm")+' '+srcLine([111]));if(rkHas(rk,"steroid"))n.push(t("rkSt")+' '+srcLine([112]));
+  return n.map(function(s){return '<div class="mcs">'+s+'</div>'}).join("")}
+
+/* ---------- 手环刻字建议 ---------- */
+function brLines(d){var rk=riskOf(d),L2=[];
+  rk.forEach(function(x){if(x.tag)L2.push(x.tag)});
+  if(d.allergy&&/^[\x20-\x7E]+$/.test(d.allergy))L2.splice(rkHas(rk,"ana")||rkHas(rk,"drug")||rkHas(rk,"latex")?1:0,0,"ALLERGY: "+d.allergy.toUpperCase());
+  var ph=phoneIn(d.ice);if(ph)L2.push("ICE "+ph);
+  return L2}
+function brHtml(d){var rk=riskOf(d);if(!rk.some(function(x){return BR_KEYS[x.k]}))return "";
+  var lines=brLines(d),txt=lines.join("\n");
+  return '<section class="card"><div class="kick">'+I("idc","s")+t("brT")+'</div><p style="margin:6px 0 0">'+t("brS")+'</p><p class="muted">'+t("brOrder")+'</p>'+
+    '<div class="brbox">'+esc(txt)+'</div><p class="muted">'+t("brNote")+'</p>'+
+    '<button class="btn ghost" id="brCopy" data-v="'+esc(txt)+'">'+t("brCopy")+'</button>'+
+    '<div class="src">'+t("srcT")+CO()+srcLine([101,102,103])+'</div></section>'}
+
+/* ---------- 我的卡（v0.6.0：多档案 + 高危勾选 + 平时状态 / 药放哪 / 保险） ---------- */
+var IDF=[["name","fName"],["blood","fBlood"],["allergy","fAll"],["cond","fCond"],["med","fMed"],["ice","fIce"],["base","fBase"],["medloc","fMedLoc"],["ins","fIns"],["insTel","fInsTel"]];
+function idHas(d){return IDF.some(function(f){return d[f[0]]})||riskOf(d).length>0}
+function renderId(editing){
+  var box=$("idBox");if(!box)return;
+  var P=profs(),d=P.list[P.cur].d||{},rk=riskOf(d),has=idHas(d);
+  var h="";
+  if(editing){
+    var inp=function(k,lb,ph,ty){return '<label>'+t(lb)+'<input data-f="'+k+'"'+(ty?' type="'+ty+'"':'')+' value="'+esc(d[k]||"")+'"'+(ph?' placeholder="'+esc(t(ph))+'"':'')+' autocomplete="off"></label>'};
+    h+='<section class="card"><div class="kick red">'+I("idc","s")+t("idK")+'</div><div class="muted" style="margin-top:4px">'+t("idHint")+'</div><div class="muted" style="margin-top:6px"><b>'+t("idEnHint")+'</b></div>'+
+       '<label>'+t("pfName")+'<input id="pfN" value="'+esc(P.list[P.cur].n||"")+'" placeholder="'+esc(pfLabel(P,P.cur))+'" autocomplete="off" maxlength="30"></label>'+
+       '<label>'+t("fName")+'<input data-f="name" value="'+esc(d.name||"")+'" autocomplete="off"></label>'+
+       '<label id="bLbl">'+t("fBlood")+'</label><div class="muted">'+t("bHint")+'</div><div class="bgrid" role="group" aria-labelledby="bLbl">'+
+       BT.concat([t("bUnk")]).map(function(b){return '<button class="bchoice" data-bt="'+esc(b)+'" aria-pressed="'+(d.blood===b)+'">'+esc(b)+'</button>'}).join("")+'</div>'+
+       '<input data-f="blood" id="bIn" value="'+esc(d.blood||"")+'" autocomplete="off" aria-label="'+esc(t("fBlood"))+'">'+
+       '<div class="kick" style="margin-top:18px" id="rkLbl">'+t("rkT")+'</div><div class="muted">'+t("rkS")+'</div>'+
+       '<div class="rkgrid" role="group" aria-labelledby="rkLbl">'+RISK.map(function(x){var on=(d.risk||[]).indexOf(x.k)>=0;return '<button class="rkc" data-rk="'+x.k+'" aria-pressed="'+on+'">'+esc(lang==="zh"?x.zh:x.en)+'</button>'}).join("")+'</div>'+
+       inp("allergy","fAll")+inp("cond","fCond")+inp("med","fMed")+inp("ice","fIce")+
+       inp("base","fBase","fBaseP")+inp("medloc","fMedLoc","fMedLocP")+inp("ins","fIns","fInsP")+inp("insTel","fInsTel","fInsTelP","tel")+
+       '<div class="muted" style="margin-top:6px">'+t("insPriv")+'</div>'+
+       '<button class="btn red" id="idSave">'+t("save")+'</button><button class="btn ghost" id="idClear">'+t("clear")+'</button>'+
+       (P.cur>0?'<button class="btn warn" id="pfDel">'+t("pfDel")+'</button>':'')+'</section>';
+    box.innerHTML=h;return;
+  }
+  h+=pfBar(P);
+  var bl=d.blood||"",lg=bl.length>4;
+  if(has)h+='<div class="idacts"><button class="btn red" id="mcGo">'+I("globe")+t("mcBtn")+'</button><button class="btn" id="hoGo">'+I("idc")+t("hoBtn")+'</button><button class="btn ghost" id="prGo">'+I("print")+t("prBtn")+'</button></div>';
+  h+='<section class="card"><div class="hrow"><div class="hinfo"><div class="kick red">'+t("idK")+'</div>'+
+     '<div class="pname'+(d.name?'':' ph')+'">'+esc(d.name||t("nameNone"))+'</div><div class="mut">'+t("idHint")+'</div></div>'+
+     '<div class="rblock'+(bl?'':' empty')+'" role="img" aria-label="'+esc(t("fBlood")+CO()+(bl||t("none")))+'"><span class="rk" aria-hidden="true">'+t("bloodK")+'</span><span class="rv'+(lg?' long':'')+'" aria-hidden="true">'+esc(bl||"?")+'</span></div></div></section>';
+  if(!has){box.innerHTML=h+'<button class="btn red" id="idEdit" style="margin:0 0 12px">'+t("edit")+'</button>';return}
+  if(rk.length)h+='<section class="card crit"><div class="kick red">'+I("alert","s")+bi("rkK")+'</div><ul class="rkl">'+rk.map(function(x){return rkLi(x,lang==="zh"?"zhs":"")}).join("")+'</ul>'+rkNotes(rk)+'</section>';
+  h+='<section class="card crit"><div class="kick red">'+I("alert","s")+bi("fAll")+'</div>'+fval(d.allergy)+'</section>';
+  h+='<section class="card"><div class="frow"><div class="kick">'+bi("fCond")+'</div>'+fval(d.cond)+'</div><div class="frow"><div class="kick">'+bi("fMed")+'</div>'+fval(d.med)+'</div>'+
+     (d.base?'<div class="frow"><div class="kick">'+bi("fBase")+'</div>'+fval(d.base)+'</div>':'')+(d.medloc?'<div class="frow"><div class="kick">'+bi("fMedLoc")+'</div>'+fval(d.medloc)+'</div>':'')+'</section>';
+  var ph=phoneIn(d.ice);
+  h+='<section class="card"><div class="kick">'+bi("fIce")+'</div>'+fval(d.ice)+
+     (ph?'<a class="btn grn" href="'+tel(ph)+'" aria-label="'+esc(t("iceCall")+SEP()+digits(ph))+'">'+phoneIco()+t("iceCall")+'</a>':'')+'</section>';
+  if(d.ins||d.insTel){var ip=phoneIn(d.insTel);
+    h+='<section class="card"><div class="kick">'+bi("fIns")+'</div>'+fval(d.ins)+(d.insTel?'<div class="kick" style="margin-top:10px">'+bi("fInsTel")+'</div>'+fval(d.insTel):'')+
+       (ip?'<a class="btn grn" href="'+tel(ip)+'" aria-label="'+esc(t("insCall")+SEP()+digits(ip))+'">'+phoneIco()+t("insCall")+'</a>':'')+
+       '<div class="src">'+t("insWhy")+' '+srcLine([113])+'</div></section>'}
+  h+=brHtml(d);
+  h+='<button class="btn ghost" id="idEdit" style="margin:0 0 12px">'+t("edit")+'</button>';
+  box.innerHTML=h;
+}
+
+/* ---------- 交接页：交给医生 ---------- */
+function openHand(){
+  metroStop();hush();cur=null;
+  var c=cc(),P=profs(),d=getId(),rk=riskOf(d),o=tmLoad();
+  var h='<div class="shead"><button class="back" id="bk">'+I("chevL")+t("back")+'</button></div>'+
+    '<h1 id="sheetT" tabindex="-1" class="pickh" style="font-size:calc(22px * var(--fs));color:var(--crimson)">'+t("hoT")+'</h1>'+
+    '<div class="muted">'+t("hoS")+'</div>';
+  if(!idHas(d)){h+='<div class="note" role="note" style="margin-top:12px">'+I("info")+'<div>'+t("mcEmpty")+'</div></div>';showSheet(h,callBtn(c));return}
+  var bl=d.blood||"";
+  h+='<section class="card" style="margin-top:12px"><div class="hrow"><div class="hinfo"><div class="kick">'+esc(pfLabel(P,P.cur))+'</div><div class="pname'+(d.name?'':' ph')+'">'+esc(d.name||t("nameNone"))+'</div></div>'+
+     (bl?'<div class="rblock" role="img" aria-label="'+esc(t("fBlood")+CO()+bl)+'"><span class="rk" aria-hidden="true">'+t("bloodK")+'</span><span class="rv'+(bl.length>4?' long':'')+'" aria-hidden="true">'+esc(bl)+'</span></div>':'')+'</div></section>';
+  var lk=lang==="zh"?"zhs":"";
+  function sec(title,items,txt,crit,extra,always){var g=items.filter(Boolean);
+    if(!g.length&&!txt&&!extra&&!always)return "";
+    return '<section class="card ho'+(crit?' crit':'')+'"><div class="kick'+(crit?' red':'')+'"><span class="hon">'+(++n)+'</span>'+title+'</div>'+
+      (g.length?'<ul class="rkl">'+g.join("")+'</ul>':'')+(txt||!g.length?fval(txt):'')+(extra||'')+'</section>'}
+  var byP=function(p){return rk.filter(function(x){return x.p===p}).map(function(x){return rkLi(x,lk)})};
+  var n=0,s="";
+  s+=sec(bi("fAll"),byP(1),d.allergy,1,"",1);
+  s+=sec(bi("fMed"),byP(2),d.med,0,rkHas(rk,"steroid")?'<div class="mcs">'+t("rkSt")+' '+srcLine([112])+'</div>':'',1);
+  s+=sec(bi("fCond"),byP(3),d.cond);
+  s+=sec(bi("hoDev"),byP(4),"",0,rkHas(rk,"pm")?'<div class="mcs">'+t("rkPm")+' '+srcLine([111])+'</div>':'');
+  s+=sec(bi("fBase"),[],d.base);
+  s+='<section class="card ho"><div class="kick"><span class="hon">'+(++n)+'</span>'+bi("fMedLoc")+'</div><p style="margin:6px 0 0;font-weight:700">'+esc(d.medloc?t("hoBring").replace("{x}",d.medloc):t("hoBringN"))+'</p><div class="src">'+t("srcT")+CO()+srcLine([110])+'</div></section>';
+  var tk=TM.filter(function(x){return o[x[0]]});
+  if(tk.length)s+='<section class="card ho"><div class="kick"><span class="hon">'+(++n)+'</span>'+bi("hoTimes")+'</div><ul class="rkl">'+tk.map(function(x){return '<li><b>'+hmOf(o[x[0]])+'</b><span>'+esc(t(x[1]))+' · '+esc(t("tmAgo").replace("{t}",dur(Date.now()-o[x[0]])))+'</span></li>'}).join("")+'</ul></section>';
+  if(d.ins||d.insTel){var ip=phoneIn(d.insTel);s+='<section class="card ho"><div class="kick"><span class="hon">'+(++n)+'</span>'+bi("fIns")+'</div>'+fval(d.ins)+(d.insTel?fval(d.insTel):'')+
+     (ip?'<a class="btn grn" href="'+tel(ip)+'">'+phoneIco()+t("insCall")+'</a>':'')+'</section>'}
+  var ph=phoneIn(d.ice);
+  if(d.ice)s+='<section class="card ho"><div class="kick"><span class="hon">'+(++n)+'</span>'+bi("fIce")+'</div>'+fval(d.ice)+(ph?'<a class="btn grn" href="'+tel(ph)+'">'+phoneIco()+t("iceCall")+'</a>':'')+'</section>';
+  h+=s+'<div class="mcs">'+t("mcAsIs")+' '+t("mcPriv")+'</div>'+awkHtml();
+  showSheet(h,callBtn(c));awake(true);
+}
+
+/* ---------- 发病时间记录（localStorage "ec_tm"，只存本机） ---------- */
+var TM=[["onset","tmOn"],["well","tmWell"],["seizS","tmSz"],["seizE","tmSe"],["cpr","tmCpr"],["call","tmCall"]];
+function tmLoad(){try{return JSON.parse(load("ec_tm")||"{}")||{}}catch(e){return {}}}
+function tmSave(o){store("ec_tm",Object.keys(o).length?JSON.stringify(o):null)}
+function p2(n){return ("0"+n).slice(-2)}
+function hmOf(ts){var d=new Date(ts);return p2(d.getHours())+":"+p2(d.getMinutes())}
+function dur(ms){var s=Math.max(0,Math.floor(ms/1000)),h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;
+  if(lang==="zh")return h?h+" 小时 "+m+" 分":m+" 分 "+p2(x)+" 秒";return h?h+" h "+m+" min":m+" min "+p2(x)+" s"}
+var tmInt=null;
+function seizOver(o){var s=o.seizS;return !!s&&!(o.seizE&&o.seizE>=s)&&Date.now()-s>=300000}
+function tmTick(){if(!$("tmWarn")){if(tmInt){clearInterval(tmInt);tmInt=null}return}
+  var o=tmLoad(),now=Date.now();
+  TM.forEach(function(x){var e=$("tm_"+x[0]);if(e)e.textContent=o[x[0]]?t("tmAgo").replace("{t}",dur(now-o[x[0]])):""});
+  $("tmWarn").hidden=!seizOver(o)}
+function openTimer(){
+  metroStop();hush();cur=null;
+  var c=cc(),N=C[c].amb,o=tmLoad();
+  var h='<div class="shead"><button class="back" id="bk">'+I("chevL")+t("back")+'</button></div>'+
+    '<h1 id="sheetT" tabindex="-1" class="pickh">'+I("clock")+' '+t("tmT")+'</h1><div class="muted">'+t("tmS")+'</div>'+
+    '<div class="note red" role="alert" id="tmWarn" style="margin-top:12px"'+(seizOver(o)?'':' hidden')+'>'+I("alert")+'<div><b>'+esc(t("tmSeizOver").replace("{N}",N))+'</b></div></div>'+
+    '<section class="card" style="margin-top:12px">'+TM.map(function(x){var k=x[0],v=o[k];
+      return '<div class="tmr"><div class="tml"><b>'+t(x[1])+'</b><div class="tmv'+(v?'':' none')+'">'+(v?hmOf(v):t("tmNone"))+'</div><div class="tma" id="tm_'+k+'" aria-live="off"></div></div>'+
+        '<div class="tmb"><button class="btn red" data-tm="'+k+'">'+t("tmNow")+'</button><label class="tmset">'+t("tmSet")+'<input type="time" data-tmi="'+k+'" value="'+(v?hmOf(v):"")+'"></label></div></div>'}).join("")+'</section>'+
+    '<section class="card"><p style="margin:0">'+t("tmStroke")+'</p><div class="src">'+t("srcT")+CO()+srcLine([98])+'</div>'+
+    '<p style="margin:12px 0 0">'+esc(t("tmSeiz").replace("{N}",N))+'</p><div class="src">'+t("srcT")+CO()+srcLine([99])+'</div>'+
+    '<p class="muted">'+t("tmNoDx")+'</p></section>'+
+    '<button class="btn warn" id="tmClr">'+t("tmClr")+'</button>'+awkHtml();
+  showSheet(h,callBtn(c),!!openTimer.keep);openTimer.keep=false;
+  awake(true);tmTick();if(!tmInt)tmInt=setInterval(tmTick,1000);
+}
+
+/* ---------- 帮别人呼救（在路人或家属的手机上用，不需要病人的任何数据） ---------- */
+function openHelper(){
+  metroStop();hush();cur=null;
+  var c=cc(),N=C[c].amb;
+  var h='<div class="shead"><button class="back" id="bk">'+I("chevL")+t("back")+'</button></div>'+
+    '<h1 id="sheetT" tabindex="-1" class="pickh" style="color:var(--crimson)">'+t("hlT")+'</h1>'+
+    '<p class="hlc">'+I("phone")+' '+esc(t("hlCall").replace("{N}",N))+'</p>'+
+    (c==="XX"?'<div class="note" role="note">'+I("alert")+'<div>'+esc(t("xxNote").replace("{z}",tzLabel()))+'</div></div>':'')+
+    '<h2 class="secH"><b>'+t("hlSayT")+'</b></h2><section class="card crit"><ol class="say">'+["hl1","hl2","hl3","hl4","hl5"].map(function(k){return '<li>'+t(k)+'</li>'}).join("")+'</ol>'+
+    '<div class="src">'+t("srcT")+CO()+srcLine([105,106])+'</div></section>'+
+    '<h2 class="secH"><b>'+t("hlLoc")+'</b></h2><section class="card"><div class="muted">'+t("hlAml")+'</div><div id="hlocOut" aria-live="polite"></div>'+
+    '<button class="btn ghost" id="hlocBtn">'+I("pin")+t("locBtn")+'</button><div class="src">'+t("srcT")+CO()+srcLine([108,109])+'</div></section>'+
+    '<h2 class="secH"><b>'+t("hlAfterT")+'</b></h2><section class="card"><ul class="notes" style="margin-top:0">'+["hlA1","hlA2","hlA3"].map(function(k){return '<li>'+t(k)+'</li>'}).join("")+'</ul>'+
+    '<div class="src">'+t("srcT")+CO()+srcLine([106,107,105])+'</div></section>'+
+    '<button class="btn" id="tmGo">'+I("clock")+t("hlTm")+'</button><button class="btn ghost" data-tab="">'+t("hlCards")+'</button>'+awkHtml();
+  showSheet(h,callBtn(c));awake(true);
+}
+
+/* ---------- 打印：钱包卡 + 冰箱单 + 大门提示贴（固定白底黑字，与日夜模式无关） ---------- */
+function wbil(en,zh){return '<span class="wl">'+esc(en)+' · '+esc(zh)+'</span>'}
+function walletHtml(c,d){var rk=riskOf(d),top=rk.slice(0,3),more=rk.length-top.length;
+  var f='<div class="wface"><div class="wh"><span>MEDICAL ID · 急救信息</span>'+(d.blood?'<span class="wbt">'+esc(d.blood)+'</span>':'')+'</div>'+
+    '<div class="wname">'+esc(d.name||"")+'</div>'+
+    top.map(function(x){return '<div class="wrk">■ '+esc(x.en)+' · '+esc(x.zh)+'</div>'}).join("")+
+    (more>0?'<div class="wl">'+esc(T.prMore[1].replace("{n}",more))+' · '+esc(T.prMore[0].replace("{n}",more))+'</div>':'')+
+    (d.allergy?'<div class="wt">'+wbil("Allergies","过敏")+'：'+esc(d.allergy)+'</div>':'')+
+    (d.med?'<div class="wt">'+wbil("Medication","用药")+'：'+esc(d.med)+'</div>':'')+
+    (d.cond?'<div class="wt">'+wbil("Conditions","疾病")+'：'+esc(d.cond)+'</div>':'')+'</div>';
+  var b='<div class="wface"><div class="wh">IN CASE OF EMERGENCY · 紧急联系</div>'+
+    (d.ice?'<div class="wt"><b>ICE</b> '+esc(d.ice)+'</div>':'')+
+    (d.ins?'<div class="wt">'+wbil("Insurance","保险")+'：'+esc(d.ins)+'</div>':'')+
+    (d.insTel?'<div class="wt">'+wbil("24h assistance","救援热线")+'：<b>'+esc(d.insTel)+'</b></div>':'')+
+    '<div class="wqr">'+QR_SVG+'</div><div class="wqrc">'+esc(T.prQrS[1])+'<br>'+esc(T.prQrS[0])+'</div>'+
+    '<div class="wdate">'+esc(T.prDate[1])+' · '+esc(T.prDate[0])+' '+todayStr()+'</div></div>';
+  return '<div class="wcard">'+f+b+'</div>'}
+function fridgeHtml(c,d){var rk=riskOf(d),N=C[c].amb;
+  function row(en,zh,v){return v?'<div class="fr"><div class="fk">'+esc(en)+'<br>'+esc(zh)+'</div><div class="fv2">'+esc(v)+'</div></div>':''}
+  return '<div class="fsheet"><div class="fh"><b>MEDICAL INFORMATION · 急救信息</b><span>'+esc(T.prDate[1])+' · '+esc(T.prDate[0])+' '+todayStr()+'</span></div>'+
+    '<div class="fname">'+esc(d.name||"")+(d.blood?' <span class="fbt">'+esc(d.blood)+'</span>':'')+'</div>'+
+    (rk.length?'<div class="frk"><div class="fk">HIGH-RISK · 高危情况</div>'+rk.map(function(x){return '<div>■ <b>'+esc(x.en)+'</b> · '+esc(x.zh)+'</div>'}).join("")+'</div>':'')+
+    row("Allergies","过敏",d.allergy)+row("Current medication","正在用药",d.med)+row("Medical conditions","疾病史",d.cond)+
+    row("Usual state","平时的状态",d.base)+row("Medicines kept","药放在哪里",d.medloc)+row("Emergency contact","紧急联系人",d.ice)+
+    row("Insurance","保险",d.ins)+row("24h assistance","救援热线",d.insTel)+
+    '<div class="famb"><span>Emergency · 急救电话（'+esc(C[c].en)+' · '+esc(C[c].zh)+'）</span><b>'+esc(N)+'</b></div>'+
+    '<div class="fqrw"><div class="fqr">'+QR_SVG+'</div><div>'+esc(T.prQrS[1])+'<br>'+esc(T.prQrS[0])+'</div></div>'+
+    '<div class="ffoot">'+esc(T.prHow[1])+'<br>'+esc(T.prHow[0])+'</div></div>'+
+    '<div class="fstk"><svg viewBox="0 0 24 24" aria-hidden="true"><rect width="24" height="24" rx="5" fill="#047857"/><path d="M10 5h4v5h5v4h-5v5h-4v-5H5v-4h5z" fill="#fff"/></svg><div><b>'+esc(T.prStk[0])+'</b><b>'+esc(T.prStk[1].toUpperCase())+'</b><small>Emergency Card · 急救卡</small></div></div>'}
+function openPrint(){
+  metroStop();hush();cur=null;
+  var c=cc(),P=profs(),d=getId(),has=idHas(d);
+  var h='<div class="shead"><button class="back" id="bk">'+I("chevL")+t("back")+'</button></div>'+
+    '<h1 id="sheetT" tabindex="-1" class="pickh">'+t("prT")+'</h1><div class="muted">'+t("prS")+'</div>';
+  if(!has){h+='<div class="note" role="note" style="margin-top:12px">'+I("info")+'<div>'+t("prEmpty")+'</div></div>';showSheet(h,callBtn(c));return}
+  h+='<div class="note" role="note" style="margin-top:12px">'+I("users")+'<div>'+esc(t("prWho").replace("{p}",pfLabel(P,P.cur)))+'</div></div>'+
+    (inWx()?'<div class="note" role="note">'+I("alert")+'<div>'+t("prWx")+'</div></div>':'')+
+    '<h2 class="secH"><b>'+t("prW")+'</b></h2><div class="prv">'+walletHtml(c,d)+'</div>'+
+    '<div class="note red" role="alert" id="prOver" hidden>'+I("alert")+'<div>'+t("prOver")+'</div></div>'+
+    '<button class="btn red" data-print="w">'+I("print")+t("prGo")+'</button>'+
+    '<h2 class="secH"><b>'+t("prF")+'</b></h2><div class="prv">'+fridgeHtml(c,d)+'</div>'+
+    '<button class="btn red" data-print="f">'+I("print")+t("prGo")+'</button>'+
+    '<p class="muted">'+t("prPriv")+'</p><p class="muted">'+t("prQr")+'</p><p class="muted">'+t("prHow")+'</p>'+
+    '<div class="src">'+t("srcT")+CO()+srcLine([100,102])+'</div>';
+  showSheet(h,callBtn(c));
+  try{var over=[].some.call(document.querySelectorAll("#sheetBody .wface"),function(x){return x.scrollHeight>x.clientHeight+2});$("prOver").hidden=!over}catch(e){}
+}
+function doPrint(k){
+  var c=cc(),d=getId(),a=$("printArea");
+  if(!a){a=document.createElement("div");a.id="printArea";document.body.appendChild(a)}
+  a.innerHTML=k==="w"?walletHtml(c,d)+walletHtml(c,d):fridgeHtml(c,d);
+  document.documentElement.classList.add("printing");
+  setTimeout(function(){try{window.print()}catch(e){}},60);
+}
+window.addEventListener("afterprint",function(){document.documentElement.classList.remove("printing")});
 
 /* ===================== 事件 ===================== */
 function goTab(k){
@@ -1816,7 +2219,7 @@ document.addEventListener("click",function(e){
     document.querySelectorAll("[data-fs]").forEach(function(x){x.setAttribute("aria-pressed",x.dataset.fs===fsMode?"true":"false")});return}
   if(el.id==="clrBtn"){
     if(el.dataset.armed!=="1"){el.dataset.armed="1";el.textContent=t("clrArm");setTimeout(function(){if(document.contains(el)){el.dataset.armed="";el.textContent=t("clrBtn")}},6000);return}
-    ["ec_id","ec_geo","ec_lang","ec_theme","ec_mode","ec_voice","ec_snd","ec_fs","ec_mlang"].forEach(function(k){store(k,null)});
+    ["ec_id","ec_prof","ec_tm","ec_geo","ec_lang","ec_theme","ec_mode","ec_voice","ec_snd","ec_fs","ec_mlang"].forEach(function(k){store(k,null)});
     hush();location.replace(location.pathname);return}
   if(el.id==="pv"){go(-1);return}
   if(el.id==="nx"){go(1);return}
@@ -1827,12 +2230,28 @@ document.addEventListener("click",function(e){
     sndShow();setTimeout(sndShow,300);return}
   if(el.id==="instBtn"){if(dip){dip.prompt();dip=null;el.hidden=true}return}
   if(el.id==="idEdit"){renderId(true);return}
+  if(el.id==="helperGo"){prime();goHash("helper");return}
+  if(el.id==="tmGo"){goHash("timer");return}
+  if(el.id==="hoGo"){goHash("hand");return}
+  if(el.id==="prGo"){goHash("print");return}
+  if(el.dataset.print){doPrint(el.dataset.print);return}
+  if(el.dataset.tm){var to=tmLoad();to[el.dataset.tm]=Date.now();tmSave(to);openTimer.keep=true;openTimer();return}
+  if(el.id==="tmClr"){if(el.dataset.armed!=="1"){el.dataset.armed="1";el.textContent=t("clrArm");setTimeout(function(){if(document.contains(el)){el.dataset.armed="";el.textContent=t("tmClr")}},6000);return}
+    tmSave({});openTimer.keep=true;openTimer();return}
+  if(el.hasAttribute("data-pf")){var Pa=profs();Pa.cur=+el.dataset.pf||0;saveProfs(Pa);renderId(false);return}
+  if(el.id==="pfAdd"){var Pb=profs();if(Pb.list.length<PF_MAX){Pb.list.push({n:"",d:{}});Pb.cur=Pb.list.length-1;saveProfs(Pb)}renderId(true);window.scrollTo(0,0);return}
+  if(el.id==="pfDel"){if(el.dataset.armed!=="1"){el.dataset.armed="1";el.textContent=t("pfDelArm");setTimeout(function(){if(document.contains(el)){el.dataset.armed="";el.textContent=t("pfDel")}},6000);return}
+    var Pc=profs();if(Pc.cur>0){Pc.list.splice(Pc.cur,1);Pc.cur=0;saveProfs(Pc)}renderId(false);window.scrollTo(0,0);return}
+  if(el.dataset.rk){el.setAttribute("aria-pressed",el.getAttribute("aria-pressed")==="true"?"false":"true");return}
+  if(el.id==="brCopy"){copyText(el.dataset.v,function(){el.textContent=t("copied")});return}
   if(el.id==="mcGo"){goHash("med");return}
   if(el.hasAttribute("data-mcl")){store("ec_mlang",el.dataset.mcl||null);openMed.keep=true;openMed();return}
   if(el.dataset.bt){var bi_=$("bIn");if(bi_)bi_.value=el.dataset.bt;
     document.querySelectorAll(".bchoice").forEach(function(x){x.setAttribute("aria-pressed",x===el?"true":"false")});return}
-  if(el.id==="idSave"){var d={};document.querySelectorAll("#idBox [data-f]").forEach(function(i){if(i.value.trim())d[i.dataset.f]=i.value.trim()});store("ec_id",JSON.stringify(d));renderId(false);window.scrollTo(0,0);return}
-  if(el.id==="idClear"){store("ec_id",null);renderId(false);return}
+  if(el.id==="idSave"){var d={},rs=[];document.querySelectorAll("#idBox [data-f]").forEach(function(i){if(i.value.trim())d[i.dataset.f]=i.value.trim()});
+    document.querySelectorAll("#idBox [data-rk]").forEach(function(b){if(b.getAttribute("aria-pressed")==="true")rs.push(b.dataset.rk)});if(rs.length)d.risk=rs;
+    var Ps=profs();Ps.list[Ps.cur].d=d;var pn=$("pfN");if(pn)Ps.list[Ps.cur].n=pn.value.trim().slice(0,30);saveProfs(Ps);renderId(false);window.scrollTo(0,0);return}
+  if(el.id==="idClear"){setId({});renderId(true);return}
   if(el.id==="mlGo"){goTab("more");setTimeout(function(){var f=$("fb");if(f)try{f.scrollIntoView({block:"start"});f.focus({preventScroll:true})}catch(x){}},30);return}
   if(el.dataset.ml){mlAns=mlAns===el.dataset.ml?null:el.dataset.ml;
     document.querySelectorAll("[data-ml]").forEach(function(x){x.setAttribute("aria-pressed",x.dataset.ml===mlAns?"true":"false")});return}
@@ -1844,8 +2263,8 @@ document.addEventListener("click",function(e){
     setTimeout(function(){openM(null)},15000);
     navigator.geolocation.getCurrentPosition(function(p){openM(gcj(p.coords.latitude,p.coords.longitude))},function(){openM(null)},{enableHighAccuracy:false,timeout:8000,maximumAge:120000});
     return}
-  if(el.id==="locBtn"){
-    var out=$("locOut");
+  if(el.id==="locBtn"||el.id==="hlocBtn"){
+    var out=$(el.id==="locBtn"?"locOut":"hlocOut");
     if(!navigator.geolocation){out.innerHTML='<div class="muted">'+t("locFail")+'</div>';return}
     out.innerHTML='<div class="muted">'+t("locing")+'</div>';
     navigator.geolocation.getCurrentPosition(function(p){
@@ -1864,6 +2283,10 @@ document.addEventListener("click",function(e){
     copyText(msg,function(){$("fbMsg").textContent=t("fbDone")});
   }
 });
+/* v0.6.0：发病时间“改时间”（输入的时间若晚于现在，按昨天算） */
+document.addEventListener("change",function(e){var i=e.target;if(!i||!i.dataset||!i.dataset.tmi)return;
+  var m=/^(\d{1,2}):(\d{2})/.exec(i.value||"");if(!m)return;var x=new Date();x.setHours(+m[1],+m[2],0,0);
+  if(x.getTime()>Date.now()+60000)x.setDate(x.getDate()-1);var o=tmLoad();o[i.dataset.tmi]=x.getTime();tmSave(o);openTimer.keep=true;openTimer()});
 document.addEventListener("keydown",function(e){
   if(!$("sheet").classList.contains("on"))return;
   if(/^(INPUT|TEXTAREA|SELECT)$/.test((e.target&&e.target.tagName)||""))return;
