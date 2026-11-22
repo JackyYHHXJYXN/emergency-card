@@ -62,7 +62,7 @@
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg-canvas);color:var(--text-primary);font:calc(17px * var(--fs))/1.5 var(--font-sans);-webkit-font-smoothing:antialiased;
-  padding-top:calc(56px + env(safe-area-inset-top));
+  padding-top:var(--top-real,calc(56px + env(safe-area-inset-top)));
   padding-bottom:calc(var(--nav-h) + 84px + env(safe-area-inset-bottom))}
 .wrap{max-width:600px;margin:0 auto;padding:0 14px}
 button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
@@ -76,7 +76,7 @@ h1:focus,h2:focus{outline:none}
 /* ---------- 顶栏 ---------- */
 header.top{position:fixed;top:0;left:0;right:0;z-index:30;background:var(--bg-card);border-bottom:1px solid var(--border-card);
   box-shadow:var(--shadow-sm);padding-top:env(safe-area-inset-top)}
-.bar{display:flex;align-items:center;gap:8px;height:56px}
+.bar{display:flex;align-items:center;gap:8px;min-height:56px}
 .logo{width:30px;height:30px;flex:none;display:block}
 .brand{font-weight:800;font-size:calc(19px * var(--fs));letter-spacing:.2px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:8px;min-width:0}
 .ibtn{min-height:44px;min-width:44px;padding:0 12px;border-radius:var(--radius-md);background:var(--bg-subtle);border:1px solid var(--border-card);
@@ -86,7 +86,7 @@ header.top{position:fixed;top:0;left:0;right:0;z-index:30;background:var(--bg-ca
 /* ---------- 底部四栏导航 ---------- */
 nav.bnav{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--bg-card);border-top:1px solid var(--border-card);
   box-shadow:0 -2px 10px rgba(0,0,0,.05);padding-bottom:env(safe-area-inset-bottom)}
-.bnav-in{max-width:600px;margin:0 auto;height:var(--nav-h);display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:4px 6px}
+.bnav-in{max-width:600px;margin:0 auto;min-height:var(--nav-h);display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:4px 6px}
 .tab{border-radius:var(--radius-md);color:var(--text-muted);font-size:calc(17px * var(--fs));font-weight:700;line-height:1.1;
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-width:0;white-space:nowrap}
 .tab .ic{width:22px;height:22px}
@@ -96,7 +96,7 @@ nav.bnav{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--bg-c
 body.sheet-on nav.bnav{display:none}
 
 /* ---------- 呼叫栏（导航上方，任何页面一键拨打） ---------- */
-.dock{position:fixed;left:0;right:0;z-index:45;bottom:calc(var(--nav-h) + env(safe-area-inset-bottom));
+.dock{position:fixed;left:0;right:0;z-index:45;bottom:var(--nav-real,calc(var(--nav-h) + env(safe-area-inset-bottom)));
   padding:10px 14px 8px;background:linear-gradient(color-mix(in srgb,var(--bg-canvas) 0%,transparent),var(--bg-canvas) 10px)}
 body.sheet-on .dock{bottom:0;padding-bottom:calc(10px + env(safe-area-inset-bottom))}
 .dock>*{max-width:572px;margin-left:auto;margin-right:auto}
@@ -254,7 +254,7 @@ details.sl summary{min-height:48px;font-weight:800;cursor:pointer;display:flex;a
 footer{font-size:calc(17px * var(--fs));color:var(--text-muted);margin:22px 4px 0;line-height:1.6}
 
 /* ---------- 全屏层（急救步骤、选国家、首次确认） ---------- */
-.sheet{position:fixed;inset:0;z-index:40;background:var(--bg-canvas);overflow:auto;display:none;padding-bottom:calc(200px + env(safe-area-inset-bottom))}
+.sheet{position:fixed;inset:0;z-index:40;background:var(--bg-canvas);overflow:auto;display:none;padding-bottom:calc(var(--dock-real,190px) + 24px)}
 .sheet.on{display:block}
 .shead{position:sticky;top:0;background:var(--bg-card);border-bottom:1px solid var(--border-card);box-shadow:var(--shadow-sm);
   padding:calc(6px + env(safe-area-inset-top)) 14px 6px;margin:0 -14px;z-index:2;display:flex;align-items:center;gap:8px}
@@ -377,7 +377,42 @@ html.bigtext .tab{font-size:17px}
 html.bigtext .lrow{flex-wrap:wrap}
 html.bigtext .lrow .tbtn{margin-left:auto}
 html.bigtext .call .num{font-size:32px}
-body{padding-bottom:calc(var(--nav-h) + 110px + env(safe-area-inset-bottom))}
+body{padding-bottom:calc(var(--nav-real,calc(var(--nav-h) + env(safe-area-inset-bottom))) + var(--dock-real,96px) + 16px)}
+
+/* ---------- v0.4.3：安卓大字不重叠 ----------
+   安卓（微信、各品牌自带浏览器、WebView）会按"系统/微信字体大小"直接放大文字，页面脚本读不到。
+   做法：①布局本身可换行，任何字号都不叠；②用隐藏的“国”字实测真实放大倍数，≥1.12 加 bigtext，≥1.4 加 hugetext，≥1.7 加 maxtext；
+   ③顶栏、底栏、呼叫栏的实际高度由脚本实测后写进 --top-real / --nav-real / --dock-real，不再写死。 */
+#ecProbe{position:absolute;left:-9999px;top:0;visibility:hidden;pointer-events:none;font-family:var(--font-sans);font-size:calc(100px * var(--fs));line-height:1;white-space:nowrap;font-weight:400;letter-spacing:0}
+main,.sheet,.dock{overflow-wrap:break-word}
+.grid>*,.tri-b>*,.nums>*,.duo>*,.snav>*{min-width:0}
+.tile b,.tile small,.big{overflow-wrap:anywhere}
+#brand{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.lrow{flex-wrap:wrap;row-gap:4px}
+.linfo{flex:1 1 9em}
+.lname,.lmeta .mut{word-break:keep-all;overflow-wrap:anywhere}
+/* 两个分诊按钮尽量并排（一屏内都看得到）；文字放大到 1.7 倍以上才上下排 */
+html.bigtext:not(.maxtext) .tri-b{grid-template-columns:1fr 1fr}
+html.bigtext .big{padding:10px 8px}
+.lmeta .badge{max-width:100%;white-space:normal}
+.lrow .tbtn{margin-left:auto}
+.call>span:first-child{align-items:center}
+html.bigtext .call .lbl{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.2}
+html.bigtext .shead{flex-wrap:wrap;row-gap:6px}
+html.bigtext .shead .chip,html.bigtext .shead .back{white-space:normal;max-width:100%;text-align:left;line-height:1.2}
+html.bigtext .seg span{white-space:normal;text-align:center;line-height:1.2;padding:4px 10px}
+html.bigtext .nums{grid-template-columns:1fr}
+html.bigtext .rblock{width:auto;min-width:108px;padding:8px 12px}
+html.bigtext .rblock .rv{word-break:keep-all}
+html.bigtext .bgrid{grid-template-columns:repeat(auto-fit,minmax(3.4em,1fr))}
+html.bigtext .tab{line-height:1.05;padding:2px 0}
+html.bigtext .tile small{-webkit-line-clamp:3}
+html.bigtext .metro{flex-wrap:wrap}
+html.bigtext .metro .chip{white-space:normal;max-width:100%;margin-left:auto}
+html.hugetext .seg3,html.hugetext .seg2,html.hugetext .seg4,html.hugetext .snav{grid-template-columns:1fr}
+html.hugetext .tab .ic{width:18px;height:18px}
+html.hugetext .duo{grid-template-columns:1fr}
+html.hugetext .ibtn{padding:0 8px}
 @media (max-width:350px){.pb .pbl{font-size:calc(26px * var(--fs))}.pb .pbn{font-size:calc(68px * var(--fs))}}
 @media (max-width:350px){.tri h1{font-size:calc(26px * var(--fs))}.big{font-size:calc(20px * var(--fs))}.stepTxt{font-size:calc(24px * var(--fs))}.call .num{font-size:calc(30px * var(--fs))}.seg span{padding:0 9px}.rblock{width:96px}.rblock .rv{font-size:calc(32px * var(--fs))}.place{font-size:calc(22px * var(--fs))}.tab{font-size:calc(15px * var(--fs))}.lname{font-size:calc(20px * var(--fs))}.lflag{font-size:calc(28px * var(--fs))}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
@@ -408,7 +443,7 @@ var FEEDBACK_GOOGLE = _CFG.google||"";    // Google 表单链接，例如 https:
 var FEEDBACK_TENCENT = _CFG.tencent||"";  // 腾讯问卷链接，例如 https://wj.qq.com/s2/xxxx/xxxx/
 // 可选：Google 表单里"版本/国家/语言"那道简答题的编号（形如 entry.123456789）。填了以后会自动带入，留空也能用。
 var GOOGLE_PREFILL_ENTRY = _CFG.googleEntry||"";
-var VERSION = "MVP v0.4.2";
+var VERSION = "MVP v0.4.3";
 var VERIFIED_ON = "2026-11-17";   // 全部国家号码的统一核实日期；某国单独复核后，在该国数据里加 v:"YYYY-MM-DD"
 // 固定的正式网址：分享、锁屏图片一律用它，不用当前地址栏（避免分享出 file:// 或预览地址）。分享链接里永远不放任何个人信息。
 var SITE_URL = "https://jackyyhhxjyxn.github.io/emergency-card/";
@@ -1040,7 +1075,7 @@ pickTz:["手机时区：{z}；自动识别结果：{c}","Device time zone: {z}; 
 aboutVer:["版本","Version"],
 diagT:["国家识别诊断（截图发给我们可帮助排查）","Country detection details (screenshot this if something looks wrong)"],
 diagTz:["手机时区","Device time zone"],diagDet:["自动识别结果","Auto-detected"],diagUse:["当前使用","Now using"],
-diagMode:["方式","Mode"],diagAuto:["自动","Automatic"],diagMan:["手动","Manual"],
+diagMode:["方式","Mode"],diagFs:["实测文字放大","Measured text scale"],diagAuto:["自动","Automatic"],diagMan:["手动","Manual"],
 fsT:["文字大小","Text size"],
 fsSys:["跟随手机","Phone setting"],fsM:["标准","Standard"],fsL:["大","Large"],fsXL:["特大","Extra large"],
 fsHint:["“跟随手机”：iPhone 读取 设置 › 显示与亮度 › 文字大小（或 辅助功能 › 更大字体）。安卓若不跟随，请直接选“大”或“特大”。","“Phone setting” follows iPhone Settings › Display & Brightness › Text Size (or Accessibility › Larger Text). If Android does not follow it, choose Large or Extra large here."],
@@ -1100,7 +1135,28 @@ function sysScale(){try{if(!(window.CSS&&CSS.supports&&CSS.supports("font","-app
   if(!isIOS())return 1;return px/17}catch(e){return 1}}
 function applyFs(){var k=fsMode==="l"?1.15:fsMode==="xl"?1.3:fsMode==="m"?1:sysScale();
   k=Math.max(1,Math.min(1.45,k));k=Math.round(k*100)/100;
-  var r=document.documentElement;r.style.setProperty("--fs",String(k));r.classList.toggle("bigtext",k>=1.12)}
+  var r=document.documentElement;r.style.setProperty("--fs",String(k));fitText()}
+
+/* ===================== v0.4.3：实测真实字号 + 实测顶栏/底栏高度 =====================
+   中文字（如“国”）的宽度恒等于 1 个字号。隐藏的“国”字按 100px × --fs 排版，
+   量出来的宽度 ÷ 100 = 真实放大倍数（包含本页“大/特大”和安卓系统/微信的放大）。 */
+var TZOOM=1;
+function probeEl(){var p=document.getElementById("ecProbe");
+  if(!p){p=document.createElement("span");p.id="ecProbe";p.setAttribute("aria-hidden","true");p.textContent="\u56fd";document.body.appendChild(p)}return p}
+function fitText(){try{var w=probeEl().getBoundingClientRect().width/100;
+    if(!(w>=0.8&&w<=4))w=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--fs"))||1;
+    TZOOM=Math.round(w*100)/100;var r=document.documentElement;
+    r.classList.toggle("bigtext",TZOOM>=1.12);r.classList.toggle("hugetext",TZOOM>=1.4);r.classList.toggle("maxtext",TZOOM>=1.7)}catch(e){}
+  fitChrome()}
+function fitChrome(){try{var r=document.documentElement.style,h=document.querySelector("header.top"),n=$("nav"),d=$("dock");
+  if(h)r.setProperty("--top-real",h.offsetHeight+"px");
+  if(n&&n.offsetHeight)r.setProperty("--nav-real",n.offsetHeight+"px");
+  if(d)r.setProperty("--dock-real",d.offsetHeight+"px")}catch(e){}}
+(function(){var q=null;function later(){if(q)return;q=(window.requestAnimationFrame||setTimeout)(function(){q=null;fitText()})}
+  try{if(window.ResizeObserver){var ro=new ResizeObserver(later);ro.observe(probeEl());
+    ["nav","dock"].forEach(function(id){var e=$(id);if(e)ro.observe(e)});var h=document.querySelector("header.top");if(h)ro.observe(h)}}catch(e){}
+  window.addEventListener("resize",later);window.addEventListener("orientationchange",later);
+  try{if(document.fonts&&document.fonts.ready)document.fonts.ready.then(later)}catch(e){}})();
 
 /* ===================== 底部四栏 ===================== */
 var TABS=[["home","","aid","tabHome"],["sos","sos","sos","tabSos"],["me","me","user","tabMe"],["more","more","dots","tabMore"]];
@@ -1173,7 +1229,7 @@ function aboutHtml(c){
     '<div class="vrow"><b>'+esc(VERSION)+'</b><span>'+t("contentVer")+CO()+CONTENT_VER+'</span><span>'+t("verOn")+CO()+esc(verOf(c))+'</span></div>'+
     '<details class="sl"><summary>'+t("diagT")+'</summary><div class="muted diag">'+
     t("diagTz")+CO()+esc(tzLabel())+'<br>'+t("diagDet")+CO()+esc(DET==="XX"?t("autoNone"):nm(DET))+' ('+DET+')<br>'+
-    t("diagUse")+CO()+esc(nm(c))+' ('+c+')<br>'+t("diagMode")+CO()+(manual?t("diagMan"):t("diagAuto"))+'<br>'+esc(VERSION)+' · '+esc(navigator.language||"")+'</div></details></section>'}
+    t("diagUse")+CO()+esc(nm(c))+' ('+c+')<br>'+t("diagMode")+CO()+(manual?t("diagMan"):t("diagAuto"))+'<br>'+t("diagFs")+CO()+TZOOM+'×<br>'+esc(VERSION)+' · '+esc(navigator.language||"")+'</div></details></section>'}
 function viewMore(c){var h=aboutHtml(c);
   if(!standalone()){
     var ios=/iPhone|iPad|iPod/.test(navigator.userAgent||"")||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
