@@ -188,6 +188,14 @@ a.rblock:active{background:var(--crimson-press);transform:scale(.98)}
 .tile.top b{font-size:calc(20px * var(--fs))}
 .tile.top small{color:#FFFFFF;opacity:.95}
 .tile.top .chev{margin-left:auto}
+/* v0.9.0：ⓘ 说明折叠、待签审标记 */
+details.ifo{margin-top:10px;border-top:1px solid var(--border-card)}
+details.ifo summary{min-height:44px;display:flex;align-items:center;font-weight:700;color:var(--text-muted);cursor:pointer;list-style:none}
+details.ifo summary::-webkit-details-marker{display:none}
+details.ifo .ifb p{margin:0 0 8px}
+details.ifo .ifb{padding-bottom:4px;color:var(--text-muted)}
+.pend{display:inline-block;margin-top:4px;padding:1px 8px;border-radius:999px;border:1px solid #B45309;color:#B45309;font-style:normal;font-weight:800;font-size:calc(14px * var(--fs))}
+.pendN{margin-top:10px;padding:8px 12px;border-radius:10px;border:1px solid #B45309;color:#B45309;font-weight:700}
 
 /* ---------- 当地号码 ---------- */
 .nums{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}
@@ -540,12 +548,12 @@ var FEEDBACK_GOOGLE = _CFG.google||"";    // Google 表单链接，例如 https:
 var FEEDBACK_TENCENT = _CFG.tencent||"";  // 腾讯问卷链接，例如 https://wj.qq.com/s2/xxxx/xxxx/
 // 可选：Google 表单里"版本/国家/语言"那道简答题的编号（形如 entry.123456789）。填了以后会自动带入，留空也能用。
 var GOOGLE_PREFILL_ENTRY = _CFG.googleEntry||"";
-var VERSION = "MVP v0.8.0";
+var VERSION = "MVP v0.9.0";
 var VERIFIED_ON = "2026-11-17";   // 全部国家号码的统一核实日期；某国单独复核后，在该国数据里加 v:"YYYY-MM-DD"
 // 固定的正式网址：分享、锁屏图片一律用它，不用当前地址栏（避免分享出 file:// 或预览地址）。分享链接里永远不放任何个人信息。
 var SITE_URL = "https://jackyyhhxjyxn.github.io/emergency-card/";
 // 内容版本：医学内容（CARDS）有任何改动时加 1。C1 = 与 v0.3.3 逐字相同、尚待医师签审的版本。
-var CONTENT_VER = "C1";
+var CONTENT_VER = "C2";
 var STALE_DAYS = 180;              // 号码核实日期超过这么多天，页面会提醒"可能已过时"
 
 /* ===================== 国家数据 COUNTRY DATA =====================
@@ -692,6 +700,32 @@ var CARDS=[
  extra:["1 岁以下婴儿：脸朝下趴在前臂上，头低于胸，拍背 5 次；翻转后用掌根在胸部正中按压 5 次，交替进行。不要做腹部冲击。",
         "Infants under 1: face-down along your forearm, head lower than chest, 5 back blows; turn over and give 5 chest thrusts with the heel of one hand; alternate. No abdominal thrusts."],
  src:[18]},
+{id:"icpr",i:"👶",pend:1,zh:"婴儿心肺复苏（1 岁以下）",en:"Baby CPR (under 1)",
+ szh:"1 岁以下：没反应、没有正常呼吸",sen:"Under 1: unresponsive, not breathing normally",
+ when:["1 岁以下婴儿叫不醒，并且不呼吸或只有喘息样呼吸（喘息不算正常呼吸）。","A baby under 1 does not respond, and is not breathing or only gasping (gasping is not normal breathing)."],
+ steps:[["确认周围安全。呼唤婴儿，轻拍脚底或肩膀，不要摇晃。","Check it is safe. Speak to the baby and gently tap the sole of the foot or the shoulder. Do not shake."],
+  ["立刻拨打 {N} 并开免提；有旁人就让他去拿 AED。只有你一人又没有电话：先做 1 分钟心肺复苏，再抱着婴儿去打电话。","Call {N} now on speaker; send anyone nearby for an AED. Alone with no phone: do 1 minute of CPR first, then take the baby with you to call."],
+  ["让婴儿仰卧在硬的平面上。头保持正中，轻轻抬起下巴，不要压下巴下面的软处。","Lay the baby on their back on a firm, flat surface. Keep the head in a neutral position and gently lift the chin; do not press under the chin."],
+  ["先吹气 5 次：用嘴同时包住婴儿的口和鼻，平稳吹气约 1 秒，看到胸部抬起就停。","First give 5 rescue breaths: cover the baby's mouth and nose with your mouth and blow steadily for about 1 second, just enough to make the chest rise."],
+  ["双手环抱胸部，两个拇指并拢放在胸部正中，向下按至少胸厚的三分之一（约 4 厘米），每分钟 100–120 次，每次让胸部完全回弹。","Encircle the chest with both hands, thumbs together on the centre of the chest. Press down at least one third of the chest depth (about 4 cm), 100–120 a minute, letting the chest rise fully each time."],
+  ["按压 30 次 + 吹气 2 次，循环进行。吹不了气：持续按压，能吹时再加上。","Repeat 30 compressions and 2 breaths. If you cannot give breaths: keep compressing and add breaths when you can."],
+  ["AED 一到立刻开机，按语音提示操作；有儿童模式就打开。持续到急救人员接手，或婴儿出现明显的生命迹象。","Switch on an AED as soon as it arrives and follow its prompts; use child mode if it has one. Continue until professionals take over or the baby shows clear signs of life."]],
+ dont:[["不要摇晃婴儿。","Do not shake the baby."],
+  ["不要盲目用手指去掏嘴；只取看得见、够得着的异物。","Do not sweep the mouth blindly; only remove an object you can clearly see and reach."]],
+ metro:1,src:[124,127,125,126]},
+{id:"ichoke",i:"👶",pend:1,zh:"婴儿噎住（1 岁以下）",en:"Baby choking (under 1)",
+ szh:"1 岁以下：哭不出、咳不出、不能呼吸",sen:"Under 1: cannot cry, cough or breathe",
+ when:["1 岁以下婴儿突然哭不出、发不出声、咳不出或不能呼吸。","A baby under 1 suddenly cannot cry, make a noise, cough or breathe."],
+ steps:[["还能哭或咳嗽：让他自己咳，守在旁边。","If the baby can cry or cough: let them cough and stay with them."],
+  ["不能哭、咳或呼吸：坐下，让婴儿脸朝下趴在你的大腿或前臂上，用手托住头，头低于身体。","If they cannot cry, cough or breathe: sit down and lay the baby face down along your thigh or forearm, supporting the head, head lower than the body."],
+  ["用掌根在两肩胛骨之间用力拍背，最多 5 次；每拍一次都看看异物出来没有。","With the heel of your hand, give up to 5 sharp back blows between the shoulder blades, checking after each one."],
+  ["还没出来：把婴儿翻过来，仰卧在你的膝上。双手环抱胸部，两个拇指放在胸骨上、乳头连线下方一指宽处，用力向下压，最多 5 次。","Still choking: turn the baby face up on your knees. Encircle the chest with both hands, thumbs on the breastbone one finger's breadth below the nipple line, and push down sharply up to 5 times."],
+  ["还没出来：拨打 {N}，抱着婴儿一起去打；继续 5 次拍背 + 5 次胸部按压交替进行。","Still choking: call {N}, taking the baby with you. Keep alternating up to 5 back blows and 5 chest thrusts."],
+  ["婴儿失去反应：立刻开始婴儿心肺复苏（先吹气 5 次），并按接线员的指示做。","If the baby becomes unresponsive: start baby CPR straight away (5 rescue breaths first) and follow the call handler."],
+  ["异物出来后，做过胸部按压的婴儿都要去医院检查，即使看起来已经好了。","Afterwards, every baby who has had chest thrusts should be seen in hospital, even if they seem fine."]],
+ dont:[["不要做腹部冲击（海姆立克法）。","Do not give abdominal thrusts."],
+  ["不要盲目用手指去掏嘴。","Do not sweep the mouth blindly with your fingers."]],
+ src:[124,128,129,130,131]},
 {id:"heart",i:"💔",zh:"胸痛 · 疑似心梗",en:"Chest pain · Heart attack",szh:"胸口压迫感、出汗、气短",sen:"Chest pressure, sweating, breathless",
  when:["胸部压榨样疼痛或不适，可放射到手臂、颈部、下颌、背部或上腹，伴出汗、恶心、气短。持续超过 15 分钟要高度警惕。",
        "Crushing chest pain or discomfort that may spread to the arm, neck, jaw, back or stomach, with sweating, nausea or breathlessness. Pain lasting over 15 minutes is a warning sign."],
@@ -898,7 +932,7 @@ s4:["是否清醒？是否有呼吸？","Are they awake? Are they breathing?"],
 s5:["你的电话号码。等对方先挂电话","Your phone number. Let them hang up first"],
 locBtn:["显示我的经纬度","Show my coordinates"],locing:["定位中…","Locating…"],locFail:["无法定位。请允许位置权限，或直接描述地址与地标。","Could not get location. Allow location access, or describe the address and landmarks."],
 acc:["精度约","Accuracy about"],m:["米","m"],copy:["复制","Copy"],copied:["已复制","Copied"],map:["在地图中打开","Open in maps"],
-cards:["急救步骤","What to do"],back:["返回","Back"],dontT:["不要做","Do not"],srcT:["依据","Based on"],
+cards:["急救步骤","What to do"],infoT:["ⓘ 说明","ⓘ Info"],pendT:["待签审","Pending review"],pendN:["待签审：本卡为 v0.9 新增，尚未经医师审核；接线员的指示优先。","Pending review: new in v0.9, not yet checked by a physician. The call handler's instructions come first."],disc1:["本卡为公众急救科普与应急参考，不能替代专业医疗救治或急救培训。","Public first-aid information for reference only; it does not replace professional medical care or first-aid training."],wallS1:["生成一张只含当地急救号码的锁屏图片。","Make a lock-screen image with only the local emergency numbers."],back:["返回","Back"],dontT:["不要做","Do not"],srcT:["依据","Based on"],
 metroOn:["开始按压节拍（110 次/分）","Start compression beat (110/min)"],metroOff:["停止节拍","Stop beat"],
 idT:["我的急救信息","My medical ID"],idHint:["只保存在本机浏览器，不会上传。昏迷时可供施救者查看。","Stored only in this browser — never uploaded. Helps rescuers if you cannot speak."],
 edit:["填写 / 修改","Add / edit"],save:["保存","Save"],clear:["清空","Clear"],
@@ -973,6 +1007,8 @@ function digits(n){return String(n).split("").join(" ")}
 function phoneIco(){return '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>'}
 function srcA(i){return '<a href="'+SRC[i][2]+'" target="_blank" rel="noopener">'+esc(SRC[i][lang==="zh"?0:1])+'</a>'}
 function srcLine(ids){return ids.map(srcA).join(" · ")}
+/* v0.9.0：说明文字统一收进“ⓘ 说明”，点开才显示（急救路径每屏最多一句说明） */
+function info(inner){return inner?'<details class="ifo"><summary>'+t("infoT")+'</summary><div class="ifb">'+inner+'</div></details>':""}
 function CO(){return lang==="zh"?"：":": "}
 function SEP(){return lang==="zh"?"，":", "}
 function PL(n){return lang==="zh"?"（"+n+"）":" ("+n+")"}
@@ -1013,7 +1049,7 @@ msg:'<path d="M4.5 5.5h15a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H10l-4.5 3.5v-3.5h-1a1 1
 book:'<path d="M5 4.5h10.5A3.5 3.5 0 0 1 19 8v12H8.5A3.5 3.5 0 0 1 5 16.5z"/><path d="M5 16.5A3.5 3.5 0 0 1 8.5 13H19"/>',
 idc:'<rect x="3.5" y="5.5" width="17" height="13" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M5.8 15.8a3.5 3.5 0 0 1 6.4 0M14.5 10h3.5M14.5 13.5h3.5"/>'
 };
-var CICO={cpr:"cpr",choke:"choke",heart:"heart",stroke:"stroke",bleed:"bleed",ana:"ana",seiz:"seiz",burn:"burn",heat:"heat",poison:"poison",unc:"unc"};
+var CICO={cpr:"cpr",choke:"choke",icpr:"cpr",ichoke:"choke",heart:"heart",stroke:"stroke",bleed:"bleed",ana:"ana",seiz:"seiz",burn:"burn",heat:"heat",poison:"poison",unc:"unc"};
 function I(n,c){return '<svg class="ic'+(c?" "+c:"")+'" viewBox="0 0 24 24" aria-hidden="true" focusable="false">'+(ICO[n]||"")+'</svg>'}
 function sign(id,cls){return '<span class="sg'+(cls?" "+cls:"")+'" aria-hidden="true">'+I(CICO[id]||"info")+'</span>'}
 
@@ -1386,8 +1422,7 @@ function viewHome(c){var h="";
   h+='<div class="hentry"><button class="btn ghost" id="hospGo">'+I("pin")+t("hospGo")+'</button></div>';
   h+='<div class="note" role="note">'+I("info")+'<div>'+t("beta")+'</div></div>';
   h+='<h2 class="secH" id="cardsH" tabindex="-1"><b>'+t("cards")+'</b></h2><div class="grid">'+CARDS.map(function(k){
-     return '<button class="tile'+(k.top?" top":"")+'" data-card="'+k.id+'">'+sign(k.id)+'<span><b>'+esc(k[lang])+'</b><small>'+esc(lang==="zh"?k.szh:k.sen)+'</small></span>'+(k.top?I("chevR","chev"):"")+'</button>'}).join("")+'</div>';
-  h+='<footer>'+t("disc")+'</footer>';
+     return '<button class="tile'+(k.top?" top":"")+'" data-card="'+k.id+'">'+sign(k.id)+'<span><b>'+esc(k[lang])+'</b><small>'+esc(lang==="zh"?k.szh:k.sen)+'</small>'+(k.pend?'<em class="pend">'+t("pendT")+'</em>':'')+'</span>'+(k.top?I("chevR","chev"):"")+'</button>'}).join("")+'</div>';
   return h}
 
 /* ===================== v0.5.1 附近的急诊医院（第 1 级：只跳转地图 App，不存数据、不读位置） =====================
@@ -1417,9 +1452,9 @@ function hospHtml(c){var N=C[c].amb,cn=c==="CN",b=[];
   var srcs=[87].concat(ios?[88,97]:[]).concat(cn?[89]:[]).concat(o?[o[2]]:[]);
   return '<h2 class="secH" id="hospH" tabindex="-1"><b>'+t("hospH")+'</b></h2><section class="card hosp" id="hosp" aria-labelledby="hospH">'+
     '<p class="hw">'+I("alert","s")+' '+esc(t("hospWarn").replace("{N}",N))+'</p>'+
-    '<div class="hb">'+b.join("")+'</div><div class="hs" id="hospMsg" aria-live="polite"></div>'+old+
-    '<p class="ht">'+t("hospNote")+'</p><p class="ht">'+t(cn?"hospPrivCN":"hospPriv")+'</p>'+
-    '<div class="src">'+t("srcT")+CO()+srcLine(srcs)+'</div></section>'}
+    '<div class="hb">'+b.join("")+'</div><div class="hs" id="hospMsg" aria-live="polite"></div>'+
+    info(old+'<p class="ht">'+t("hospNote")+'</p><p class="ht">'+t(cn?"hospPrivCN":"hospPriv")+'</p>'+
+    '<div class="src">'+t("srcT")+CO()+srcLine(srcs)+'</div>')+'</section>'}
 
 function viewSos(c){var d=C[c],h="";
   h+='<button class="helpbtn" id="helperGo"><span class="sg" aria-hidden="true">'+I("phone")+'</span><span><b>'+t("helpOT")+'</b><small>'+t("helpOS")+'</small></span>'+I("chevR","chev")+'</button>';
@@ -1457,20 +1492,20 @@ function viewMore(c){var h=aboutHtml(c);
     var and=/Android/.test(navigator.userAgent||"");
     h+='<div id="instSec"><h2 class="secH" style="margin-top:6px"><b>'+t("instT")+'</b></h2><section class="card"><div>'+t("instHint")+'</div>'+
        '<button class="btn" id="instBtn"'+(dip?'':' hidden')+'>'+I("dl")+t("instBtn")+'</button>'+
-       (and?'':'<p class="muted">'+t("instIOS")+'</p>')+(ios?'':'<p class="muted">'+t("instAnd")+'</p>')+'</section></div>';
+       info((and?'':'<p>'+t("instIOS")+'</p>')+(ios?'':'<p>'+t("instAnd")+'</p>'))+'</section></div>';
   }
-  h+='<h2 class="secH"'+(standalone()?' style="margin-top:6px"':'')+'><b>'+t("wallT")+'</b></h2><section class="card"><div>'+t("wallS")+'</div>'+
-     '<button class="btn red" id="wallGo">'+I("phone")+t("wallBtn")+'</button></section>';
+  h+='<h2 class="secH"'+(standalone()?' style="margin-top:6px"':'')+'><b>'+t("wallT")+'</b></h2><section class="card"><div>'+t("wallS1")+'</div>'+
+     '<button class="btn red" id="wallGo">'+I("phone")+t("wallBtn")+'</button>'+info('<p>'+t("wallS")+'</p>')+'</section>';
   h+='<h2 class="secH"><b>'+t("shareT")+'</b></h2><section class="card"><div>'+t("shareS")+'</div><div class="urlbox">'+esc(SITE_URL)+'</div>'+
      (inWx()?'<div class="note" role="note" style="margin:12px 0 0">'+I("info")+'<div>'+t("shareInWx")+'</div></div>':'')+
      '<button class="btn" id="copyUrl">'+t("shareCopy")+'</button><div class="muted" id="shareMsg" role="status"></div>'+
      (navigator.share&&!inWx()?'<button class="btn ghost" id="shareBtn">'+t("shareSys")+'</button>':'')+
-     '<p class="muted">'+t("shareWx")+'</p></section>';
+     info('<p>'+t("shareWx")+'</p>')+'</section>';
   h+='<h2 class="secH"><b>'+t("thT")+'</b></h2><section class="card"><div class="seg3" role="group" aria-label="'+esc(t("thT"))+'">'+
      [["auto","thAuto","auto"],["light","thLight","sun"],["dark","thDark","moon"]].map(function(x){return '<button data-th="'+x[0]+'" aria-pressed="'+(theme===x[0])+'">'+I(x[2],"s")+t(x[1])+'</button>'}).join("")+'</div>'+
      '<div class="kick" style="margin-top:16px">'+t("fsT")+'</div><div class="seg4" role="group" aria-label="'+esc(t("fsT"))+'">'+
      [["sys","fsSys"],["m","fsM"],["l","fsL"],["xl","fsXL"]].map(function(x){return '<button data-fs="'+x[0]+'" aria-pressed="'+(fsMode===x[0])+'">'+t(x[1])+'</button>'}).join("")+'</div>'+
-     '<p class="muted">'+t("fsHint")+'</p></section>';
+     info('<p>'+t("fsHint")+'</p>')+'</section>';
   h+='<h2 class="secH" id="fb" tabindex="-1"><b>'+t("fbT")+'</b></h2><section class="card"><div>'+t("fbQ")+'</div>'+fbBlock(c)+'</section>';
   var ks=Object.keys(SRC);
   h+='<h2 class="secH"><b>'+t("srcAll")+'</b></h2><section class="card"><div class="muted">'+t("verified")+CO()+VERIFIED_ON+'<br>A = '+t("lvlA")+SEP()+'B = '+t("lvlB")+SEP()+'C = '+t("lvlC")+'</div>'+
@@ -1478,7 +1513,7 @@ function viewMore(c){var h=aboutHtml(c);
      ks.map(function(i){return '<li>'+srcA(i)+'</li>'}).join("")+'</ol></details></section>';
   h+='<h2 class="secH"><b>'+t("clrT")+'</b></h2><section class="card"><div>'+t("clrS")+'</div>'+
      '<button class="btn warn" id="clrBtn">'+t("clrBtn")+'</button></section>';
-  h+='<footer>'+t("disc")+' '+srcLine([51])+'<br>'+t("offline")+'<br><b>'+t("ver")+CO()+VERSION+' · '+t("contentVer")+CO()+CONTENT_VER+'</b></footer>';
+  h+='<footer>'+t("disc1")+info('<p>'+t("disc")+' '+srcLine([51])+'</p><p>'+t("offline")+'</p>')+'<b>'+t("ver")+CO()+VERSION+' · '+t("contentVer")+CO()+CONTENT_VER+'</b></footer>';
   return h}
 
 function renderMain(){
@@ -1561,10 +1596,10 @@ function renderCard(keep){
   function fill(s){return esc(s).replace(/\{N\}/g,'<b>'+esc(N)+'</b>')}
   var dont='<ul>'+k.dont.map(function(s){return '<li>'+esc(L(s))+'</li>'}).join("")+'</ul>';
   var h='<div class="shead"><button class="back" id="bk">'+I("chevL")+t("back")+'</button><span class="sp"></span>'+
-    (/^(stroke|seiz|cpr)$/.test(k.id)?'<button class="chip" id="tmGo">'+I("clock","s")+t("tmShort")+'</button>':'')+
+    (/^(stroke|seiz|cpr|icpr)$/.test(k.id)?'<button class="chip" id="tmGo">'+I("clock","s")+t("tmShort")+'</button>':'')+
     '<button class="chip" id="voiceBtn" aria-pressed="'+(cur.voice?"true":"false")+'" aria-label="'+esc(cur.voice?t("voiceOnA"):t("voiceOffA"))+'">'+I(cur.voice?"vol":"mute")+'</button>'+
     '</div>'+
-    '<div class="ttl">'+sign(k.id,k.top?"red":"")+'<h1 id="sheetT" tabindex="-1">'+esc(k[lang])+'</h1></div>'+
+    '<div class="ttl">'+sign(k.id,k.top?"red":"")+'<h1 id="sheetT" tabindex="-1">'+esc(k[lang])+'</h1></div>'+(k.pend?'<div class="pendN" role="note">'+t("pendN")+'</div>':'')+
     '<button class="seg wide" id="modeBtn" aria-label="'+esc(step?t("modeList"):t("modeStep"))+'"><span'+(step?' class="on"':'')+' aria-hidden="true">'+t("modeStep")+'</span><span'+(step?'':' class="on"')+' aria-hidden="true">'+t("modeList")+'</span></button>';
   if(k.metro)h+='<div class="metro"><div class="dot" id="dot" aria-hidden="true">'+I("cpr")+'</div><div class="ml">'+t("beatLbl")+'</div><button class="chip" id="sndBtn">'+sndLabel()+'</button></div>';
   h+='<div class="status" id="awk"'+(wl?'':' hidden')+'>'+I("sun","s")+t("awake")+'</div><details class="when" id="noawk" style="margin-top:8px;padding:6px 12px"'+(wlFail?'':' hidden')+'><summary style="min-height:36px;display:flex;align-items:center;gap:6px;cursor:pointer">'+I("alert","s")+t("noAwakeS")+'</summary><div style="padding-bottom:6px">'+t("noAwake")+'</div></details>';
@@ -1886,6 +1921,14 @@ for(var _k7 in T7)T[_k7]=T7[_k7];
 SRC[120]=["IETF RFC 5724：sms 链接格式（sms:号码?body=内容）","IETF RFC 5724: the sms: URI (sms:number?body=text)","https://www.rfc-editor.org/rfc/rfc5724"];
 SRC[121]=["Apple 开发者论坛：iOS 上 sms: 链接用 &body= 预填内容","Apple Developer Forums: iOS sms: links prefill text with &body=","https://developer.apple.com/forums/thread/91442"];
 SRC[122]=["WhatsApp 帮助中心：Click to chat（wa.me/国际号码?text=内容）","WhatsApp Help Center: How to use click to chat (wa.me/number?text=)","https://whatsapp.com/faq/en/general/26000030"];
+SRC[124]=["英国复苏委员会（RCUK）2025：儿童基础生命支持指南","Resuscitation Council UK 2025: Paediatric basic life support guidelines","https://www.resus.org.uk/professional-library/2025-resuscitation-guidelines/paediatric-basic-life-support-guidelines"];
+SRC[125]=["St John Ambulance（英国）：婴儿心肺复苏（1 岁以下）","St John Ambulance (UK): How to do baby CPR (under one year old)","https://www.sja.org.uk/first-aid-advice/baby-cpr/"];
+SRC[126]=["英国心脏基金会（BHF）：儿童和婴儿心肺复苏","British Heart Foundation: How to do CPR on a child or baby","https://www.bhf.org.uk/how-you-can-help/how-to-save-a-life/how-to-do-cpr/how-to-do-cpr-on-a-child-or-baby"];
+SRC[127]=["Royal Berkshire NHS 基金会：婴儿基础生命支持（依据 RCUK 2025）","Royal Berkshire NHS FT: Basic life support for babies (based on RCUK 2025)","https://www.royalberkshire.nhs.uk/media/1vgmejit/basic-life-support-for-babies_aug26.pdf"];
+SRC[128]=["St John Ambulance（英国）：婴儿噎住（1 岁以下）","St John Ambulance (UK): Choking baby (under one year old)","https://www.sja.org.uk/first-aid-advice/baby-choking/"];
+SRC[129]=["NHS：如何帮噎住的孩子","NHS: How to stop a child from choking","https://www.nhs.uk/baby/first-aid-and-safety/first-aid/how-to-stop-a-child-from-choking/"];
+SRC[130]=["英国红十字会：婴儿噎住","British Red Cross: Choking baby","https://redcross.org.uk/first-aid/learn-first-aid-for-babies-and-children/choking-baby"];
+SRC[131]=["美国心脏协会 2025：婴儿噎住不做腹部冲击","American Heart Association 2025: no abdominal thrusts for choking infants","https://newsroom.heart.org/news/updated-cpr-guidelines-released-for-pediatric-and-neonatal-emergency-care-and-resuscitation"];
 SRC[123]=["高德开放平台：URI API（中国大陆地图链接）","AMap Open Platform: URI API (maps links in mainland China)","https://lbs.amap.com/api/uri-api/guide/search/search"];
 var T8={
 nfBtn:["通知家人","Notify family"],
