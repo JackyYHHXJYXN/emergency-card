@@ -210,6 +210,12 @@ a.rblock:active{background:var(--crimson-press);transform:scale(.98)}
 .btn.ghost{background:var(--bg-subtle);color:var(--text-primary);border:1px solid var(--border-strong)}
 .btn.red{background:var(--crimson-fill);color:#FFFFFF}
 .btn.grn{background:var(--emerald-fill);color:#FFFFFF}
+/* v0.5.1 附近的急诊医院 */
+.hosp .hb{display:grid;gap:10px;margin-top:4px}.hosp .hb .btn{margin-top:0}
+.hosp .ht{font-size:calc(17px * var(--fs));line-height:1.5;color:var(--text-muted);margin:10px 0 0}
+.hosp .hw{font-size:calc(17px * var(--fs));line-height:1.5;font-weight:700;margin:0 0 12px}
+.hosp .hs{font-size:calc(17px * var(--fs));color:var(--text-muted);margin-top:8px;min-height:1em}
+.hentry{margin:0 0 12px}.hentry .btn{margin-top:0}
 .loc{font-family:var(--font-num);font-size:calc(24px * var(--fs));font-weight:800;font-variant-numeric:tabular-nums;margin:12px 0 2px;word-break:break-all;
   background:var(--bg-subtle);border:1px solid var(--border-card);border-radius:8px;padding:10px 12px}
 .src{font-size:calc(17px * var(--fs));color:var(--text-muted);margin-top:14px;word-break:break-word}
@@ -455,7 +461,7 @@ var FEEDBACK_GOOGLE = _CFG.google||"";    // Google 表单链接，例如 https:
 var FEEDBACK_TENCENT = _CFG.tencent||"";  // 腾讯问卷链接，例如 https://wj.qq.com/s2/xxxx/xxxx/
 // 可选：Google 表单里"版本/国家/语言"那道简答题的编号（形如 entry.123456789）。填了以后会自动带入，留空也能用。
 var GOOGLE_PREFILL_ENTRY = _CFG.googleEntry||"";
-var VERSION = "MVP v0.5.0";
+var VERSION = "MVP v0.5.1";
 var VERIFIED_ON = "2026-11-17";   // 全部国家号码的统一核实日期；某国单独复核后，在该国数据里加 v:"YYYY-MM-DD"
 // 固定的正式网址：分享、锁屏图片一律用它，不用当前地址栏（避免分享出 file:// 或预览地址）。分享链接里永远不放任何个人信息。
 var SITE_URL = "https://jackyyhhxjyxn.github.io/emergency-card/";
@@ -772,11 +778,25 @@ var SRC={
 83:["厚生劳动省：診療申込書（阿拉伯语 / 英语 / 日语）","MHLW: Medical application form (Arabic / English / Japanese)","https://www.mhlw.go.jp/content/10800000/01_en01_Ar.pdf"],
 84:["厚生劳动省：内科問診票（印地语 / 英语 / 日语）","MHLW: Internal medicine questionnaire (Hindi / English / Japanese)","https://www.mhlw.go.jp/content/10800000/14_000948754_Hindi_revised.pdf"],
 85:["厚生劳动省：診療申込書（印地语 / 英语 / 日语）","MHLW: Medical application form (Hindi / English / Japanese)","https://www.mhlw.go.jp/content/10800000/1_Hindi.pdf"],
-86:["ConceptNet（收录 JMdict）：日语“血液型”","ConceptNet (incl. JMdict): Japanese 血液型 (blood type)","https://conceptnet.io/c/ja/%E8%A1%80%E6%B6%B2%E5%9E%8B"]
+86:["ConceptNet（收录 JMdict）：日语“血液型”","ConceptNet (incl. JMdict): Japanese 血液型 (blood type)","https://conceptnet.io/c/ja/%E8%A1%80%E6%B6%B2%E5%9E%8B"],
+87:["Google：Maps URLs（跨平台，无需密钥）","Google: Maps URLs (cross-platform, no API key)","https://developers.google.com/maps/documentation/urls/get-started"],
+88:["Apple：统一地图链接（默认以本人位置为中心搜索）","Apple: Unified Maps URLs (search defaults to the person's location)","https://developer.apple.com/documentation/mapkit/unified-map-urls"],
+89:["高德开放平台：URI API 搜索查询","AMap Open Platform: URI API search","https://lbs.amap.com/api/uri-api/guide/search/search"],
+90:["NHS：查找最近的 A&E（英格兰）","NHS: Find an A&E (England)","https://www.nhs.uk/service-search/find-an-accident-and-emergency-service"],
+91:["healthdirect（澳大利亚政府资助）：急诊科与 Service Finder","healthdirect (Australian Government funded): emergency departments & Service Finder","https://www.healthdirect.gov.au/hospital-emergency-departments"]
 };
 
 /* ===================== 界面文字 UI STRINGS ===================== */
 var T={
+hospH:["附近的急诊医院","Nearby emergency hospitals"],hospGo:["附近的急诊医院（在地图中查看）","Nearby emergency hospitals (open in maps)"],
+hospWarn:["危及生命时先拨 {N}，不要先找医院。","If life is at risk, call {N} first — don't look for a hospital first."],
+hospG:["在 Google 地图中查看","Open in Google Maps"],hospA:["在苹果地图中查看","Open in Apple Maps"],hospM:["在高德地图中查看","Open in AMap (高德)"],
+hospGcn:["Google 地图（大陆通常打不开）","Google Maps (usually blocked in mainland China)"],
+hospOff:["官方查询：{s}","Official finder: {s}"],hospNHS:["NHS 查找 A&E（英格兰）","NHS A&E finder (England)"],hospHD:["healthdirect 急诊科查询","healthdirect emergency department finder"],
+hospNote:["地图结果由地图公司提供，仅供参考：不保证每家都有 24 小时急诊，也不保证接收这类病人（例如只收儿童或只收成人），距离可能是直线距离。","Results come from the map provider and are for reference only: they may not all have a 24-hour emergency department or accept this patient (some only see children or only adults), and distances may be straight-line."],
+hospPriv:["本页不读取、不上传你的位置；点按钮后，由地图 App 用它自己的定位来搜索。","This page does not read or upload your location; after you tap, the map app searches using its own location."],
+hospPrivCN:["点“高德地图”时，本页会请求一次位置（只用于把搜索中心发给高德，不保存、不上传给我们）；拒绝也能打开，只是可能不在你附近。","Tapping AMap asks for your location once (only to send the search centre to AMap; not saved or sent to us). If you decline it still opens, but may not centre on you."],
+hospLoc:["正在获取位置…","Getting location…"],hospNoLoc:["没拿到位置，已按高德自己的定位打开，请确认结果在你附近。","Couldn't get your location; opened AMap with its own positioning — check the results are near you."],
 brand:["急救卡","Emergency Card"],
 beta:["测试版（"+VERSION+"）：内容依据公开的官方指南整理，尚未经执业急诊医师签审。紧急情况请先打电话，接线员的指示优先于本卡。",
       "Test version ("+VERSION+"): compiled from public official guidance; not yet signed off by a practising emergency physician. In an emergency call first — the dispatcher's instructions override this card."],
@@ -1268,11 +1288,41 @@ function viewHome(c){var h="";
   if(c==="XX")h+='<div class="note" role="note">'+I("alert")+'<div>'+esc(t("xxNote").replace("{z}",tzLabel()))+'</div></div>';
   h+=staleNote(c);
   h+='<section class="card crit tri" id="tri" aria-labelledby="triQ">'+triHtml()+'</section>';
+  h+='<div class="hentry"><button class="btn ghost" id="hospGo">'+I("pin")+t("hospGo")+'</button></div>';
   h+='<div class="note" role="note">'+I("info")+'<div>'+t("beta")+'</div></div>';
   h+='<h2 class="secH" id="cardsH" tabindex="-1"><b>'+t("cards")+'</b></h2><div class="grid">'+CARDS.map(function(k){
      return '<button class="tile'+(k.top?" top":"")+'" data-card="'+k.id+'">'+sign(k.id)+'<span><b>'+esc(k[lang])+'</b><small>'+esc(lang==="zh"?k.szh:k.sen)+'</small></span>'+(k.top?I("chevR","chev"):"")+'</button>'}).join("")+'</div>';
   h+='<footer>'+t("disc")+'</footer>';
   return h}
+
+/* ===================== v0.5.1 附近的急诊医院（第 1 级：只跳转地图 App，不存数据、不读位置） =====================
+   来源 87–91。Google / 苹果不传坐标：由地图 App 用自己的定位搜索。高德：仅中国大陆，按用户点击请求一次位置，
+   换算为高德使用的 GCJ-02 坐标后作为 center 传入（官方参数说明见来源 89；不传 center 时的行为官方未说明）。 */
+var HOSP_Q={def:"emergency room hospital",GB:"A&E hospital",IE:"A&E hospital",AU:"emergency department hospital",NZ:"emergency department hospital"};
+var HOSP_OFF={GB:["hospNHS","https://www.nhs.uk/service-search/find-an-accident-and-emergency-service",90],AU:["hospHD","https://www.healthdirect.gov.au/hospital-emergency-departments",91]};
+function hospQ(c){return HOSP_Q[c]||HOSP_Q.def}
+function gUrl(c){return "https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(hospQ(c))}
+function aUrl(c){return "https://maps.apple.com/search?query="+encodeURIComponent(c==="CN"?"急诊":hospQ(c))}
+function mUrl(g){return "https://uri.amap.com/search?keyword="+encodeURIComponent("急诊")+(g?"&center="+g[0].toFixed(6)+","+g[1].toFixed(6):"")+"&view=list&src=emergency-card&callnative=1"}
+/* WGS-84 → GCJ-02（公开的标准换算公式；只在中国大陆境内使用） */
+function gcj(lat,lng){var a=6378245,ee=0.00669342162296594323,PI=Math.PI;
+  function tl(x,y){var r=-100+2*x+3*y+0.2*y*y+0.1*x*y+0.2*Math.sqrt(Math.abs(x));r+=(20*Math.sin(6*x*PI)+20*Math.sin(2*x*PI))*2/3;r+=(20*Math.sin(y*PI)+40*Math.sin(y/3*PI))*2/3;r+=(160*Math.sin(y/12*PI)+320*Math.sin(y*PI/30))*2/3;return r}
+  function tg(x,y){var r=300+x+2*y+0.1*x*x+0.1*x*y+0.1*Math.sqrt(Math.abs(x));r+=(20*Math.sin(6*x*PI)+20*Math.sin(2*x*PI))*2/3;r+=(20*Math.sin(x*PI)+40*Math.sin(x/3*PI))*2/3;r+=(150*Math.sin(x/12*PI)+300*Math.sin(x/30*PI))*2/3;return r}
+  var dl=tl(lng-105,lat-35),dg=tg(lng-105,lat-35),rl=lat/180*PI,m=Math.sin(rl);m=1-ee*m*m;var sm=Math.sqrt(m);
+  dl=(dl*180)/((a*(1-ee))/(m*sm)*PI);dg=(dg*180)/(a/sm*Math.cos(rl)*PI);return [lng+dg,lat+dl]}
+function hospHtml(c){var N=C[c].amb,cn=c==="CN",b=[];
+  var A='<a class="btn ghost" target="_blank" rel="noopener" href="'+esc(aUrl(c))+'">'+I("pin")+t("hospA")+'</a>';
+  var G='<a class="btn'+(cn?' ghost':'')+'" target="_blank" rel="noopener" href="'+esc(gUrl(c))+'">'+I("pin")+t(cn?"hospGcn":"hospG")+'</a>';
+  if(cn){b.push('<button class="btn" id="amapGo">'+I("pin")+t("hospM")+'</button>');b.push(A);b.push(G)}
+  else if(isIOS()){b.push(A.replace('btn ghost','btn'));b.push(G.replace('class="btn"','class="btn ghost"'))}
+  else b.push(G);
+  var o=HOSP_OFF[c];if(o)b.push('<a class="btn ghost" target="_blank" rel="noopener" href="'+o[1]+'">'+esc(t("hospOff").replace("{s}",t(o[0])))+'</a>');
+  var srcs=[87].concat(cn||isIOS()?[88]:[]).concat(cn?[89]:[]).concat(o?[o[2]]:[]);
+  return '<h2 class="secH" id="hospH" tabindex="-1"><b>'+t("hospH")+'</b></h2><section class="card hosp" id="hosp" aria-labelledby="hospH">'+
+    '<p class="hw">'+I("alert","s")+' '+esc(t("hospWarn").replace("{N}",N))+'</p>'+
+    '<div class="hb">'+b.join("")+'</div><div class="hs" id="hospMsg" aria-live="polite"></div>'+
+    '<p class="ht">'+t("hospNote")+'</p><p class="ht">'+t(cn?"hospPrivCN":"hospPriv")+'</p>'+
+    '<div class="src">'+t("srcT")+CO()+srcLine(srcs)+'</div></section>'}
 
 function viewSos(c){var d=C[c],h="";
   h+='<button class="helpbtn" id="helpGo"><span class="sg" aria-hidden="true">'+I("sos")+'</span><span><b>'+t("helpT")+'</b><small>'+t("helpS")+'</small></span>'+I("chevR","chev")+'</button>';
@@ -1285,6 +1335,7 @@ function viewSos(c){var d=C[c],h="";
   h+='<ul class="notes"'+(d.nums.length?'':' style="margin-top:0"')+'>'+d.notes.map(function(n){return '<li>'+esc(L(n))+'</li>'}).join("")+'</ul>';
   if(d.src.length)h+='<div class="src">'+t("srcT")+CO()+srcLine(d.src)+'<br>'+t("verOn")+CO()+esc(verOf(c))+'</div>';
   h+='</section>';
+  h+=hospHtml(c);
   h+='<h2 class="secH"><b>'+t("say")+'</b></h2><section class="card crit"><ol class="say">'+["s1","s2","s3","s4","s5"].map(function(k){return '<li>'+t(k)+'</li>'}).join("")+'</ol>'+
      '<div id="locOut" aria-live="polite"></div><button class="btn ghost" id="locBtn">'+I("pin")+t("locBtn")+'</button></section>';
   return h}
@@ -1768,6 +1819,14 @@ document.addEventListener("click",function(e){
   if(el.id==="mlGo"){goTab("more");setTimeout(function(){var f=$("fb");if(f)try{f.scrollIntoView({block:"start"});f.focus({preventScroll:true})}catch(x){}},30);return}
   if(el.dataset.ml){mlAns=mlAns===el.dataset.ml?null:el.dataset.ml;
     document.querySelectorAll("[data-ml]").forEach(function(x){x.setAttribute("aria-pressed",x.dataset.ml===mlAns?"true":"false")});return}
+  if(el.id==="hospGo"){goTab("sos");setTimeout(function(){var hh=$("hospH");if(hh)try{hh.scrollIntoView({block:"start"});var th=document.querySelector("header.top");window.scrollBy(0,-((th?th.getBoundingClientRect().height:0)+8));hh.focus({preventScroll:true})}catch(x){}},30);return}
+  if(el.id==="amapGo"){var hm=$("hospMsg"),done=false;
+    function openM(g){if(done)return;done=true;if(hm)hm.textContent=g?"":t("hospNoLoc");location.href=mUrl(g)}
+    if(!navigator.geolocation){openM(null);return}
+    if(hm)hm.textContent=t("hospLoc");
+    setTimeout(function(){openM(null)},15000);
+    navigator.geolocation.getCurrentPosition(function(p){openM(gcj(p.coords.latitude,p.coords.longitude))},function(){openM(null)},{enableHighAccuracy:false,timeout:8000,maximumAge:120000});
+    return}
   if(el.id==="locBtn"){
     var out=$("locOut");
     if(!navigator.geolocation){out.innerHTML='<div class="muted">'+t("locFail")+'</div>';return}
