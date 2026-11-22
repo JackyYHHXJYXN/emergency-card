@@ -461,7 +461,7 @@ var FEEDBACK_GOOGLE = _CFG.google||"";    // Google 表单链接，例如 https:
 var FEEDBACK_TENCENT = _CFG.tencent||"";  // 腾讯问卷链接，例如 https://wj.qq.com/s2/xxxx/xxxx/
 // 可选：Google 表单里"版本/国家/语言"那道简答题的编号（形如 entry.123456789）。填了以后会自动带入，留空也能用。
 var GOOGLE_PREFILL_ENTRY = _CFG.googleEntry||"";
-var VERSION = "MVP v0.5.1";
+var VERSION = "MVP v0.5.2";
 var VERIFIED_ON = "2026-11-17";   // 全部国家号码的统一核实日期；某国单独复核后，在该国数据里加 v:"YYYY-MM-DD"
 // 固定的正式网址：分享、锁屏图片一律用它，不用当前地址栏（避免分享出 file:// 或预览地址）。分享链接里永远不放任何个人信息。
 var SITE_URL = "https://jackyyhhxjyxn.github.io/emergency-card/";
@@ -539,6 +539,8 @@ IT:{f:"🇮🇹",zh:"意大利",en:"Italy",lvl:"A",amb:"112",nums:[["118","医�
          ["其余大区医疗急救仍拨 118。","Elsewhere, call 118 for medical emergencies."]],src:[44,15]},
 ES:{f:"🇪🇸",zh:"西班牙",en:"Spain",lvl:"A",amb:"112",nums:[["061","医疗急救（部分地区）","Medical (some regions)"]],
   notes:[["112 为全国统一紧急号码，外国手机也直接拨 112，无需加区号。","112 is the general emergency number; dial 112 with no prefix, even from a foreign phone."]],src:[45,15]},
+CH:{f:"🇨🇭",zh:"瑞士",en:"Switzerland",lvl:"A",amb:"144",v:"2026-11-22",nums:[["112","欧洲统一号码（接通警察紧急中心，外国 SIM 卡也能拨）","European emergency number (police control centre; works with a foreign SIM)"],["145","中毒咨询","Poison control"],["117","报警","Police"],["118","消防","Fire service"]],
+  notes:[["144 为救护车号码；记不住就拨 112。","144 is the ambulance number. If in doubt, dial 112."]],src:[92]},
 EU:{f:"🇪🇺",zh:"欧盟其他国家",en:"Other EU countries",lvl:"A",amb:"112",nums:[],
   notes:[["112 在全部 27 个欧盟成员国免费、全天可用，可接通急救、消防和警察。","112 works free of charge, 24/7, in all 27 EU member states for ambulance, fire and police."],
          ["部分国家另有本国号码，但 112 始终可用。","Some countries also keep national numbers, but 112 always works."]],src:[15]},
@@ -555,7 +557,7 @@ XX:{f:"🌐",zh:"其他地区 / 未识别",en:"Other / not detected",lvl:"B",amb
   notes:[["未能识别所在国家。请点上方按钮手动选择。","Country not detected. Tap the button above to choose it."],
          ["112 在很多国家的手机上可接通当地紧急服务，但并非所有国家都可靠（例如中国大陆、泰国不适用）。","112 reaches local emergency services from mobiles in many countries, but not reliably everywhere (e.g. not mainland China or Thailand)."]],src:[15,20]}
 };
-var ORDER=["CN","HK","MO","TW","JP","KR","TH","SG","MY","VN","ID","PH","IN","AE","GB","IE","FR","DE","IT","ES","EU","US","CA","AU","NZ","XX"];
+var ORDER=["CN","HK","MO","TW","JP","KR","TH","SG","MY","VN","ID","PH","IN","AE","GB","IE","FR","DE","IT","ES","CH","EU","US","CA","AU","NZ","XX"];
 
 /* 时区 → 国家（离线识别，不上传任何数据） */
 var TZ={};
@@ -571,7 +573,7 @@ tz("DE","Europe/Berlin Europe/Busingen");tz("IT","Europe/Rome");tz("ES","Europe/
 tz("EU","Europe/Amsterdam Europe/Brussels Europe/Vienna Europe/Lisbon Atlantic/Madeira Atlantic/Azores Europe/Stockholm Europe/Copenhagen Europe/Helsinki Europe/Mariehamn Europe/Athens Europe/Warsaw Europe/Prague Europe/Budapest Europe/Bucharest Europe/Sofia Europe/Zagreb Europe/Ljubljana Europe/Bratislava Europe/Tallinn Europe/Riga Europe/Vilnius Europe/Luxembourg Europe/Malta Asia/Nicosia Europe/Nicosia");
 tz("US","America/New_York America/Detroit America/Chicago America/Denver America/Phoenix America/Los_Angeles America/Anchorage America/Juneau America/Boise America/Menominee America/Nome America/Sitka America/Yakutat America/Metlakatla America/Adak Pacific/Honolulu");
 tz("CA","America/Toronto America/Vancouver America/Edmonton America/Winnipeg America/Halifax America/St_Johns America/Regina America/Montreal America/Moncton America/Whitehorse America/Yellowknife America/Iqaluit America/Glace_Bay America/Goose_Bay America/Thunder_Bay America/Swift_Current America/Dawson America/Dawson_Creek America/Fort_Nelson America/Cambridge_Bay America/Rankin_Inlet America/Resolute America/Inuvik America/Atikokan America/Creston America/Blanc-Sablon");
-tz("NZ","Pacific/Auckland Pacific/Chatham NZ");
+tz("NZ","Pacific/Auckland Pacific/Chatham NZ");tz("CH","Europe/Zurich");
 
 var TZNAME="";
 function detect(){
@@ -783,7 +785,13 @@ var SRC={
 88:["Apple：统一地图链接（默认以本人位置为中心搜索）","Apple: Unified Maps URLs (search defaults to the person's location)","https://developer.apple.com/documentation/mapkit/unified-map-urls"],
 89:["高德开放平台：URI API 搜索查询","AMap Open Platform: URI API search","https://lbs.amap.com/api/uri-api/guide/search/search"],
 90:["NHS：查找最近的 A&E（英格兰）","NHS: Find an A&E (England)","https://www.nhs.uk/service-search/find-an-accident-and-emergency-service"],
-91:["healthdirect（澳大利亚政府资助）：急诊科与 Service Finder","healthdirect (Australian Government funded): emergency departments & Service Finder","https://www.healthdirect.gov.au/hospital-emergency-departments"]
+91:["healthdirect（澳大利亚政府资助）：急诊科与 Service Finder","healthdirect (Australian Government funded): emergency departments & Service Finder","https://www.healthdirect.gov.au/hospital-emergency-departments"],
+92:["瑞士联邦政府 ch.ch：紧急号码（救护车 144、112、145）","Swiss authorities ch.ch: emergency numbers (ambulance 144, 112, 145)","https://www.ch.ch/en/safety-and-justice/emergencies-and-danger"],
+93:["多言语医疗问诊票·德语内科（NPO 国际交流ハーティ港南台与神奈川县国际交流财团制作，非政府）","Multilingual medical questionnaire, German internal medicine (KIF Kanagawa & NPO Hearty Konandai; not government)","https://kifjp.org/medical/wp-content/themes/medical-new/german/pdf/naika.pdf"],
+94:["多言语医疗问诊票·法语（同上，非政府）","Multilingual medical questionnaire, French (same publisher; not government)","https://kifjp.org/medical/wp-content/themes/medical-new/french/pdf/all.pdf"],
+95:["日本厚生劳动省：医疗情报网（ナビイ）——全国医疗机构官方检索，含“正在接诊”“节假日夜间”，有英文和中文界面","Japan MHLW: Medical Information Net (Navii) — official national search incl. “open now” and “holiday/night”, with English and Chinese","https://kakarikata.mhlw.go.jp/kakaritsuke/nabii.html"],
+96:["香港医院管理局：急症室服务","Hong Kong Hospital Authority: Accident & Emergency (A&E)","https://www.ha.org.hk/visitor/ha_visitor_index.asp?Content_ID=10051&Lang=ENG&Dimension=100&Parent_ID=10042"],
+97:["Apple：Map Links（旧版地图链接 ?q=，适用于较旧的 iOS）","Apple: Map Links (legacy ?q= links for older iOS)","https://developer.apple.com/library/archive/featuredarticles/iPhoneURLScheme_Reference/MapLinks/MapLinks.html"]
 };
 
 /* ===================== 界面文字 UI STRINGS ===================== */
@@ -792,7 +800,7 @@ hospH:["附近的急诊医院","Nearby emergency hospitals"],hospGo:["附近的�
 hospWarn:["危及生命时先拨 {N}，不要先找医院。","If life is at risk, call {N} first — don't look for a hospital first."],
 hospG:["在 Google 地图中查看","Open in Google Maps"],hospA:["在苹果地图中查看","Open in Apple Maps"],hospM:["在高德地图中查看","Open in AMap (高德)"],
 hospGcn:["Google 地图（大陆通常打不开）","Google Maps (usually blocked in mainland China)"],
-hospOff:["官方查询：{s}","Official finder: {s}"],hospNHS:["NHS 查找 A&E（英格兰）","NHS A&E finder (England)"],hospHD:["healthdirect 急诊科查询","healthdirect emergency department finder"],
+hospOff:["官方查询：{s}","Official finder: {s}"],hospNHS:["NHS 查找 A&E（英格兰）","NHS A&E finder (England)"],hospHD:["healthdirect 急诊科查询","healthdirect emergency department finder"],hospNavi:["厚生劳动省 医疗情报网（可选“节假日夜间”，有中文）","MHLW Medical Information Net (holiday/night search, English available)"],hospHA:["医院管理局 急症室服务（英文页）","Hospital Authority A&E services"],hospOld:["苹果地图打不开或没有搜索结果（较旧的 iOS）？试试旧版链接","Apple Maps didn’t open or found nothing (older iOS)? Try the legacy link"],
 hospNote:["地图结果由地图公司提供，仅供参考：不保证每家都有 24 小时急诊，也不保证接收这类病人（例如只收儿童或只收成人），距离可能是直线距离。","Results come from the map provider and are for reference only: they may not all have a 24-hour emergency department or accept this patient (some only see children or only adults), and distances may be straight-line."],
 hospPriv:["本页不读取、不上传你的位置；点按钮后，由地图 App 用它自己的定位来搜索。","This page does not read or upload your location; after you tap, the map app searches using its own location."],
 hospPrivCN:["点“高德地图”时，本页会请求一次位置（只用于把搜索中心发给高德，不保存、不上传给我们）；拒绝也能打开，只是可能不在你附近。","Tapping AMap asks for your location once (only to send the search centre to AMap; not saved or sent to us). If you decline it still opens, but may not centre on you."],
@@ -1154,13 +1162,17 @@ vi:{n:["越南语","Vietnamese"],own:"Tiếng Việt",l:"vi",f:{name:"Tên bện
 id:{n:["印尼语","Indonesian"],own:"Bahasa Indonesia",l:"id",f:{name:"Nama pasien",allergy:"Alergi",cond:"Nama penyakit",med:"Nama obat",ice:"Kontak darurat"},src:[78,79],ok:0},
 ar:{n:["阿拉伯语","Arabic"],own:"العربية",l:"ar",dir:"rtl",fix:1,f:{name:"اسم المريض",allergy:"الحساسية",med:"اسم الأدوية",ice:"بيانات الاتصال في حالات الطوارئ"},src:[82,83],ok:0},
 hi:{n:["印地语","Hindi"],own:"हिन्दी",l:"hi",fix:1,f:{name:"मरीज का नाम",allergy:"एलर्जी",cond:"रोग का नाम",med:"औषधियों का नाम",ice:"आपातकालीन संपर्क"},src:[84,85],ok:0},
-es:{n:["西班牙语","Spanish"],own:"Español",l:"es",f:{name:"Nombre del paciente",allergy:"Alergias",cond:"Enfermedad",med:"Medicamento",ice:"Persona de contacto en caso de urgencia"},src:[74,75],ok:0}
+es:{n:["西班牙语","Spanish"],own:"Español",l:"es",f:{name:"Nombre del paciente",allergy:"Alergias",cond:"Enfermedad",med:"Medicamento",ice:"Persona de contacto en caso de urgencia"},src:[74,75],ok:0},
+/* v0.5.2：德、法取自神奈川县国际交流财团 + NPO 的多言语医疗问诊票（来源 93、94；不是政府来源）。原文多为问句，这里截取其中的名词；原文没有的（德：血型、紧急联系人；法：过敏、血型、紧急联系人）不显示，改显示英文。 */
+de:{n:["德语","German"],own:"Deutsch",l:"de",ng:1,f:{name:"Name",allergy:"Allergien",cond:"Krankheiten",med:"Medikamente"},src:[93],ok:0},
+fr:{n:["法语","French"],own:"Français",l:"fr",ng:1,f:{name:"Nom",cond:"Antécédents médicaux",med:"Médicaments"},src:[94],ok:0}
 };
-var MCORD=["ja","ko","th","vi","id","ar","hi","es"];
+var MCORD=["ja","ko","th","vi","id","ar","hi","es","de","fr"];
 /* 国家 → 医护最可能读的语言（只列有来源的语言）；港澳台用繁体中文字段名 */
-var MCC={JP:"ja",KR:"ko",TH:"th",VN:"vi",ID:"id",AE:"ar",IN:"hi",ES:"es"};
+var MCC={JP:"ja",KR:"ko",TH:"th",VN:"vi",ID:"id",AE:"ar",IN:"hi",ES:"es",DE:"de",FR:"fr"};
 /* 只有这些国家/地区缺当地语言来源时才提示；英语国家、未识别地区直接用英文，中国大陆用简体中文字段名 */
-var MCNOSRC={FR:1,DE:1,IT:1,MY:1,EU:1};
+var MCNOSRC={IT:1,MY:1,EU:1};
+var MCMULTI={CH:1};
 var MCZT={name:"姓名",blood:"血型",allergy:"過敏",cond:"疾病史",med:"正在用藥",ice:"緊急聯絡人及電話"};
 var T5={
 mcBtn:["给外国医护看（当地语言字段名）","Show medical staff (local-language labels)"],
@@ -1170,6 +1182,8 @@ mcLang:["字段名语言","Label language"],
 mcAuto:["自动（{x}）","Auto ({x})"],
 mcEnOnly:["只用英文","English only"],
 mcNoSrc:["{c}的当地语言字段名暂未找到可靠的官方来源，先只显示英文和中文（多数医护能读英文）。也可以在下方“字段名语言”里手动选一种。","No reliable official source yet for {c} local-language labels, so only English and Chinese are shown. You can pick a language under “Label language” below."],
+mcMulti:["{c}有德、法、意等多种官方语言，页面不替你猜。请在下方“字段名语言”里选当地语言（Deutsch / Français），或保持英文。","{c} has several official languages (German, French, Italian), so we don’t guess. Pick Deutsch or Français under “Label language” below, or keep English."],
+mcNg:["该语言的字段名来自地方国际交流财团和 NPO 制作的问诊票，不是政府来源；原文多为问句，这里只截取了名词。","These labels come from a questionnaire made by a local international-exchange foundation and an NPO (not government); the source uses questions, and only the nouns were taken."],
 mcAsIs:["内容由本人填写，未经翻译。","Content entered by the card holder — not translated."],
 mcFix:["该语言原文件文字提取有乱码，已按标准写法还原字形，尤其需要母语者核对。","The source PDF text for this language had extraction errors; letters were restored to standard spelling — native-speaker check especially needed."],
 mcZht:["繁体字段名由简体中文字段名逐字转换，不是新翻译。","Traditional Chinese labels are a character-by-character conversion of the Simplified Chinese labels, not a new translation."],
@@ -1180,7 +1194,7 @@ idEnHint:["建议用英文填写（或中英都写）：外国医护能直接看
 };
 for(var _k5 in T5)T[_k5]=T5[_k5];
 T.mlT=["多语种医疗卡（测试版）","Multilingual medical card (beta)"];
-T.mlS=["出国时，把你的急救信息配上当地语言字段名给医护看（日、韩、泰、越、印尼、阿拉伯、印地、西班牙语；其他国家显示英文）。你写的内容不会被翻译。","Abroad, show your medical ID with local-language labels (Japanese, Korean, Thai, Vietnamese, Indonesian, Arabic, Hindi, Spanish; English elsewhere). What you write is not translated."];
+T.mlS=["出国时，把你的急救信息配上当地语言字段名给医护看（日、韩、泰、越、印尼、阿拉伯、印地、西班牙、德、法语；其他国家显示英文）。你写的内容不会被翻译。","Abroad, show your medical ID with local-language labels (Japanese, Korean, Thai, Vietnamese, Indonesian, Arabic, Hindi, Spanish, German, French; English elsewhere). What you write is not translated."];
 T.mlGo=["好不好用？去反馈","Is it useful? Give feedback"];
 
 function verOf(c){return C[c].v||VERIFIED_ON}
@@ -1299,9 +1313,10 @@ function viewHome(c){var h="";
    来源 87–91。Google / 苹果不传坐标：由地图 App 用自己的定位搜索。高德：仅中国大陆，按用户点击请求一次位置，
    换算为高德使用的 GCJ-02 坐标后作为 center 传入（官方参数说明见来源 89；不传 center 时的行为官方未说明）。 */
 var HOSP_Q={def:"emergency room hospital",GB:"A&E hospital",IE:"A&E hospital",AU:"emergency department hospital",NZ:"emergency department hospital"};
-var HOSP_OFF={GB:["hospNHS","https://www.nhs.uk/service-search/find-an-accident-and-emergency-service",90],AU:["hospHD","https://www.healthdirect.gov.au/hospital-emergency-departments",91]};
+var HOSP_OFF={GB:["hospNHS","https://www.nhs.uk/service-search/find-an-accident-and-emergency-service",90],AU:["hospHD","https://www.healthdirect.gov.au/hospital-emergency-departments",91],JP:["hospNavi","https://www.iryou.teikyouseido.mhlw.go.jp/znk-web/juminkanja/S2300/initialize",95],HK:["hospHA","https://www.ha.org.hk/visitor/ha_visitor_index.asp?Content_ID=10051&Lang=ENG&Dimension=100&Parent_ID=10042",96]};
 function hospQ(c){return HOSP_Q[c]||HOSP_Q.def}
 function gUrl(c){return "https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(hospQ(c))}
+function aOld(c){return "https://maps.apple.com/?q="+encodeURIComponent(c==="CN"?"急诊":hospQ(c))}
 function aUrl(c){return "https://maps.apple.com/search?query="+encodeURIComponent(c==="CN"?"急诊":hospQ(c))}
 function mUrl(g){return "https://uri.amap.com/search?keyword="+encodeURIComponent("急诊")+(g?"&center="+g[0].toFixed(6)+","+g[1].toFixed(6):"")+"&view=list&src=emergency-card&callnative=1"}
 /* WGS-84 → GCJ-02（公开的标准换算公式；只在中国大陆境内使用） */
@@ -1317,10 +1332,11 @@ function hospHtml(c){var N=C[c].amb,cn=c==="CN",b=[];
   else if(isIOS()){b.push(A.replace('btn ghost','btn'));b.push(G.replace('class="btn"','class="btn ghost"'))}
   else b.push(G);
   var o=HOSP_OFF[c];if(o)b.push('<a class="btn ghost" target="_blank" rel="noopener" href="'+o[1]+'">'+esc(t("hospOff").replace("{s}",t(o[0])))+'</a>');
-  var srcs=[87].concat(cn||isIOS()?[88]:[]).concat(cn?[89]:[]).concat(o?[o[2]]:[]);
+  var ios=cn||isIOS(),old=ios?'<p class="ht"><a target="_blank" rel="noopener" href="'+esc(aOld(c))+'">'+t("hospOld")+'</a></p>':"";
+  var srcs=[87].concat(ios?[88,97]:[]).concat(cn?[89]:[]).concat(o?[o[2]]:[]);
   return '<h2 class="secH" id="hospH" tabindex="-1"><b>'+t("hospH")+'</b></h2><section class="card hosp" id="hosp" aria-labelledby="hospH">'+
     '<p class="hw">'+I("alert","s")+' '+esc(t("hospWarn").replace("{N}",N))+'</p>'+
-    '<div class="hb">'+b.join("")+'</div><div class="hs" id="hospMsg" aria-live="polite"></div>'+
+    '<div class="hb">'+b.join("")+'</div><div class="hs" id="hospMsg" aria-live="polite"></div>'+old+
     '<p class="ht">'+t("hospNote")+'</p><p class="ht">'+t(cn?"hospPrivCN":"hospPriv")+'</p>'+
     '<div class="src">'+t("srcT")+CO()+srcLine(srcs)+'</div></section>'}
 
@@ -1590,6 +1606,7 @@ function openMed(){
     MCORD.map(function(k){return '<button class="chip2" data-mcl="'+k+'" lang="'+MCL[k].l+'" aria-pressed="'+(m===k)+'">'+esc(MCL[k].own)+'</button>'}).join("")+
     '<button class="chip2" data-mcl="en" aria-pressed="'+(m==="en")+'">'+t("mcEnOnly")+'</button></div>'+'</details>';
 
+  if(!m&&MCMULTI[c])h+='<div class="note" role="note" style="margin-top:12px">'+I("info")+'<div>'+esc(t("mcMulti").replace("{c}",nm(c)))+'</div></div>';
   if(!m&&!autoK&&MCNOSRC[c])h+='<div class="note" role="note" style="margin-top:12px">'+I("info")+'<div>'+esc(t("mcNoSrc").replace("{c}",nm(c)))+'</div></div>';
   var F=[["name","fName"],["blood","fBlood"],["allergy","fAll",1],["med","fMed"],["cond","fCond"],["ice","fIce"]];
   var has=F.some(function(f){return d[f[0]]});
@@ -1608,7 +1625,7 @@ function openMed(){
   h+='</div>';
   h+='<div class="mcs"><b>'+t("mcAsIs")+'</b> '+t("mcPriv")+'</div>';
   if(lk==="zht")h+='<div class="mcs">'+t("mcZht")+'</div>';
-  if(P)h+='<div class="mcs">'+(P.ok?'':'<span class="pend">'+t("lpPend")+'</span> ')+(P.fix?esc(t("mcFix"))+' ':'')+t("mcLblSrc")+CO()+srcLine([71].concat(P.src))+'</div>';
+  if(P)h+='<div class="mcs">'+(P.ok?'':'<span class="pend">'+t("lpPend")+'</span> ')+(P.fix?esc(t("mcFix"))+' ':'')+(P.ng?esc(t("mcNg"))+' ':'')+t("mcLblSrc")+CO()+srcLine([71].concat(P.src))+'</div>';
   h+=pk+awkHtml();
   showSheet(h,callBtn(c),!!openMed.keep);openMed.keep=false;
   awake(true);
