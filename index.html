@@ -339,6 +339,11 @@ details.dd li{margin-top:6px}
 .helpbtn{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--bg-card);border:2px solid var(--crimson-fill);border-radius:var(--radius-lg);
   padding:14px;min-height:72px;margin:6px 0 12px;box-shadow:var(--shadow-sm);color:var(--text-primary)}
 .helpbtn b{display:block;font-size:calc(20px * var(--fs));line-height:1.25}
+.nfc{border-top:1px solid var(--border-card);padding:10px 0 4px;margin-top:8px}
+.nfn{font-size:calc(18px * var(--fs));word-break:break-all}.nfn span{font-family:var(--font-num);font-variant-numeric:tabular-nums}
+.nfb{display:flex;flex-wrap:wrap;gap:8px}.nfb .btn{flex:1 1 6em;width:auto;min-width:0;margin-top:8px;white-space:nowrap}.nfb .btn.nfp{flex:0 0 64px}
+.nfloc{margin:6px 0 4px;font-weight:600}.nfloc.ok{color:var(--green,#0B7B55)}.nfloc.no{color:var(--crimson)}
+#nfTxt{width:100%;box-sizing:border-box;font:inherit;font-size:calc(17px * var(--fs));line-height:1.45;padding:10px;border-radius:8px;border:1px solid var(--border-card);background:var(--bg-card);color:var(--text-primary);margin-top:6px}
 .helpbtn small{display:block;color:var(--text-muted);font-size:calc(17px * var(--fs))}
 .helpbtn .sg{background:var(--crimson-fill)}
 .helpbtn .chev{margin-left:auto;color:var(--text-muted)}
@@ -535,7 +540,7 @@ var FEEDBACK_GOOGLE = _CFG.google||"";    // Google 表单链接，例如 https:
 var FEEDBACK_TENCENT = _CFG.tencent||"";  // 腾讯问卷链接，例如 https://wj.qq.com/s2/xxxx/xxxx/
 // 可选：Google 表单里"版本/国家/语言"那道简答题的编号（形如 entry.123456789）。填了以后会自动带入，留空也能用。
 var GOOGLE_PREFILL_ENTRY = _CFG.googleEntry||"";
-var VERSION = "MVP v0.7.0";
+var VERSION = "MVP v0.8.0";
 var VERIFIED_ON = "2026-11-17";   // 全部国家号码的统一核实日期；某国单独复核后，在该国数据里加 v:"YYYY-MM-DD"
 // 固定的正式网址：分享、锁屏图片一律用它，不用当前地址栏（避免分享出 file:// 或预览地址）。分享链接里永远不放任何个人信息。
 var SITE_URL = "https://jackyyhhxjyxn.github.io/emergency-card/";
@@ -1377,6 +1382,7 @@ function viewHome(c){var h="";
   h+=staleNote(c);
   h+='<section class="card crit tri" id="tri" aria-labelledby="triQ">'+triHtml()+'</section>';
   h+='<button class="helpbtn" id="helperGo"><span class="sg" aria-hidden="true">'+I("phone")+'</span><span><b>'+t("helpOT")+'</b><small>'+t("helpOS")+'</small></span>'+I("chevR","chev")+'</button>';
+  h+='<button class="helpbtn" id="nfGo"><span class="sg" aria-hidden="true">'+I("msg")+'</span><span><b>'+t("nfBtn")+'</b><small>'+t("nfBtnS")+'</small></span>'+I("chevR","chev")+'</button>';
   h+='<div class="hentry"><button class="btn ghost" id="hospGo">'+I("pin")+t("hospGo")+'</button></div>';
   h+='<div class="note" role="note">'+I("info")+'<div>'+t("beta")+'</div></div>';
   h+='<h2 class="secH" id="cardsH" tabindex="-1"><b>'+t("cards")+'</b></h2><div class="grid">'+CARDS.map(function(k){
@@ -1418,6 +1424,7 @@ function hospHtml(c){var N=C[c].amb,cn=c==="CN",b=[];
 function viewSos(c){var d=C[c],h="";
   h+='<button class="helpbtn" id="helperGo"><span class="sg" aria-hidden="true">'+I("phone")+'</span><span><b>'+t("helpOT")+'</b><small>'+t("helpOS")+'</small></span>'+I("chevR","chev")+'</button>';
   h+='<button class="helpbtn" id="helpGo"><span class="sg" aria-hidden="true">'+I("sos")+'</span><span><b>'+t("helpT")+'</b><small>'+t("helpS")+'</small></span>'+I("chevR","chev")+'</button>';
+  h+='<button class="helpbtn" id="nfGo"><span class="sg" aria-hidden="true">'+I("msg")+'</span><span><b>'+t("nfBtn")+'</b><small>'+t("nfBtnS")+'</small></span>'+I("chevR","chev")+'</button>';
   if(c==="XX")h+='<div class="note" role="note">'+I("alert")+'<div>'+esc(t("xxNote").replace("{z}",tzLabel()))+'</div></div>';
   h+=staleNote(c);
   h+='<h2 class="secH" style="margin-top:6px"><b>'+t("local")+'</b>'+esc(nm(c))+'</h2><section class="card">';
@@ -1761,6 +1768,7 @@ function route(){var h=location.hash.slice(1);
   if(h==="med"){openMed();return}
   if(h==="helper"){openHelper();return}
   if(h==="timer"){openTimer();return}
+  if(h==="notify"){openNotify();return}
   if(h==="hand"){openHand();return}
   if(h==="print"){openPrint();return}
   if(h in TABN){var nt=TABN[h];closeSheet();if(nt!==tab){tab=nt;renderMain();window.scrollTo(0,0)}return}
@@ -1872,6 +1880,116 @@ mcReadN:["只朗读勾选项的标准用语（英文；有来源的当地语言�
 mcReadHead:["Medical alert. High risk:","Medical alert. High risk:"]
 };
 for(var _k7 in T7)T[_k7]=T7[_k7];
+/* ===================== v0.8.0：一键通知家人（来源 120–123） =====================
+   静态网页不能替人自动发短信：按钮打开短信 / WhatsApp，消息已写好，本人点“发送”。
+   位置只在打开本页时读取一次，只放进消息里，不上传、不保存。消息不含任何病情。 */
+SRC[120]=["IETF RFC 5724：sms 链接格式（sms:号码?body=内容）","IETF RFC 5724: the sms: URI (sms:number?body=text)","https://www.rfc-editor.org/rfc/rfc5724"];
+SRC[121]=["Apple 开发者论坛：iOS 上 sms: 链接用 &body= 预填内容","Apple Developer Forums: iOS sms: links prefill text with &body=","https://developer.apple.com/forums/thread/91442"];
+SRC[122]=["WhatsApp 帮助中心：Click to chat（wa.me/国际号码?text=内容）","WhatsApp Help Center: How to use click to chat (wa.me/number?text=)","https://whatsapp.com/faq/en/general/26000030"];
+SRC[123]=["高德开放平台：URI API（中国大陆地图链接）","AMap Open Platform: URI API (maps links in mainland China)","https://lbs.amap.com/api/uri-api/guide/search/search"];
+var T8={
+nfBtn:["通知家人","Notify family"],
+nfBtnS:["把“需要急救 + 位置”发给紧急联系人（先打急救电话）","Send “need emergency help + location” to your emergency contacts (call the emergency number first)"],
+nfT:["通知家人","Notify family"],
+nfFirst:["先打急救电话 {N}。通知家人不能代替急救电话。","Call {N} first. Notifying family does not replace the emergency call."],
+nfProf:["使用档案：{p}","Using profile: {p}"],
+nfWho:["发给紧急联系人","Send to emergency contacts"],
+nfSms:["短信","Text"],nfWa:["WhatsApp","WhatsApp"],
+nfAny:["选择联系人发短信","Text someone else (pick contact)"],
+nfShare:["用微信等其他 App 发送","Send with WeChat or another app"],
+nfCopy:["复制消息（粘贴到微信等）","Copy message (to paste into WeChat etc.)"],
+nfCopied:["已复制。打开微信或其他 App，粘贴后发送。","Copied. Open WeChat or another app, paste and send."],
+nfNone:["这个档案还没有紧急联系人电话。现在可以先“选择联系人发短信”，或者稍后在“我的卡”里填上。","This profile has no emergency contact number yet. You can still “Text someone else” now, or add contacts in My card later."],
+nfAdd:["去填写紧急联系人","Add emergency contacts"],
+nfWx:["你是在微信里打开的：短信按钮可能打不开。请用“复制消息”，或点右上角“…”在浏览器打开本页。","You opened this inside WeChat: the Text buttons may not open. Use “Copy message”, or open this page in your browser from the “…” menu."],
+nfLocK:["位置","Location"],
+nfLoc:["正在获取位置…不用等，现在就可以发；拿到位置后消息会自动加上。","Getting your location… No need to wait — you can send now; the location is added when it arrives."],
+nfLocOk:["位置已加入消息（误差约 {m} 米）。","Location added to the message (accurate to about {m} m)."],
+nfLocNo:["拿不到位置。消息里已写“请打电话问我在哪”。可在下面手动写上地址。","Couldn't get the location. The message asks family to call you for it. You can type the address below."],
+nfLocRe:["再试一次定位","Try location again"],
+nfPrev:["将发送的消息（可以改）","Message to send (you can edit it)"],
+nfHow:["不会自动发送：按钮会打开短信或 WhatsApp，消息已写好，你还要点一下“发送”。短信不需要上网。","Nothing is sent automatically: the button opens Messages or WhatsApp with the text ready — you still tap Send. Text messages work without mobile data."],
+nfPriv:["位置只放进你发出的这条消息，本页不上传、不保存。消息里不写病情。","Your location only goes into the message you send; this page doesn't upload or keep it. The message contains no health details."],
+nfWaN:["只有号码带国家代码（以 + 或 00 开头）时才显示 WhatsApp 按钮。","The WhatsApp button only appears for numbers with a country code (starting with + or 00)."],
+nfMe:["【急救】我需要急救。","[EMERGENCY] I need emergency help."],
+nfMeN:["【急救】我是{n}，我需要急救。","[EMERGENCY] This is {n}. I need emergency help."],
+nfOth:["【急救】{n}需要急救。","[EMERGENCY] {n} needs emergency help."],
+nfMLoc:["位置：{ll}（误差约 {m} 米）","Location: {ll} (about {m} m)"],
+nfMMap:["地图：{u}","Map: {u}"],
+nfMNoLoc:["位置：暂时拿不到，请打电话问我在哪。","Location: not available yet — please call me to ask where."],
+nfMCty:["所在国家/地区：{c}","Country: {c}"],
+nfMTime:["时间：{t}（当地时间 {z}）","Time: {t} (local time, {z})"],
+nfMEnd:["请尽快联系我。","Please contact me as soon as you can."],
+nfMeBtn:["发消息通知紧急联系人","Message emergency contacts"],
+fIceP:["可写多位，例如：妈妈 +86 138 0000 0000；哥哥 +44 7700 900000","You can add several, e.g. Mum +44 7700 900000; Brother +86 138 0000 0000"],
+fIceH:["号码前加国家代码（+86、+44…）：出国时短信才发得到，也能用 WhatsApp。","Add the country code (+44, +86…) so texts reach them from abroad and WhatsApp works."]
+};
+for(var _k8 in T8)T[_k8]=T8[_k8];
+/* 从“紧急联系人”一栏里找出所有电话（最多 3 个），号码前面的文字作为称呼 */
+function phonesIn(s){var re=/\+?\d[\d\s\-()]{4,}\d/g,m,out=[],last=0,seen={};s=s||"";
+  while((m=re.exec(s))&&out.length<3){var num=m[0].replace(/[^\d+]/g,"");
+    var lb=s.slice(last,m.index).replace(/[;；,，、\/|\n:：()（）\-]+/g," ").trim();last=m.index+m[0].length;
+    if(num.length<6||seen[num])continue;seen[num]=1;out.push({n:num,l:lb.slice(-14)})}
+  return out}
+function waNum(n){if(/^\+/.test(n))return n.slice(1);if(/^00/.test(n))return n.slice(2);return ""}
+function smsHref(n,body){return "sms:"+(n||"")+(isIOS()?"&":"?")+"body="+encodeURIComponent(body)}
+function tzOff(){var o=-new Date().getTimezoneOffset(),sg=o>=0?"+":"-",a=Math.abs(o);return "UTC"+sg+Math.floor(a/60)+(a%60?":"+("0"+a%60).slice(-2):"")}
+var NF={pos:null,st:"wait",edited:false};
+function nfMapUrl(lat,lng){
+  if(cc()==="CN"){var g=gcj(lat,lng);return "https://uri.amap.com/marker?position="+g[0].toFixed(6)+","+g[1].toFixed(6)+"&src=emergency-card"}
+  return "https://www.google.com/maps/search/?api=1&query="+lat.toFixed(5)+","+lng.toFixed(5)}
+function nfMsg(){var P=profs(),d=P.list[P.cur].d||{},nmv=(d.name||P.list[P.cur].n||"").trim(),c=cc(),L=[],x=new Date();
+  L.push(P.cur>0&&nmv?t("nfOth").replace("{n}",nmv):nmv?t("nfMeN").replace("{n}",nmv):t("nfMe"));
+  if(NF.pos){var la=NF.pos.lat,lo=NF.pos.lng;L.push(t("nfMLoc").replace("{ll}",la.toFixed(5)+", "+lo.toFixed(5)).replace("{m}",NF.pos.acc));L.push(t("nfMMap").replace("{u}",nfMapUrl(la,lo)))}
+  else L.push(t("nfMNoLoc"));
+  if(c!=="XX")L.push(t("nfMCty").replace("{c}",nm(c)));
+  L.push(t("nfMTime").replace("{t}",("0"+x.getHours()).slice(-2)+":"+("0"+x.getMinutes()).slice(-2)).replace("{z}",tzOff()));
+  L.push(t("nfMEnd"));
+  return L.join("\n")}
+function nfRefresh(){var ta=$("nfTxt");if(!ta)return;var body=ta.value;
+  document.querySelectorAll("[data-nfs]").forEach(function(a){a.href=smsHref(a.dataset.nfs,body)});
+  document.querySelectorAll("[data-nfw]").forEach(function(a){a.href="https://wa.me/"+a.dataset.nfw+"?text="+encodeURIComponent(body)})}
+function nfLocUi(){var o=$("nfLocS"),r=$("nfLocRe");if(!o)return;
+  o.textContent=NF.st==="ok"?t("nfLocOk").replace("{m}",NF.pos.acc):NF.st==="no"?t("nfLocNo"):t("nfLoc");
+  o.className="nfloc "+NF.st;if(r)r.hidden=NF.st!=="no"}
+function nfApplyLoc(){var ta=$("nfTxt");if(!ta)return;
+  if(!NF.edited)ta.value=nfMsg();
+  else if(NF.pos){ta.value=ta.value.replace(/\n?.*(暂时拿不到|not available yet).*$/m,"")+"\n"+t("nfMLoc").replace("{ll}",NF.pos.lat.toFixed(5)+", "+NF.pos.lng.toFixed(5)).replace("{m}",NF.pos.acc)+"\n"+t("nfMMap").replace("{u}",nfMapUrl(NF.pos.lat,NF.pos.lng))}
+  nfLocUi();nfRefresh()}
+function nfLocate(){NF.st="wait";nfLocUi();
+  if(!navigator.geolocation){NF.st="no";nfApplyLoc();return}
+  var done=false,fin=function(){if(done)return false;done=true;return true};
+  setTimeout(function(){if(fin()){NF.st="no";nfApplyLoc()}},12000);
+  navigator.geolocation.getCurrentPosition(function(p){if(!fin())return;
+      NF.pos={lat:p.coords.latitude,lng:p.coords.longitude,acc:Math.round(p.coords.accuracy)};NF.st="ok";nfApplyLoc()},
+    function(){if(fin()){NF.st="no";nfApplyLoc()}},{enableHighAccuracy:true,timeout:10000,maximumAge:60000})}
+function openNotify(){
+  metroStop();hush();cur=null;
+  var c=cc(),N=C[c].amb,P=profs(),d=P.list[P.cur].d||{},ps=phonesIn(d.ice),anyLocal=false;
+  NF={pos:null,st:"wait",edited:false};
+  var h='<div class="shead"><button class="back" id="bk">'+I("chevL")+t("back")+'</button></div>'+
+    '<h1 id="sheetT" tabindex="-1" class="pickh">'+I("msg")+' '+t("nfT")+'</h1>'+
+    '<div class="note red" role="note" style="margin-top:10px">'+I("alert")+'<div><b>'+esc(t("nfFirst").replace("{N}",N))+'</b></div></div>'+
+    (P.list.length>1?'<div class="muted">'+esc(t("nfProf").replace("{p}",pfLabel(P,P.cur)))+'</div>':'')+
+    (inWx()?'<div class="note" role="note" style="margin-top:10px">'+I("info")+'<div>'+t("nfWx")+'</div></div>':'')+
+    '<section class="card" style="margin-top:12px"><div class="kick red">'+t("nfWho")+'</div>';
+  if(ps.length){ps.forEach(function(x){var w=waNum(x.n);if(!w)anyLocal=true;
+      h+='<div class="nfc"><div class="nfn">'+(x.l?'<b>'+esc(x.l)+'</b> ':'')+'<span>'+esc(x.n)+'</span></div><div class="nfb">'+
+        '<a class="btn grn" data-nfs="'+esc(x.n)+'" href="#">'+I("msg")+t("nfSms")+'</a>'+
+        (w?'<a class="btn ghost" data-nfw="'+w+'" href="#" target="_blank" rel="noopener">'+t("nfWa")+'</a>':'')+
+        '<a class="btn ghost nfp" href="'+tel(x.n)+'" aria-label="'+esc(t("iceCall")+SEP()+digits(x.n))+'">'+phoneIco()+'</a></div></div>'});
+    h+='<a class="btn ghost" data-nfs="" href="#">'+t("nfAny")+'</a>'}
+  else h+='<p>'+t("nfNone")+'</p><a class="btn grn" data-nfs="" href="#">'+I("msg")+t("nfAny")+'</a><button class="btn ghost" id="nfAdd">'+t("nfAdd")+'</button>';
+  h+=(navigator.share&&!inWx()?'<button class="btn ghost" id="nfShare">'+t("nfShare")+'</button>':'')+
+     '<button class="btn ghost" id="nfCopy">'+t("nfCopy")+'</button><div class="muted" id="nfMsgS" role="status"></div></section>';
+  h+='<section class="card"><div class="kick">'+t("nfLocK")+'</div><div id="nfLocS" class="nfloc wait" aria-live="polite"></div>'+
+     '<button class="btn ghost" id="nfLocRe" hidden>'+I("pin")+t("nfLocRe")+'</button>'+
+     '<label>'+t("nfPrev")+'<textarea id="nfTxt" rows="8" autocomplete="off"></textarea></label></section>';
+  h+='<section class="card"><p style="margin:0">'+t("nfHow")+'</p><p class="muted">'+t("nfPriv")+'</p>'+(anyLocal?'<p class="muted">'+t("nfWaN")+'</p>':'')+
+     '<div class="src">'+t("srcT")+CO()+srcLine([120,121,122,87].concat(c==="CN"?[123]:[]))+'</div></section>';
+  showSheet(h,callBtn(c));
+  $("nfTxt").value=nfMsg();nfLocUi();nfRefresh();nfLocate()}
+
 function pregOld(d){if(!d||(d.risk||[]).indexOf("preg")<0)return "";var now=Date.now();
   if(d.due){var ms=Date.parse(d.due+"T00:00:00");if(!isNaN(ms)&&now-ms>14*86400000)return t("pregOldDue").replace("{d}",d.due);return ""}
   if(d.pregAt&&now-d.pregAt>294*86400000){var x=new Date(d.pregAt);return t("pregOldTick").replace("{d}",x.getFullYear()+"-"+p2(x.getMonth()+1)+"-"+p2(x.getDate()))}
@@ -2039,7 +2157,7 @@ function renderId(editing){
        '<input data-f="blood" id="bIn" value="'+esc(d.blood||"")+'" autocomplete="off" aria-label="'+esc(t("fBlood"))+'">'+
        '<div class="kick" style="margin-top:18px" id="rkLbl">'+t("rkT")+'</div><div class="muted">'+t("rkS")+'</div>'+
        '<div class="rkgrid" role="group" aria-labelledby="rkLbl">'+RISK.map(function(x){var on=(d.risk||[]).indexOf(x.k)>=0;return '<button class="rkc" data-rk="'+x.k+'" aria-pressed="'+on+'">'+esc(lang==="zh"?x.zh:x.en)+'</button>'}).join("")+'</div>'+
-       inp("allergy","fAll")+inp("cond","fCond")+inp("med","fMed")+inp("ice","fIce")+
+       inp("allergy","fAll")+inp("cond","fCond")+inp("med","fMed")+inp("ice","fIce","fIceP")+'<div class="muted">'+t("fIceH")+'</div>'+
        inp("base","fBase","fBaseP")+inp("medloc","fMedLoc","fMedLocP")+inp("acp","fAcp","fAcpP")+'<div class="muted">'+t("acpNote")+' '+srcLine([114,115,116])+'</div>'+
        inp("due","fDue","","date")+
        inp("ins","fIns","fInsP")+inp("insTel","fInsTel","fInsTelP","tel")+
@@ -2063,7 +2181,8 @@ function renderId(editing){
      (d.acp?'<div class="frow"><div class="kick">'+bi("fAcp")+'</div>'+fval(d.acp)+'</div>':'')+'</section>';
   var ph=phoneIn(d.ice);
   h+='<section class="card"><div class="kick">'+bi("fIce")+'</div>'+fval(d.ice)+
-     (ph?'<a class="btn grn" href="'+tel(ph)+'" aria-label="'+esc(t("iceCall")+SEP()+digits(ph))+'">'+phoneIco()+t("iceCall")+'</a>':'')+'</section>';
+     (ph?'<a class="btn grn" href="'+tel(ph)+'" aria-label="'+esc(t("iceCall")+SEP()+digits(ph))+'">'+phoneIco()+t("iceCall")+'</a>':'')+
+     (ph?'<button class="btn ghost" id="nfGo">'+I("msg")+t("nfMeBtn")+'</button>':'')+'</section>';
   if(d.ins||d.insTel){var ip=phoneIn(d.insTel);
     h+='<section class="card"><div class="kick">'+bi("fIns")+'</div>'+fval(d.ins)+(d.insTel?'<div class="kick" style="margin-top:10px">'+bi("fInsTel")+'</div>'+fval(d.insTel):'')+
        (ip?'<a class="btn grn" href="'+tel(ip)+'" aria-label="'+esc(t("insCall")+SEP()+digits(ip))+'">'+phoneIco()+t("insCall")+'</a>':'')+
@@ -2283,6 +2402,11 @@ document.addEventListener("click",function(e){
   if(el.id==="idEdit"){renderId(true);return}
   if(el.id==="helperGo"){prime();goHash("helper");return}
   if(el.id==="tmGo"){goHash("timer");return}
+  if(el.id==="nfGo"){goHash("notify");return}
+  if(el.id==="nfAdd"){closeSheet();goHash("me");setTimeout(function(){renderId(true);var f=document.querySelector('#idBox [data-f="ice"]');if(f)try{f.scrollIntoView({block:"center"});f.focus()}catch(x){}},60);return}
+  if(el.id==="nfLocRe"){nfLocate();return}
+  if(el.id==="nfCopy"){var tv=$("nfTxt");copyText(tv?tv.value:nfMsg(),function(){var m=$("nfMsgS");if(m)m.textContent=t("nfCopied")});return}
+  if(el.id==="nfShare"){var tv2=$("nfTxt");navigator.share({text:tv2?tv2.value:nfMsg()}).catch(function(){});return}
   if(el.id==="hoGo"){goHash("hand");return}
   if(el.id==="prGo"){goHash("print");return}
   if(el.dataset.print){doPrint(el.dataset.print);return}
@@ -2349,6 +2473,7 @@ document.addEventListener("click",function(e){
 document.addEventListener("change",function(e){var i=e.target;if(!i||!i.dataset||!i.dataset.tmi)return;
   var m=/^(\d{1,2}):(\d{2})/.exec(i.value||"");if(!m)return;var x=new Date();x.setHours(+m[1],+m[2],0,0);
   if(x.getTime()>Date.now()+60000)x.setDate(x.getDate()-1);var o=tmLoad();o[i.dataset.tmi]=x.getTime();tmSave(o);openTimer.keep=true;openTimer()});
+document.addEventListener("input",function(e){if(e.target&&e.target.id==="nfTxt"){NF.edited=true;nfRefresh()}});
 document.addEventListener("keydown",function(e){
   if(!$("sheet").classList.contains("on"))return;
   if(/^(INPUT|TEXTAREA|SELECT)$/.test((e.target&&e.target.tagName)||""))return;
