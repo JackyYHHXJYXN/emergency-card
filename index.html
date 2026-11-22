@@ -535,7 +535,7 @@ var FEEDBACK_GOOGLE = _CFG.google||"";    // Google 表单链接，例如 https:
 var FEEDBACK_TENCENT = _CFG.tencent||"";  // 腾讯问卷链接，例如 https://wj.qq.com/s2/xxxx/xxxx/
 // 可选：Google 表单里"版本/国家/语言"那道简答题的编号（形如 entry.123456789）。填了以后会自动带入，留空也能用。
 var GOOGLE_PREFILL_ENTRY = _CFG.googleEntry||"";
-var VERSION = "MVP v0.6.0";
+var VERSION = "MVP v0.7.0";
 var VERIFIED_ON = "2026-11-17";   // 全部国家号码的统一核实日期；某国单独复核后，在该国数据里加 v:"YYYY-MM-DD"
 // 固定的正式网址：分享、锁屏图片一律用它，不用当前地址栏（避免分享出 file:// 或预览地址）。分享链接里永远不放任何个人信息。
 var SITE_URL = "https://jackyyhhxjyxn.github.io/emergency-card/";
@@ -1656,11 +1656,12 @@ function openMed(){
 
   if(!m&&MCMULTI[c])h+='<div class="note" role="note" style="margin-top:12px">'+I("info")+'<div>'+esc(t("mcMulti").replace("{c}",nm(c)))+'</div></div>';
   if(!m&&!autoK&&MCNOSRC[c])h+='<div class="note" role="note" style="margin-top:12px">'+I("info")+'<div>'+esc(t("mcNoSrc").replace("{c}",nm(c)))+'</div></div>';
-  var F=[["name","fName"],["blood","fBlood"],["allergy","fAll",1],["med","fMed"],["cond","fCond"],["ice","fIce"],["ins","fIns",0,1],["insTel","fInsTel",0,1]];
+  var F=[["name","fName"],["blood","fBlood"],["allergy","fAll",1],["med","fMed"],["cond","fCond"],["ice","fIce"],["ins","fIns",0,1],["insTel","fInsTel",0,1],["acp","fAcp",0,1]];
   var has=idHas(d);
   if(!has){h+='<div class="note" role="note" style="margin-top:12px">'+I("info")+'<div>'+t("mcEmpty")+'</div></div>'+pk;showSheet(h,callBtn(c));return}
   h+='<div class="mc"><div class="mcf"><div class="kick red" style="color:#B91C1C">'+t("mcK")+'</div></div>';
-  if(rk.length)h+='<div class="mcf crit"><div class="mcl">HIGH-RISK</div><div class="mce">'+esc(T.rkK[0])+'</div><ul class="rkl">'+rk.map(function(x){return rkLi(x,lk)}).join("")+'</ul>'+rkNotes(rk)+'</div>';
+  if(rk.length)h+='<div class="mcf crit"><div class="mcl">HIGH-RISK</div><div class="mce">'+esc(T.rkK[0])+'</div><ul class="rkl">'+rk.map(function(x){return rkLi(x,lk,d)}).join("")+'</ul>'+rkNotes(rk)+
+    '<button class="chip" id="mcRead" aria-pressed="false" style="margin-top:10px">'+I("vol","s")+t("mcRead")+'</button><div class="muted" id="mcReadMsg" aria-live="polite"></div><div class="muted" style="font-size:calc(13px * var(--fs))">'+t("mcReadN")+'</div></div>';
   F.forEach(function(f){var k=f[0],v=d[k]||"";if(f[3]&&!v)return;
     var zh=lk==="zht"||lk==="zhs";
     var loc=lk==="zht"?MCZT[k]:lk==="zhs"?T[f[1]][0]:(P&&P.f[k])||"";
@@ -1836,6 +1837,48 @@ SRC[111]=["英国心脏基金会 BHF：起搏器与 MRI（任何检查或操作�
 SRC[112]=["NHS England：Steroid Emergency Card（激素依赖者随身携带并出示）","NHS England: Steroid Emergency Card (carried by steroid-dependent patients)","https://www.england.nhs.uk/2020/08/steroid-emergency-card-to-support-early-recognition-and-treatment-of-adrenal-crisis/"];
 SRC[113]=["日本厚生劳动省：外国患者受理手册（诊疗申请书含民间医疗保险信息栏）","Japan MHLW: guide for receiving foreign patients (registration form includes private medical insurance details)","https://www.mhlw.go.jp/content/000927892.pdf"];
 
+
+/* ===================== v0.7.0：P1 =====================
+   1 预立医疗意愿：只记“文件放在哪”，不记内容（来源 114–116）
+   2 在家等救护车的准备（来源 117–118）；门锁密码、钥匙位置一律不存
+   3 “怀孕”状态到期提醒：有预产期按预产期 +14 天（42 周），没有按勾选后 294 天（42 周）（来源 119）
+   4 医疗卡朗读：只朗读勾选项的标准用语（英文 + 有来源的当地语言），不朗读用户自己写的文字
+   新来源 114–119（只追加）。 */
+SRC[114]=["英国复苏委员会 RCUK：有了 ReSPECT 表以后（放在容易找到的地方、告诉家人）","Resuscitation Council UK: now you have a ReSPECT form (keep it somewhere easy to find; tell family)","https://www.resus.org.uk/sites/default/files/2025-05/Guidance%20for%20people%20with%20a%20ReSPECT%20form.pdf"];
+SRC[115]=["英国救护车服务首席执行官协会 AACE：ReSPECT 表应随身，急救时马上交给救护人员；建议不具法律约束力","AACE: the ReSPECT form should be with the patient and shown to ambulance crews at once; its recommendations are not legally binding","https://aace.org.uk/?p=1206071"];
+SRC[116]=["英国伍斯特郡 / 赫里福德郡 ReSPECT 政策：只有原件有效，不要复印用于临床","Worcestershire & Herefordshire ReSPECT policy: only original forms are valid — never photocopy for clinical use","https://apps.worcsacute.nhs.uk/KeyDocumentPortal/Home/DownloadFile/2016"];
+SRC[117]=["英国西北救护车服务（NHS）：等救护车时（天黑开灯、关好宠物）","North West Ambulance Service (NHS): preparing for an ambulance arrival (lights on, pets secured)","https://www.nwas.nhs.uk/news/preparing-for-an-ambulance-arrival/"];
+SRC[118]=["英国东北救护车服务（NHS）：救护车来的时候（拿出病人的药、关好宠物、在门口招手）","North East Ambulance Service (NHS): when the ambulance is coming (get their medicines, secure pets, wave at the door)","https://neas.nhs.uk/first-aid-community/learning-disability-zone/learning-zone/emergency-care999/what-do-when-ambulance-coming"];
+SRC[119]=["NHS：怀孕通常持续 37–42 周，预产期是 40 周的估计","NHS: pregnancy usually lasts 37–42 weeks; the due date estimates 40 weeks","https://www.nhs.uk/pregnancy/week-by-week/28-to-40-plus/42-weeks/"];
+var T7={
+fAcp:["预立医疗计划 / 不复苏（DNACPR）文件放在哪里","Where the advance care plan / DNACPR form is kept"],
+fAcpP:["例如：ReSPECT 表在大门边的文件夹里","e.g. ReSPECT form in the folder by the front door"],
+acpNote:["这里只写文件放在哪，不写文件内容。急救人员以原件为准：只有原件有效，不要用复印件；英国的 ReSPECT 表是建议，不具法律约束力。","Write only where the form is kept, not what it says. Crews go by the original: only originals are valid, never photocopies; in the UK a ReSPECT form is guidance and not legally binding."],
+acpHo:["请向急救人员出示原件：{x}","Show the original to the crew: {x}"],
+fDue:["预产期（勾选“怀孕”时填）","Due date (if “Pregnant” is ticked)"],
+dueK:["预产期","Due"],
+pregOld:["“怀孕”可能已过期：{w}。如果已经分娩或不再怀孕，请点“填写 / 修改”取消勾选，以免医生误判。","“Pregnant” may be out of date: {w}. If the baby is born or you are no longer pregnant, tap Edit and untick it so doctors are not misled."],
+pregOldDue:["预产期 {d} 已过去 14 天以上","the due date {d} was more than 14 days ago"],
+pregOldTick:["勾选已超过 42 周（{d} 勾选）","it was ticked more than 42 weeks ago (on {d})"],
+pregWhy:["怀孕通常持续 37–42 周。","Pregnancy usually lasts 37–42 weeks."],
+hmT:["如果在家里：等救护车时","At home: while you wait for the ambulance"],
+hm1:["天黑时把屋里和门外的灯都打开，方便救护车找到。","If it’s dark, turn on lights inside and outside so the crew can find you."],
+hm2:["把宠物关到别的房间。","Put pets in another room."],
+hm3:["把病人的药找出来，交给急救人员。","Find the person’s medicines to give to the crew."],
+hm4:["留意救护车，到门口招手。","Look out for the ambulance and wave at the door."],
+hmPriv:["门锁密码、钥匙放在哪里，不要写进本页或“我的卡”——任何能看到手机的人都能读到。","Never write door codes or where a key is hidden into this page or My card — anyone who sees the phone can read it."],
+mcRead:["朗读高危情况","Read high-risk items aloud"],mcReadStop:["停止朗读","Stop reading"],
+mcReadN:["只朗读勾选项的标准用语（英文；有来源的当地语言也念），不朗读你自己写的文字，以免机器念错。手机没有对应语音时跳过。","Reads only the standard wording of ticked items (English, plus the local language where sourced) — never your own text, which a machine could misread. Skipped if the phone has no voice for that language."],
+mcReadHead:["Medical alert. High risk:","Medical alert. High risk:"]
+};
+for(var _k7 in T7)T[_k7]=T7[_k7];
+function pregOld(d){if(!d||(d.risk||[]).indexOf("preg")<0)return "";var now=Date.now();
+  if(d.due){var ms=Date.parse(d.due+"T00:00:00");if(!isNaN(ms)&&now-ms>14*86400000)return t("pregOldDue").replace("{d}",d.due);return ""}
+  if(d.pregAt&&now-d.pregAt>294*86400000){var x=new Date(d.pregAt);return t("pregOldTick").replace("{d}",x.getFullYear()+"-"+p2(x.getMonth()+1)+"-"+p2(x.getDate()))}
+  return ""}
+function pregNote(d){var w=pregOld(d);return w?'<div class="note" role="note" id="pregNote" style="margin-bottom:12px">'+I("alert")+'<div>'+esc(t("pregOld").replace("{w}",w))+' '+t("pregWhy")+' <span class="src" style="display:inline">'+srcLine([119])+'</span></div></div>':""}
+function dueOk(s){return /^\d{4}-\d{2}-\d{2}$/.test(s||"")}
+
 /* 二维码：只编码固定首页网址 SITE_URL，不含任何个人信息。版本 4、纠错 M、整数像素（每格 1 个单位，crispEdges），生成后已用 OpenCV 解码核对。 */
 var QR_SVG='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 41 41" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M4 4h7v1h-7zM12 4h1v1h-1zM14 4h2v1h-2zM17 4h2v1h-2zM21 4h2v1h-2zM24 4h2v1h-2zM30 4h7v1h-7zM4 5h1v1h-1zM10 5h1v1h-1zM13 5h2v1h-2zM16 5h1v1h-1zM25 5h1v1h-1zM28 5h1v1h-1zM30 5h1v1h-1zM36 5h1v1h-1zM4 6h1v1h-1zM6 6h3v1h-3zM10 6h1v1h-1zM12 6h6v1h-6zM21 6h1v1h-1zM25 6h4v1h-4zM30 6h1v1h-1zM32 6h3v1h-3zM36 6h1v1h-1zM4 7h1v1h-1zM6 7h3v1h-3zM10 7h1v1h-1zM13 7h1v1h-1zM19 7h1v1h-1zM23 7h1v1h-1zM25 7h4v1h-4zM30 7h1v1h-1zM32 7h3v1h-3zM36 7h1v1h-1zM4 8h1v1h-1zM6 8h3v1h-3zM10 8h1v1h-1zM14 8h2v1h-2zM19 8h1v1h-1zM23 8h1v1h-1zM26 8h1v1h-1zM30 8h1v1h-1zM32 8h3v1h-3zM36 8h1v1h-1zM4 9h1v1h-1zM10 9h1v1h-1zM12 9h1v1h-1zM19 9h1v1h-1zM21 9h3v1h-3zM28 9h1v1h-1zM30 9h1v1h-1zM36 9h1v1h-1zM4 10h7v1h-7zM12 10h1v1h-1zM14 10h1v1h-1zM16 10h1v1h-1zM18 10h1v1h-1zM20 10h1v1h-1zM22 10h1v1h-1zM24 10h1v1h-1zM26 10h1v1h-1zM28 10h1v1h-1zM30 10h7v1h-7zM13 11h3v1h-3zM18 11h3v1h-3zM23 11h2v1h-2zM26 11h1v1h-1zM4 12h1v1h-1zM6 12h1v1h-1zM10 12h2v1h-2zM13 12h2v1h-2zM20 12h1v1h-1zM24 12h1v1h-1zM27 12h1v1h-1zM31 12h1v1h-1zM34 12h1v1h-1zM36 12h1v1h-1zM7 13h1v1h-1zM9 13h1v1h-1zM13 13h1v1h-1zM17 13h1v1h-1zM19 13h1v1h-1zM21 13h1v1h-1zM23 13h2v1h-2zM27 13h2v1h-2zM30 13h1v1h-1zM33 13h1v1h-1zM36 13h1v1h-1zM4 14h1v1h-1zM6 14h1v1h-1zM8 14h1v1h-1zM10 14h1v1h-1zM13 14h1v1h-1zM19 14h2v1h-2zM23 14h3v1h-3zM27 14h1v1h-1zM33 14h2v1h-2zM36 14h1v1h-1zM4 15h1v1h-1zM6 15h3v1h-3zM11 15h2v1h-2zM14 15h2v1h-2zM17 15h1v1h-1zM19 15h1v1h-1zM21 15h1v1h-1zM27 15h1v1h-1zM30 15h4v1h-4zM35 15h1v1h-1zM5 16h2v1h-2zM10 16h2v1h-2zM15 16h3v1h-3zM19 16h1v1h-1zM21 16h1v1h-1zM26 16h1v1h-1zM28 16h1v1h-1zM30 16h2v1h-2zM36 16h1v1h-1zM8 17h2v1h-2zM11 17h1v1h-1zM13 17h2v1h-2zM16 17h2v1h-2zM25 17h1v1h-1zM27 17h2v1h-2zM30 17h2v1h-2zM33 17h4v1h-4zM4 18h1v1h-1zM6 18h1v1h-1zM8 18h1v1h-1zM10 18h3v1h-3zM14 18h2v1h-2zM17 18h3v1h-3zM23 18h1v1h-1zM25 18h3v1h-3zM32 18h1v1h-1zM34 18h1v1h-1zM36 18h1v1h-1zM5 19h3v1h-3zM12 19h2v1h-2zM16 19h3v1h-3zM22 19h1v1h-1zM27 19h1v1h-1zM29 19h3v1h-3zM33 19h1v1h-1zM4 20h4v1h-4zM9 20h2v1h-2zM15 20h2v1h-2zM19 20h2v1h-2zM23 20h1v1h-1zM27 20h2v1h-2zM30 20h2v1h-2zM33 20h1v1h-1zM35 20h1v1h-1zM5 21h1v1h-1zM7 21h1v1h-1zM12 21h2v1h-2zM17 21h1v1h-1zM19 21h2v1h-2zM23 21h3v1h-3zM27 21h2v1h-2zM30 21h1v1h-1zM33 21h1v1h-1zM36 21h1v1h-1zM5 22h1v1h-1zM7 22h5v1h-5zM13 22h3v1h-3zM17 22h3v1h-3zM21 22h3v1h-3zM27 22h1v1h-1zM29 22h3v1h-3zM33 22h2v1h-2zM36 22h1v1h-1zM4 23h1v1h-1zM6 23h1v1h-1zM9 23h1v1h-1zM12 23h1v1h-1zM15 23h4v1h-4zM20 23h1v1h-1zM22 23h1v1h-1zM26 23h2v1h-2zM29 23h2v1h-2zM32 23h2v1h-2zM35 23h2v1h-2zM7 24h5v1h-5zM16 24h7v1h-7zM24 24h5v1h-5zM30 24h2v1h-2zM7 25h2v1h-2zM12 25h1v1h-1zM16 25h3v1h-3zM20 25h3v1h-3zM24 25h2v1h-2zM27 25h5v1h-5zM33 25h1v1h-1zM36 25h1v1h-1zM4 26h3v1h-3zM10 26h4v1h-4zM16 26h2v1h-2zM20 26h3v1h-3zM24 26h4v1h-4zM29 26h1v1h-1zM34 26h1v1h-1zM36 26h1v1h-1zM7 27h1v1h-1zM11 27h2v1h-2zM15 27h2v1h-2zM19 27h2v1h-2zM22 27h3v1h-3zM28 27h1v1h-1zM30 27h2v1h-2zM33 27h1v1h-1zM35 27h2v1h-2zM4 28h2v1h-2zM8 28h4v1h-4zM14 28h1v1h-1zM18 28h1v1h-1zM28 28h5v1h-5zM12 29h15v1h-15zM28 29h1v1h-1zM32 29h1v1h-1zM36 29h1v1h-1zM4 30h7v1h-7zM12 30h1v1h-1zM14 30h1v1h-1zM16 30h2v1h-2zM19 30h2v1h-2zM23 30h2v1h-2zM28 30h1v1h-1zM30 30h1v1h-1zM32 30h5v1h-5zM4 31h1v1h-1zM10 31h1v1h-1zM13 31h4v1h-4zM18 31h1v1h-1zM21 31h1v1h-1zM23 31h1v1h-1zM25 31h1v1h-1zM27 31h2v1h-2zM32 31h2v1h-2zM35 31h2v1h-2zM4 32h1v1h-1zM6 32h3v1h-3zM10 32h1v1h-1zM14 32h2v1h-2zM17 32h2v1h-2zM21 32h1v1h-1zM25 32h1v1h-1zM27 32h6v1h-6zM4 33h1v1h-1zM6 33h3v1h-3zM10 33h1v1h-1zM13 33h2v1h-2zM25 33h1v1h-1zM27 33h1v1h-1zM29 33h1v1h-1zM31 33h2v1h-2zM36 33h1v1h-1zM4 34h1v1h-1zM6 34h3v1h-3zM10 34h1v1h-1zM12 34h1v1h-1zM14 34h3v1h-3zM18 34h2v1h-2zM21 34h1v1h-1zM23 34h1v1h-1zM25 34h5v1h-5zM31 34h3v1h-3zM35 34h2v1h-2zM4 35h1v1h-1zM10 35h1v1h-1zM17 35h2v1h-2zM28 35h1v1h-1zM30 35h4v1h-4zM4 36h7v1h-7zM12 36h1v1h-1zM14 36h1v1h-1zM19 36h2v1h-2zM23 36h2v1h-2zM27 36h2v1h-2zM30 36h4v1h-4zM36 36h1v1h-1z"/></svg>';
 
@@ -1958,10 +2001,11 @@ function riskOf(d){var r=(d&&d.risk)||[];return RISK.filter(function(x){return r
 function rkHas(rk,k){return rk.some(function(x){return x.k===k})}
 function rkLoc(x,lk){return (x.loc&&RK_SRC[lk]&&x.loc[lk])||""}
 /* 一项：当地语言（有来源时）大字，下面 English · 中文；中文界面的国家用中文大字 */
-function rkLi(x,lk){var lo=rkLoc(x,lk),zh=lk==="zht"||lk==="zhs"||(!lo&&lang==="zh"&&!lk);
-  if(lo)return '<li><b lang="'+lk+'">'+esc(lo)+'</b><span>'+esc(x.en)+' · '+esc(x.zh)+'</span></li>';
-  if(zh)return '<li><b>'+esc(x.zh)+'</b><span>'+esc(x.en)+'</span></li>';
-  return '<li><b>'+esc(x.en)+'</b><span>'+esc(x.zh)+'</span></li>'}
+function rkLi(x,lk,d){var lo=rkLoc(x,lk),zh=lk==="zht"||lk==="zhs"||(!lo&&lang==="zh"&&!lk);
+  var ex=(x.k==="preg"&&d&&dueOk(d.due))?' · Due '+T.dueK[0]+' '+d.due:'';
+  if(lo)return '<li><b lang="'+lk+'">'+esc(lo)+'</b><span>'+esc(x.en)+' · '+esc(x.zh)+esc(ex)+'</span></li>';
+  if(zh)return '<li><b>'+esc(x.zh)+'</b><span>'+esc(x.en)+esc(ex)+'</span></li>';
+  return '<li><b>'+esc(x.en)+'</b><span>'+esc(x.zh)+esc(ex)+'</span></li>'}
 function rkNotes(rk){var n=[];if(rkHas(rk,"pm"))n.push(t("rkPm")+' '+srcLine([111]));if(rkHas(rk,"steroid"))n.push(t("rkSt")+' '+srcLine([112]));
   return n.map(function(s){return '<div class="mcs">'+s+'</div>'}).join("")}
 
@@ -1979,7 +2023,7 @@ function brHtml(d){var rk=riskOf(d);if(!rk.some(function(x){return BR_KEYS[x.k]}
     '<div class="src">'+t("srcT")+CO()+srcLine([101,102,103])+'</div></section>'}
 
 /* ---------- 我的卡（v0.6.0：多档案 + 高危勾选 + 平时状态 / 药放哪 / 保险） ---------- */
-var IDF=[["name","fName"],["blood","fBlood"],["allergy","fAll"],["cond","fCond"],["med","fMed"],["ice","fIce"],["base","fBase"],["medloc","fMedLoc"],["ins","fIns"],["insTel","fInsTel"]];
+var IDF=[["name","fName"],["blood","fBlood"],["allergy","fAll"],["cond","fCond"],["med","fMed"],["ice","fIce"],["base","fBase"],["medloc","fMedLoc"],["ins","fIns"],["insTel","fInsTel"],["acp","fAcp"]];
 function idHas(d){return IDF.some(function(f){return d[f[0]]})||riskOf(d).length>0}
 function renderId(editing){
   var box=$("idBox");if(!box)return;
@@ -1996,7 +2040,9 @@ function renderId(editing){
        '<div class="kick" style="margin-top:18px" id="rkLbl">'+t("rkT")+'</div><div class="muted">'+t("rkS")+'</div>'+
        '<div class="rkgrid" role="group" aria-labelledby="rkLbl">'+RISK.map(function(x){var on=(d.risk||[]).indexOf(x.k)>=0;return '<button class="rkc" data-rk="'+x.k+'" aria-pressed="'+on+'">'+esc(lang==="zh"?x.zh:x.en)+'</button>'}).join("")+'</div>'+
        inp("allergy","fAll")+inp("cond","fCond")+inp("med","fMed")+inp("ice","fIce")+
-       inp("base","fBase","fBaseP")+inp("medloc","fMedLoc","fMedLocP")+inp("ins","fIns","fInsP")+inp("insTel","fInsTel","fInsTelP","tel")+
+       inp("base","fBase","fBaseP")+inp("medloc","fMedLoc","fMedLocP")+inp("acp","fAcp","fAcpP")+'<div class="muted">'+t("acpNote")+' '+srcLine([114,115,116])+'</div>'+
+       inp("due","fDue","","date")+
+       inp("ins","fIns","fInsP")+inp("insTel","fInsTel","fInsTelP","tel")+
        '<div class="muted" style="margin-top:6px">'+t("insPriv")+'</div>'+
        '<button class="btn red" id="idSave">'+t("save")+'</button><button class="btn ghost" id="idClear">'+t("clear")+'</button>'+
        (P.cur>0?'<button class="btn warn" id="pfDel">'+t("pfDel")+'</button>':'')+'</section>';
@@ -2009,10 +2055,12 @@ function renderId(editing){
      '<div class="pname'+(d.name?'':' ph')+'">'+esc(d.name||t("nameNone"))+'</div><div class="mut">'+t("idHint")+'</div></div>'+
      '<div class="rblock'+(bl?'':' empty')+'" role="img" aria-label="'+esc(t("fBlood")+CO()+(bl||t("none")))+'"><span class="rk" aria-hidden="true">'+t("bloodK")+'</span><span class="rv'+(lg?' long':'')+'" aria-hidden="true">'+esc(bl||"?")+'</span></div></div></section>';
   if(!has){box.innerHTML=h+'<button class="btn red" id="idEdit" style="margin:0 0 12px">'+t("edit")+'</button>';return}
-  if(rk.length)h+='<section class="card crit"><div class="kick red">'+I("alert","s")+bi("rkK")+'</div><ul class="rkl">'+rk.map(function(x){return rkLi(x,lang==="zh"?"zhs":"")}).join("")+'</ul>'+rkNotes(rk)+'</section>';
+  h+=pregNote(d);
+  if(rk.length)h+='<section class="card crit"><div class="kick red">'+I("alert","s")+bi("rkK")+'</div><ul class="rkl">'+rk.map(function(x){return rkLi(x,lang==="zh"?"zhs":"",d)}).join("")+'</ul>'+rkNotes(rk)+'</section>';
   h+='<section class="card crit"><div class="kick red">'+I("alert","s")+bi("fAll")+'</div>'+fval(d.allergy)+'</section>';
   h+='<section class="card"><div class="frow"><div class="kick">'+bi("fCond")+'</div>'+fval(d.cond)+'</div><div class="frow"><div class="kick">'+bi("fMed")+'</div>'+fval(d.med)+'</div>'+
-     (d.base?'<div class="frow"><div class="kick">'+bi("fBase")+'</div>'+fval(d.base)+'</div>':'')+(d.medloc?'<div class="frow"><div class="kick">'+bi("fMedLoc")+'</div>'+fval(d.medloc)+'</div>':'')+'</section>';
+     (d.base?'<div class="frow"><div class="kick">'+bi("fBase")+'</div>'+fval(d.base)+'</div>':'')+(d.medloc?'<div class="frow"><div class="kick">'+bi("fMedLoc")+'</div>'+fval(d.medloc)+'</div>':'')+
+     (d.acp?'<div class="frow"><div class="kick">'+bi("fAcp")+'</div>'+fval(d.acp)+'</div>':'')+'</section>';
   var ph=phoneIn(d.ice);
   h+='<section class="card"><div class="kick">'+bi("fIce")+'</div>'+fval(d.ice)+
      (ph?'<a class="btn grn" href="'+tel(ph)+'" aria-label="'+esc(t("iceCall")+SEP()+digits(ph))+'">'+phoneIco()+t("iceCall")+'</a>':'')+'</section>';
@@ -2041,7 +2089,7 @@ function openHand(){
     if(!g.length&&!txt&&!extra&&!always)return "";
     return '<section class="card ho'+(crit?' crit':'')+'"><div class="kick'+(crit?' red':'')+'"><span class="hon">'+(++n)+'</span>'+title+'</div>'+
       (g.length?'<ul class="rkl">'+g.join("")+'</ul>':'')+(txt||!g.length?fval(txt):'')+(extra||'')+'</section>'}
-  var byP=function(p){return rk.filter(function(x){return x.p===p}).map(function(x){return rkLi(x,lk)})};
+  var byP=function(p){return rk.filter(function(x){return x.p===p}).map(function(x){return rkLi(x,lk,d)})};
   var n=0,s="";
   s+=sec(bi("fAll"),byP(1),d.allergy,1,"",1);
   s+=sec(bi("fMed"),byP(2),d.med,0,rkHas(rk,"steroid")?'<div class="mcs">'+t("rkSt")+' '+srcLine([112])+'</div>':'',1);
@@ -2049,6 +2097,7 @@ function openHand(){
   s+=sec(bi("hoDev"),byP(4),"",0,rkHas(rk,"pm")?'<div class="mcs">'+t("rkPm")+' '+srcLine([111])+'</div>':'');
   s+=sec(bi("fBase"),[],d.base);
   s+='<section class="card ho"><div class="kick"><span class="hon">'+(++n)+'</span>'+bi("fMedLoc")+'</div><p style="margin:6px 0 0;font-weight:700">'+esc(d.medloc?t("hoBring").replace("{x}",d.medloc):t("hoBringN"))+'</p><div class="src">'+t("srcT")+CO()+srcLine([110])+'</div></section>';
+  if(d.acp)s+='<section class="card ho"><div class="kick"><span class="hon">'+(++n)+'</span>'+bi("fAcp")+'</div><p style="margin:6px 0 0;font-weight:700">'+esc(t("acpHo").replace("{x}",d.acp))+'</p><div class="src">'+t("srcT")+CO()+srcLine([115,116])+'</div></section>';
   var tk=TM.filter(function(x){return o[x[0]]});
   if(tk.length)s+='<section class="card ho"><div class="kick"><span class="hon">'+(++n)+'</span>'+bi("hoTimes")+'</div><ul class="rkl">'+tk.map(function(x){return '<li><b>'+hmOf(o[x[0]])+'</b><span>'+esc(t(x[1]))+' · '+esc(t("tmAgo").replace("{t}",dur(Date.now()-o[x[0]])))+'</span></li>'}).join("")+'</ul></section>';
   if(d.ins||d.insTel){var ip=phoneIn(d.insTel);s+='<section class="card ho"><div class="kick"><span class="hon">'+(++n)+'</span>'+bi("fIns")+'</div>'+fval(d.ins)+(d.insTel?fval(d.insTel):'')+
@@ -2104,6 +2153,8 @@ function openHelper(){
     '<button class="btn ghost" id="hlocBtn">'+I("pin")+t("locBtn")+'</button><div class="src">'+t("srcT")+CO()+srcLine([108,109])+'</div></section>'+
     '<h2 class="secH"><b>'+t("hlAfterT")+'</b></h2><section class="card"><ul class="notes" style="margin-top:0">'+["hlA1","hlA2","hlA3"].map(function(k){return '<li>'+t(k)+'</li>'}).join("")+'</ul>'+
     '<div class="src">'+t("srcT")+CO()+srcLine([106,107,105])+'</div></section>'+
+    '<h2 class="secH"><b>'+t("hmT")+'</b></h2><section class="card"><ul class="notes" style="margin-top:0">'+["hm1","hm2","hm3","hm4"].map(function(k){return '<li>'+t(k)+'</li>'}).join("")+'</ul>'+
+    '<div class="mcs">'+I("alert","s")+' '+t("hmPriv")+'</div><div class="src">'+t("srcT")+CO()+srcLine([117,118])+'</div></section>'+
     '<button class="btn" id="tmGo">'+I("clock")+t("hlTm")+'</button><button class="btn ghost" data-tab="">'+t("hlCards")+'</button>'+awkHtml();
   showSheet(h,callBtn(c));awake(true);
 }
@@ -2113,7 +2164,7 @@ function wbil(en,zh){return '<span class="wl">'+esc(en)+' · '+esc(zh)+'</span>'
 function walletHtml(c,d){var rk=riskOf(d),top=rk.slice(0,3),more=rk.length-top.length;
   var f='<div class="wface"><div class="wh"><span>MEDICAL ID · 急救信息</span>'+(d.blood?'<span class="wbt">'+esc(d.blood)+'</span>':'')+'</div>'+
     '<div class="wname">'+esc(d.name||"")+'</div>'+
-    top.map(function(x){return '<div class="wrk">■ '+esc(x.en)+' · '+esc(x.zh)+'</div>'}).join("")+
+    top.map(function(x){return '<div class="wrk">■ '+esc(x.en)+' · '+esc(x.zh)+(x.k==="preg"&&dueOk(d.due)?' · Due '+esc(d.due):'')+'</div>'}).join("")+
     (more>0?'<div class="wl">'+esc(T.prMore[1].replace("{n}",more))+' · '+esc(T.prMore[0].replace("{n}",more))+'</div>':'')+
     (d.allergy?'<div class="wt">'+wbil("Allergies","过敏")+'：'+esc(d.allergy)+'</div>':'')+
     (d.med?'<div class="wt">'+wbil("Medication","用药")+'：'+esc(d.med)+'</div>':'')+
@@ -2129,9 +2180,9 @@ function fridgeHtml(c,d){var rk=riskOf(d),N=C[c].amb;
   function row(en,zh,v){return v?'<div class="fr"><div class="fk">'+esc(en)+'<br>'+esc(zh)+'</div><div class="fv2">'+esc(v)+'</div></div>':''}
   return '<div class="fsheet"><div class="fh"><b>MEDICAL INFORMATION · 急救信息</b><span>'+esc(T.prDate[1])+' · '+esc(T.prDate[0])+' '+todayStr()+'</span></div>'+
     '<div class="fname">'+esc(d.name||"")+(d.blood?' <span class="fbt">'+esc(d.blood)+'</span>':'')+'</div>'+
-    (rk.length?'<div class="frk"><div class="fk">HIGH-RISK · 高危情况</div>'+rk.map(function(x){return '<div>■ <b>'+esc(x.en)+'</b> · '+esc(x.zh)+'</div>'}).join("")+'</div>':'')+
+    (rk.length?'<div class="frk"><div class="fk">HIGH-RISK · 高危情况</div>'+rk.map(function(x){return '<div>■ <b>'+esc(x.en)+'</b> · '+esc(x.zh)+(x.k==="preg"&&dueOk(d.due)?' · Due 预产期 '+esc(d.due):'')+'</div>'}).join("")+'</div>':'')+
     row("Allergies","过敏",d.allergy)+row("Current medication","正在用药",d.med)+row("Medical conditions","疾病史",d.cond)+
-    row("Usual state","平时的状态",d.base)+row("Medicines kept","药放在哪里",d.medloc)+row("Emergency contact","紧急联系人",d.ice)+
+    row("Usual state","平时的状态",d.base)+row("Medicines kept","药放在哪里",d.medloc)+row("Advance care plan / DNACPR form kept","预立医疗计划 / 不复苏文件放在",d.acp)+row("Emergency contact","紧急联系人",d.ice)+
     row("Insurance","保险",d.ins)+row("24h assistance","救援热线",d.insTel)+
     '<div class="famb"><span>Emergency · 急救电话（'+esc(C[c].en)+' · '+esc(C[c].zh)+'）</span><b>'+esc(N)+'</b></div>'+
     '<div class="fqrw"><div class="fqr">'+QR_SVG+'</div><div>'+esc(T.prQrS[1])+'<br>'+esc(T.prQrS[0])+'</div></div>'+
@@ -2245,11 +2296,22 @@ document.addEventListener("click",function(e){
   if(el.dataset.rk){el.setAttribute("aria-pressed",el.getAttribute("aria-pressed")==="true"?"false":"true");return}
   if(el.id==="brCopy"){copyText(el.dataset.v,function(){el.textContent=t("copied")});return}
   if(el.id==="mcGo"){goHash("med");return}
+  if(el.id==="mcRead"){var mm=$("mcReadMsg");if(mm)mm.textContent="";
+    var stopR=function(){var b=$("mcRead");if(b){b.setAttribute("aria-pressed","false");b.innerHTML=I("vol","s")+t("mcRead")}};
+    if(el.getAttribute("aria-pressed")==="true"){hush();stopR();return}
+    var mk=mcPick(cc()),MP=MCL[mk]||null,seq=[[T.mcReadHead[1],"en"]];
+    riskOf(getId()).forEach(function(x){var lo=rkLoc(x,mk);if(lo&&MP)seq.push([lo,MP.l]);else if(mk==="zhs"||mk==="zht")seq.push([x.zh,mk==="zht"?(ZHT[cc()]||"zh-TW"):"zh"]);seq.push([x.en,"en"])});
+    var sk2=speakSeq(seq,stopR);
+    if(sk2===null){if(mm)mm.textContent=t("noTts");return}
+    el.setAttribute("aria-pressed","true");el.innerHTML=I("mute","s")+t("mcReadStop");
+    if(sk2.length&&mm){var u2=sk2.filter(function(v,i,a){return a.indexOf(v)===i});mm.textContent=u2.map(function(l){return t("noVoice").replace("{l}",l)}).join(" ")}
+    return}
   if(el.hasAttribute("data-mcl")){store("ec_mlang",el.dataset.mcl||null);openMed.keep=true;openMed();return}
   if(el.dataset.bt){var bi_=$("bIn");if(bi_)bi_.value=el.dataset.bt;
     document.querySelectorAll(".bchoice").forEach(function(x){x.setAttribute("aria-pressed",x===el?"true":"false")});return}
   if(el.id==="idSave"){var d={},rs=[];document.querySelectorAll("#idBox [data-f]").forEach(function(i){if(i.value.trim())d[i.dataset.f]=i.value.trim()});
     document.querySelectorAll("#idBox [data-rk]").forEach(function(b){if(b.getAttribute("aria-pressed")==="true")rs.push(b.dataset.rk)});if(rs.length)d.risk=rs;
+    var od=getId();if(rs.indexOf("preg")>=0){d.pregAt=od.pregAt||Date.now();if(d.due&&!dueOk(d.due))delete d.due}else delete d.due;
     var Ps=profs();Ps.list[Ps.cur].d=d;var pn=$("pfN");if(pn)Ps.list[Ps.cur].n=pn.value.trim().slice(0,30);saveProfs(Ps);renderId(false);window.scrollTo(0,0);return}
   if(el.id==="idClear"){setId({});renderId(true);return}
   if(el.id==="mlGo"){goTab("more");setTimeout(function(){var f=$("fb");if(f)try{f.scrollIntoView({block:"start"});f.focus({preventScroll:true})}catch(x){}},30);return}
