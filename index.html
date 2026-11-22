@@ -359,6 +359,18 @@ details.dd li{margin-top:6px}
 .lp .lpr{font-size:calc(18px * var(--fs));color:#374151;margin-top:4px;font-style:italic}
 .lp .lps{font-size:calc(15px * var(--fs));color:#4B5563;margin-top:8px;line-height:1.4;word-break:break-word}
 .lp .lps a{color:#1D4ED8}
+.mc{margin-top:14px;background:#FFFFFF;color:#111111;border:4px solid #DC2626;border-radius:18px;padding:6px 16px}
+.mc .mcf{padding:14px 0;border-bottom:2px solid #E5E7EB}
+.mc .mcf:last-child{border-bottom:0}
+.mc .mcl{font-size:calc(22px * var(--fs));font-weight:900;line-height:1.3;word-break:break-word;color:#111111}
+.mc .mcf.crit .mcl{color:#B91C1C}
+.mc .mce{font-size:calc(15px * var(--fs));font-weight:700;color:#4B5563;margin-top:2px;line-height:1.35}
+.mc .mcv{font-size:calc(26px * var(--fs));font-weight:800;line-height:1.35;margin-top:6px;word-break:break-word;white-space:pre-wrap}
+.mc .mcv.bt{font-family:var(--font-num);font-size:calc(40px * var(--fs));font-weight:900;color:#B91C1C}
+.mc .mcv.none{font-size:calc(17px * var(--fs));color:#6B7280;font-weight:600}
+.mc a.btn{margin-top:10px}
+.mcs{font-size:calc(15px * var(--fs));color:var(--text-muted);margin-top:10px;line-height:1.45;word-break:break-word}
+.mcs .pend{display:inline-block;font-weight:800;color:#92400E;background:#FFFBEB;border:1px solid #FDE68A;border-radius:6px;padding:0 6px}
 .lp .pend{display:inline-block;font-weight:800;color:#92400E;background:#FFFBEB;border:1px solid #FDE68A;border-radius:6px;padding:0 6px}
 .about .vrow{display:flex;flex-wrap:wrap;gap:4px 14px;align-items:baseline;margin-top:4px}
 .about .vrow b{font-size:calc(22px * var(--fs));font-family:var(--font-num)}
@@ -443,7 +455,7 @@ var FEEDBACK_GOOGLE = _CFG.google||"";    // Google 表单链接，例如 https:
 var FEEDBACK_TENCENT = _CFG.tencent||"";  // 腾讯问卷链接，例如 https://wj.qq.com/s2/xxxx/xxxx/
 // 可选：Google 表单里"版本/国家/语言"那道简答题的编号（形如 entry.123456789）。填了以后会自动带入，留空也能用。
 var GOOGLE_PREFILL_ENTRY = _CFG.googleEntry||"";
-var VERSION = "MVP v0.4.3";
+var VERSION = "MVP v0.5.0";
 var VERIFIED_ON = "2026-11-17";   // 全部国家号码的统一核实日期；某国单独复核后，在该国数据里加 v:"YYYY-MM-DD"
 // 固定的正式网址：分享、锁屏图片一律用它，不用当前地址栏（避免分享出 file:// 或预览地址）。分享链接里永远不放任何个人信息。
 var SITE_URL = "https://jackyyhhxjyxn.github.io/emergency-card/";
@@ -744,7 +756,23 @@ var SRC={
 67:["Triptipedia：意大利语旅行基础句","Triptipedia: Italian basic holiday phrases","https://triptipedia.com/tip/pY4tKtj/italian-basic-holiday-phrases"],
 68:["SpanishPod101 Survival Phrases #48（医疗求助）","SpanishPod101 Survival Phrases #48 (getting medical assistance)","https://www.spanishpod101.com/lesson/survival-phrases-48-getting-medical-assistance-in-spanish"],
 69:["Spanish Academy：西班牙语紧急情况用语","Spanish Academy: How to deal with an emergency in Spanish","https://www.spanish.academy/blog/how-to-deal-with-an-emergency-in-spanish/"],
-70:["Rocket Languages：印地语健康用语","Rocket Languages: Health in Hindi","https://www.rocketlanguages.com/hindi/learn/health-in-hindi"]
+70:["Rocket Languages：印地语健康用语","Rocket Languages: Health in Hindi","https://www.rocketlanguages.com/hindi/learn/health-in-hindi"],
+71:["日本厚生劳动省：外国人向け多言語説明資料 一覧（v0.5 医疗卡字段名来源总页）","Japan MHLW: Multilingual documents for foreign patients (index; source of v0.5 medical-card field names)","https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryou/kokusai/setsumei-ml.html"],
+72:["厚生劳动省：内科問診票（韩语 / 日语）","MHLW: Internal medicine questionnaire (Korean / Japanese)","https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/kokusai/setsumeisiryo/dl/kr14.pdf"],
+73:["厚生劳动省：診療申込書（韩语 / 日语）","MHLW: Medical application form (Korean / Japanese)","https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/kokusai/setsumeisiryo/dl/kr01.pdf"],
+74:["厚生劳动省：内科問診票（西班牙语 / 日语）","MHLW: Internal medicine questionnaire (Spanish / Japanese)","https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/kokusai/setsumeisiryo/dl/es14.pdf"],
+75:["厚生劳动省：診療申込書（西班牙语 / 日语）","MHLW: Medical application form (Spanish / Japanese)","https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/kokusai/setsumeisiryo/dl/es01.pdf"],
+76:["厚生劳动省：内科問診票（越南语 / 英语 / 日语）","MHLW: Internal medicine questionnaire (Vietnamese / English / Japanese)","https://www.mhlw.go.jp/content/10800000/14_Vietnamiese.pdf"],
+77:["厚生劳动省：診療申込書（越南语 / 英语 / 日语）","MHLW: Medical application form (Vietnamese / English / Japanese)","https://www.mhlw.go.jp/content/10800000/001251716.pdf"],
+78:["厚生劳动省：内科問診票（印尼语 / 英语 / 日语）","MHLW: Internal medicine questionnaire (Indonesian / English / Japanese)","https://www.mhlw.go.jp/content/10800000/14_000948754Rev.4.5.__..pdf"],
+79:["厚生劳动省：診療申込書（印尼语 / 英语 / 日语）","MHLW: Medical application form (Indonesian / English / Japanese)","https://www.mhlw.go.jp/content/10800000/001251122.pdf"],
+80:["厚生劳动省：内科問診票（泰语 / 英语 / 日语）","MHLW: Internal medicine questionnaire (Thai / English / Japanese)","https://www.mhlw.go.jp/content/10800000/001251575.pdf"],
+81:["厚生劳动省：診療申込書（泰语 / 英语 / 日语）","MHLW: Medical application form (Thai / English / Japanese)","https://www.mhlw.go.jp/content/10800000/001251549.pdf"],
+82:["厚生劳动省：内科問診票（阿拉伯语 / 英语 / 日语）","MHLW: Internal medicine questionnaire (Arabic / English / Japanese)","https://www.mhlw.go.jp/content/10800000/14_en14_Ar.pdf"],
+83:["厚生劳动省：診療申込書（阿拉伯语 / 英语 / 日语）","MHLW: Medical application form (Arabic / English / Japanese)","https://www.mhlw.go.jp/content/10800000/01_en01_Ar.pdf"],
+84:["厚生劳动省：内科問診票（印地语 / 英语 / 日语）","MHLW: Internal medicine questionnaire (Hindi / English / Japanese)","https://www.mhlw.go.jp/content/10800000/14_000948754_Hindi_revised.pdf"],
+85:["厚生劳动省：診療申込書（印地语 / 英语 / 日语）","MHLW: Medical application form (Hindi / English / Japanese)","https://www.mhlw.go.jp/content/10800000/1_Hindi.pdf"],
+86:["ConceptNet（收录 JMdict）：日语“血液型”","ConceptNet (incl. JMdict): Japanese 血液型 (blood type)","https://conceptnet.io/c/ja/%E8%A1%80%E6%B6%B2%E5%9E%8B"]
 };
 
 /* ===================== 界面文字 UI STRINGS ===================== */
@@ -1092,6 +1120,49 @@ shareTxt:["急救卡：按所在国家显示急救电话和急救步骤（中文
 };
 for(var _k4 in T4)T[_k4]=T4[_k4];
 
+/* ===================== v0.5.0：多语种个人医疗卡（给外国医护看） =====================
+   只翻译“字段名”，你填写的内容原样显示、不翻译、只存在本机（localStorage "ec_id"），从不进网址、分享、锁屏图片或反馈。
+   字段名全部取自日本厚生劳动省多语种问诊票 / 诊疗申请书（来源 71–85），不是 Claude 翻译的；全部标“待母语者核对”，核对通过后把 ok 改为 1。
+   fix:1 = 该语言的原 PDF 文字提取有乱码（泰语、阿拉伯语、印地语），这里按标准写法还原了字形，必须优先请母语者核对。
+   某个字段没有来源（例如大多数语言的“血型”）就不显示当地语言，只显示 English · 中文。
+   法、德、意、马来语：暂未找到同等级别的官方来源 → 只显示英文 + 中文（不显示自造译文）。 */
+var MCL={
+ja:{n:["日语","Japanese"],own:"日本語",l:"ja",f:{name:"患者氏名",blood:"血液型",allergy:"アレルギー",cond:"疾患名",med:"お薬の名前",ice:"緊急連絡先"},src:[72,73,78,86],ok:0},
+ko:{n:["韩语","Korean"],own:"한국어",l:"ko",f:{name:"환자성명",allergy:"알레르기",cond:"현재 치료중인 질병",med:"현재 복용중인 약",ice:"긴급연락처"},src:[72,73],ok:0},
+th:{n:["泰语","Thai"],own:"ไทย",l:"th",fix:1,f:{name:"ชื่อและนามสกุลของผู้ป่วย",allergy:"โรคภูมิแพ้",cond:"ชื่อโรค",med:"ชื่อยา",ice:"ข้อมูลการติดต่อในกรณีฉุกเฉิน"},src:[80,81],ok:0},
+vi:{n:["越南语","Vietnamese"],own:"Tiếng Việt",l:"vi",f:{name:"Tên bệnh nhân",allergy:"Dị ứng",cond:"Bệnh",med:"Tên thuốc",ice:"Liên lạc khẩn cấp"},src:[76,77],ok:0},
+id:{n:["印尼语","Indonesian"],own:"Bahasa Indonesia",l:"id",f:{name:"Nama pasien",allergy:"Alergi",cond:"Nama penyakit",med:"Nama obat",ice:"Kontak darurat"},src:[78,79],ok:0},
+ar:{n:["阿拉伯语","Arabic"],own:"العربية",l:"ar",dir:"rtl",fix:1,f:{name:"اسم المريض",allergy:"الحساسية",med:"اسم الأدوية",ice:"بيانات الاتصال في حالات الطوارئ"},src:[82,83],ok:0},
+hi:{n:["印地语","Hindi"],own:"हिन्दी",l:"hi",fix:1,f:{name:"मरीज का नाम",allergy:"एलर्जी",cond:"रोग का नाम",med:"औषधियों का नाम",ice:"आपातकालीन संपर्क"},src:[84,85],ok:0},
+es:{n:["西班牙语","Spanish"],own:"Español",l:"es",f:{name:"Nombre del paciente",allergy:"Alergias",cond:"Enfermedad",med:"Medicamento",ice:"Persona de contacto en caso de urgencia"},src:[74,75],ok:0}
+};
+var MCORD=["ja","ko","th","vi","id","ar","hi","es"];
+/* 国家 → 医护最可能读的语言（只列有来源的语言）；港澳台用繁体中文字段名 */
+var MCC={JP:"ja",KR:"ko",TH:"th",VN:"vi",ID:"id",AE:"ar",IN:"hi",ES:"es"};
+/* 只有这些国家/地区缺当地语言来源时才提示；英语国家、未识别地区直接用英文，中国大陆用简体中文字段名 */
+var MCNOSRC={FR:1,DE:1,IT:1,MY:1,EU:1};
+var MCZT={name:"姓名",blood:"血型",allergy:"過敏",cond:"疾病史",med:"正在用藥",ice:"緊急聯絡人及電話"};
+var T5={
+mcBtn:["给外国医护看（当地语言字段名）","Show medical staff (local-language labels)"],
+mcT:["给医护人员看","For medical staff"],
+mcK:["急救信息 · MEDICAL INFORMATION","MEDICAL INFORMATION · 急救信息"],
+mcLang:["字段名语言","Label language"],
+mcAuto:["自动（{x}）","Auto ({x})"],
+mcEnOnly:["只用英文","English only"],
+mcNoSrc:["{c}的当地语言字段名暂未找到可靠的官方来源，先只显示英文和中文（多数医护能读英文）。也可以在下方“字段名语言”里手动选一种。","No reliable official source yet for {c} local-language labels, so only English and Chinese are shown. You can pick a language under “Label language” below."],
+mcAsIs:["内容由本人填写，未经翻译。","Content entered by the card holder — not translated."],
+mcFix:["该语言原文件文字提取有乱码，已按标准写法还原字形，尤其需要母语者核对。","The source PDF text for this language had extraction errors; letters were restored to standard spelling — native-speaker check especially needed."],
+mcZht:["繁体字段名由简体中文字段名逐字转换，不是新翻译。","Traditional Chinese labels are a character-by-character conversion of the Simplified Chinese labels, not a new translation."],
+mcLblSrc:["字段名来源","Label source"],
+mcEmpty:["还没有填写急救信息。先点“填写 / 修改”。","No medical information yet. Tap “Add / edit” first."],
+mcPriv:["只在本机显示，不会上传，也不会出现在分享链接或锁屏图片里。","Shown on this phone only — never uploaded, never in share links or lock-screen images."],
+idEnHint:["建议用英文填写（或中英都写）：外国医护能直接看懂。页面只翻译字段名，不翻译你写的内容。","Tip: write in English (or both English and Chinese) so staff abroad can read it. Only the labels are translated, not what you write."]
+};
+for(var _k5 in T5)T[_k5]=T5[_k5];
+T.mlT=["多语种医疗卡（测试版）","Multilingual medical card (beta)"];
+T.mlS=["出国时，把你的急救信息配上当地语言字段名给医护看（日、韩、泰、越、印尼、阿拉伯、印地、西班牙语；其他国家显示英文）。你写的内容不会被翻译。","Abroad, show your medical ID with local-language labels (Japanese, Korean, Thai, Vietnamese, Indonesian, Arabic, Hindi, Spanish; English elsewhere). What you write is not translated."];
+T.mlGo=["好不好用？去反馈","Is it useful? Give feedback"];
+
 function verOf(c){return C[c].v||VERIFIED_ON}
 function staleDays(c){var ms=Date.parse(verOf(c)+"T00:00:00Z");if(isNaN(ms))return 0;var d=Math.floor((Date.now()-ms)/86400000);return d>STALE_DAYS?d:0}
 function staleNote(c){return staleDays(c)?'<div class="note" role="note">'+I("alert")+'<div>'+esc(t("stale").replace("{d}",verOf(c)).replace("{n}",STALE_DAYS))+'</div></div>':""}
@@ -1310,7 +1381,7 @@ function renderId(editing){
   var has=F.some(function(f){return d[f[0]]});
   var h="";
   if(editing){
-    h+='<section class="card"><div class="kick red">'+I("idc","s")+t("idK")+'</div><div class="muted" style="margin-top:4px">'+t("idHint")+'</div>'+
+    h+='<section class="card"><div class="kick red">'+I("idc","s")+t("idK")+'</div><div class="muted" style="margin-top:4px">'+t("idHint")+'</div><div class="muted" style="margin-top:6px"><b>'+t("idEnHint")+'</b></div>'+
        '<label>'+t("fName")+'<input data-f="name" value="'+esc(d.name||"")+'" autocomplete="off"></label>'+
        '<label id="bLbl">'+t("fBlood")+'</label><div class="muted">'+t("bHint")+'</div><div class="bgrid" role="group" aria-labelledby="bLbl">'+
        BT.concat([t("bUnk")]).map(function(b){return '<button class="bchoice" data-bt="'+esc(b)+'" aria-pressed="'+(d.blood===b)+'">'+esc(b)+'</button>'}).join("")+'</div>'+
@@ -1319,6 +1390,7 @@ function renderId(editing){
        '<button class="btn red" id="idSave">'+t("save")+'</button><button class="btn ghost" id="idClear">'+t("clear")+'</button></section>';
   }else{
     var bl=d.blood||"",lg=bl.length>4;
+    if(has)h+='<button class="btn red" id="mcGo" style="margin:0 0 12px">'+I("globe")+t("mcBtn")+'</button>';
     h+='<section class="card"><div class="hrow"><div class="hinfo"><div class="kick red">'+t("idK")+'</div>'+
        '<div class="pname'+(d.name?'':' ph')+'">'+esc(d.name||t("nameNone"))+'</div><div class="mut">'+t("idHint")+'</div></div>'+
        '<div class="rblock'+(bl?'':' empty')+'" role="img" aria-label="'+esc(t("fBlood")+CO()+(bl||t("none")))+'"><span class="rk" aria-hidden="true">'+t("bloodK")+'</span><span class="rv'+(lg?' long':'')+'" aria-hidden="true">'+esc(bl||"?")+'</span></div></div></section>';
@@ -1451,6 +1523,45 @@ function openHelp(){
   showSheet(h,callBtn(c));
   awake(true);
 }
+/* ===================== v0.5.0：给医护看的多语种医疗卡 ===================== */
+function mcPick(c){var m=load("ec_mlang");if(m==="en")return "en";if(m&&MCL[m])return m;if(ZHT[c])return "zht";if(c==="CN")return "zhs";return MCC[c]||""}
+function openMed(){
+  metroStop();hush();cur=null;
+  var c=cc(),d={};try{d=JSON.parse(load("ec_id")||"{}")}catch(e){}
+  var lk=mcPick(c),P=MCL[lk]||null,m=load("ec_mlang");
+  var autoK=ZHT[c]?"zht":c==="CN"?"zhs":(MCC[c]||"");
+  var autoN=autoK==="zht"?"繁體中文":autoK==="zhs"?"简体中文":autoK?MCL[autoK].own:"English";
+  var h='<div class="shead"><button class="back" id="bk">'+I("chevL")+t("back")+'</button></div>'+
+    '<h1 id="sheetT" tabindex="-1" class="pickh" style="font-size:calc(20px * var(--fs));color:var(--crimson)">'+t("mcT")+'</h1>'+
+    '';
+  var pk='<details class="sl" style="margin-top:14px"'+(m?' open':'')+'><summary>'+t("mcLang")+CO()+esc(m?(m==="en"?t("mcEnOnly"):MCL[m].own):t("mcAuto").replace("{x}",autoN))+'</summary><div class="chips" role="group" aria-label="'+esc(t("mcLang"))+'">'+
+    '<button class="chip2" data-mcl="" aria-pressed="'+(!m)+'">'+esc(t("mcAuto").replace("{x}",autoN))+'</button>'+
+    MCORD.map(function(k){return '<button class="chip2" data-mcl="'+k+'" lang="'+MCL[k].l+'" aria-pressed="'+(m===k)+'">'+esc(MCL[k].own)+'</button>'}).join("")+
+    '<button class="chip2" data-mcl="en" aria-pressed="'+(m==="en")+'">'+t("mcEnOnly")+'</button></div>'+'</details>';
+
+  if(!m&&!autoK&&MCNOSRC[c])h+='<div class="note" role="note" style="margin-top:12px">'+I("info")+'<div>'+esc(t("mcNoSrc").replace("{c}",nm(c)))+'</div></div>';
+  var F=[["name","fName"],["blood","fBlood"],["allergy","fAll",1],["med","fMed"],["cond","fCond"],["ice","fIce"]];
+  var has=F.some(function(f){return d[f[0]]});
+  if(!has){h+='<div class="note" role="note" style="margin-top:12px">'+I("info")+'<div>'+t("mcEmpty")+'</div></div>'+pk;showSheet(h,callBtn(c));return}
+  h+='<div class="mc"><div class="mcf"><div class="kick red" style="color:#B91C1C">'+t("mcK")+'</div></div>';
+  F.forEach(function(f){var k=f[0],v=d[k]||"";
+    var zh=lk==="zht"||lk==="zhs";
+    var loc=lk==="zht"?MCZT[k]:lk==="zhs"?T[f[1]][0]:(P&&P.f[k])||"";
+    var both=zh?T[f[1]][1]:lang==="zh"?T[f[1]][0]+" · "+T[f[1]][1]:T[f[1]][1]+" · "+T[f[1]][0];
+    h+='<div class="mcf'+(f[2]?' crit':'')+'">'+
+      (loc?'<div class="mcl" lang="'+(lk==="zht"?(ZHT[c]||"zh-TW"):lk==="zhs"?"zh-CN":P.l)+'"'+(P&&P.dir?' dir="rtl"':'')+'>'+esc(loc)+'</div><div class="mce">'+esc(both)+'</div>'
+          :'<div class="mcl">'+esc(T[f[1]][1])+'</div><div class="mce">'+esc(T[f[1]][0])+'</div>')+
+      (v?'<div class="mcv'+(k==="blood"&&v.length<=4?' bt':'')+'">'+esc(v)+'</div>':'<div class="mcv none">—</div>');
+    if(k==="ice"){var ph=phoneIn(v);if(ph)h+='<a class="btn grn" href="'+tel(ph)+'" aria-label="'+esc(t("iceCall")+SEP()+digits(ph))+'">'+phoneIco()+t("iceCall")+'</a>'}
+    h+='</div>'});
+  h+='</div>';
+  h+='<div class="mcs"><b>'+t("mcAsIs")+'</b> '+t("mcPriv")+'</div>';
+  if(lk==="zht")h+='<div class="mcs">'+t("mcZht")+'</div>';
+  if(P)h+='<div class="mcs">'+(P.ok?'':'<span class="pend">'+t("lpPend")+'</span> ')+(P.fix?esc(t("mcFix"))+' ':'')+t("mcLblSrc")+CO()+srcLine([71].concat(P.src))+'</div>';
+  h+=pk+awkHtml();
+  showSheet(h,callBtn(c),!!openMed.keep);openMed.keep=false;
+  awake(true);
+}
 function readShow(on){var b=$("readBtn");if(!b)return;b.setAttribute("aria-pressed",on?"true":"false");b.innerHTML=on?I("mute","s")+t("readStop"):I("vol","s")+t("readA")}
 /* 按顺序朗读多段文字；本机没有对应语种语音时跳过该段（避免用错误语音念出另一种语言） */
 function speakSeq(list,onEnd){
@@ -1528,6 +1639,7 @@ function route(){var h=location.hash.slice(1);
   if(!confirmed){openConfirm();return}
   if(h==="help"){openHelp();return}
   if(h==="wall"){openWall();return}
+  if(h==="med"){openMed();return}
   if(h in TABN){var nt=TABN[h];closeSheet();if(nt!==tab){tab=nt;renderMain();window.scrollTo(0,0)}return}
   openCard(h)}
 var skipHash=null;
@@ -1636,7 +1748,7 @@ document.addEventListener("click",function(e){
     document.querySelectorAll("[data-fs]").forEach(function(x){x.setAttribute("aria-pressed",x.dataset.fs===fsMode?"true":"false")});return}
   if(el.id==="clrBtn"){
     if(el.dataset.armed!=="1"){el.dataset.armed="1";el.textContent=t("clrArm");setTimeout(function(){if(document.contains(el)){el.dataset.armed="";el.textContent=t("clrBtn")}},6000);return}
-    ["ec_id","ec_geo","ec_lang","ec_theme","ec_mode","ec_voice","ec_snd","ec_fs"].forEach(function(k){store(k,null)});
+    ["ec_id","ec_geo","ec_lang","ec_theme","ec_mode","ec_voice","ec_snd","ec_fs","ec_mlang"].forEach(function(k){store(k,null)});
     hush();location.replace(location.pathname);return}
   if(el.id==="pv"){go(-1);return}
   if(el.id==="nx"){go(1);return}
@@ -1647,6 +1759,8 @@ document.addEventListener("click",function(e){
     sndShow();setTimeout(sndShow,300);return}
   if(el.id==="instBtn"){if(dip){dip.prompt();dip=null;el.hidden=true}return}
   if(el.id==="idEdit"){renderId(true);return}
+  if(el.id==="mcGo"){goHash("med");return}
+  if(el.hasAttribute("data-mcl")){store("ec_mlang",el.dataset.mcl||null);openMed.keep=true;openMed();return}
   if(el.dataset.bt){var bi_=$("bIn");if(bi_)bi_.value=el.dataset.bt;
     document.querySelectorAll(".bchoice").forEach(function(x){x.setAttribute("aria-pressed",x===el?"true":"false")});return}
   if(el.id==="idSave"){var d={};document.querySelectorAll("#idBox [data-f]").forEach(function(i){if(i.value.trim())d[i.dataset.f]=i.value.trim()});store("ec_id",JSON.stringify(d));renderId(false);window.scrollTo(0,0);return}
