@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#111827" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F3F4F6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0B0F17" media="(prefers-color-scheme: dark)">
 <link rel="canonical" href="https://jackyyhhxjyxn.github.io/emergency-card/">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
@@ -522,6 +522,161 @@ html.hugetext .ibtn{padding:0 8px}
   html.printing .wface,html.printing .fstk{break-inside:avoid}
   html.printing .fsheet{border:0;padding:0;max-width:none}
 }
+
+/* ==========================================================================
+   v0.9.1 视觉层（只改外观，不改功能、不改医学文字）
+   - 更轻的边框、更柔和的分层阴影、更大的圆角
+   - 急救卡图标按类别着色（浅色底 + 深色图标），一眼分辨
+   - 顶栏、底栏毛玻璃；呼叫栏渐变红
+   - 规则不变：正文与按钮文字 ≥17px；文字对比度 ≥4.5:1；红色实心只用于"拨打"和最危急入口
+   ========================================================================== */
+:root{
+  --bg-canvas:#F3F4F6; --bg-subtle:#F1F5F9; --border-card:#E2E8F0; --border-strong:#94A3B8;
+  --hair:rgba(15,23,42,.08);
+  --shadow-sm:0 1px 2px rgba(15,23,42,.05),0 2px 10px -2px rgba(15,23,42,.06);
+  --shadow-md:0 2px 4px rgba(15,23,42,.04),0 12px 28px -8px rgba(15,23,42,.14);
+  --shadow-red:0 1px 0 rgba(255,255,255,.18) inset,0 10px 24px -8px rgba(185,28,28,.55);
+  --radius-lg:18px; --radius-md:12px;
+  --red-grad:linear-gradient(180deg,#DC2626 0%,#B91C1C 100%);
+  --glass:rgba(255,255,255,.94); --seg-bg:#E5E8EC;
+  /* 类别色：图标色 / 浅底（图标对浅底对比度均 ≥4.5:1） */
+  --h-rose:#BE123C; --h-rose-bg:#FFE4E6;
+  --h-sky:#0369A1;  --h-sky-bg:#E0F2FE;
+  --h-vio:#6D28D9;  --h-vio-bg:#EDE9FE;
+  --h-red:#B91C1C;  --h-red-bg:#FEE2E2;
+  --h-amb:#B45309;  --h-amb-bg:#FEF3C7;
+  --h-org:#C2410C;  --h-org-bg:#FFEDD5;
+  --h-teal:#0F766E; --h-teal-bg:#CCFBF1;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg-canvas:#0B0F17; --border-card:#253044; --hair:rgba(255,255,255,.08); --glass:rgba(17,24,39,.94); --seg-bg:#1E293B;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.5); --shadow-md:0 12px 28px -8px rgba(0,0,0,.7); --shadow-red:0 10px 24px -8px rgba(0,0,0,.7);
+  --h-rose:#FDA4AF; --h-rose-bg:rgba(244,63,94,.18); --h-sky:#7DD3FC; --h-sky-bg:rgba(14,165,233,.18);
+  --h-vio:#C4B5FD; --h-vio-bg:rgba(139,92,246,.2); --h-red:#FCA5A5; --h-red-bg:rgba(239,68,68,.18);
+  --h-amb:#FCD34D; --h-amb-bg:rgba(245,158,11,.18); --h-org:#FDBA74; --h-org-bg:rgba(249,115,22,.18);
+  --h-teal:#5EEAD4; --h-teal-bg:rgba(20,184,166,.18);
+}}
+:root[data-theme="dark"]{
+  --bg-canvas:#0B0F17; --border-card:#253044; --hair:rgba(255,255,255,.08); --glass:rgba(17,24,39,.94); --seg-bg:#1E293B;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.5); --shadow-md:0 12px 28px -8px rgba(0,0,0,.7); --shadow-red:0 10px 24px -8px rgba(0,0,0,.7);
+  --h-rose:#FDA4AF; --h-rose-bg:rgba(244,63,94,.18); --h-sky:#7DD3FC; --h-sky-bg:rgba(14,165,233,.18);
+  --h-vio:#C4B5FD; --h-vio-bg:rgba(139,92,246,.2); --h-red:#FCA5A5; --h-red-bg:rgba(239,68,68,.18);
+  --h-amb:#FCD34D; --h-amb-bg:rgba(245,158,11,.18); --h-org:#FDBA74; --h-org-bg:rgba(249,115,22,.18);
+  --h-teal:#5EEAD4; --h-teal-bg:rgba(20,184,166,.18);
+}
+body{letter-spacing:.1px}
+
+/* 顶栏 / 底栏：毛玻璃 */
+header.top,nav.bnav,.shead{background:var(--bg-card);background:var(--glass);-webkit-backdrop-filter:saturate(180%) blur(18px);backdrop-filter:saturate(180%) blur(18px);box-shadow:none}
+header.top{border-bottom:1px solid var(--hair)}
+nav.bnav{border-top:1px solid var(--hair);box-shadow:none}
+.logo{border-radius:9px;box-shadow:0 2px 6px -1px rgba(4,120,87,.45)}
+.brand{font-weight:800;letter-spacing:.4px}
+.ibtn{border-radius:12px;border-color:var(--hair)}
+.tab{font-weight:600;gap:4px;border-radius:14px}
+.tab[aria-current="page"]{background:var(--bg-subtle);color:var(--text-primary);font-weight:800}
+.tab[aria-current="page"] .ic{stroke-width:2.4}
+
+/* 呼叫栏：渐变红 + 白色电话键 */
+.dock{background:linear-gradient(color-mix(in srgb,var(--bg-canvas) 0%,transparent),var(--bg-canvas) 14px)}
+.call{background:var(--red-grad);border-radius:20px;padding:7px 7px 7px 18px;box-shadow:var(--shadow-red)}
+.call:active{background:var(--crimson-press)}
+.call .lbl{font-weight:700;opacity:.98}
+.call .ico{border-radius:14px;box-shadow:0 2px 6px rgba(127,29,29,.35)}
+.snav button{border-radius:18px}
+.snav .pv{border:1px solid var(--border-strong);background:var(--bg-card)}
+.snav .nx{box-shadow:var(--shadow-md)}
+
+/* 卡片：更轻的边框 + 分层阴影 */
+.card,.tile,.helpbtn,.steps li,.extra,.metro,.list,details.dd{border:1px solid var(--hair);box-shadow:var(--shadow-sm)}
+.card{border-radius:20px;padding:18px}
+.card.crit{border-left:1px solid var(--hair);position:relative;overflow:hidden}
+.card.crit:before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--red-grad)}
+.secH{margin:30px 4px 12px;color:var(--text-muted)}
+.secH b{font-weight:800;letter-spacing:.3px}
+.kick{font-weight:700;letter-spacing:.4px}
+
+/* 位置条 */
+.lcard{padding:12px 10px 12px 12px}
+.lflag{width:1.5em;height:1.5em;border-radius:50%;background:var(--seg-bg);display:grid;place-items:center;font-size:calc(28px * var(--fs))}
+.lname{font-weight:800}
+.badge{font-weight:600}
+
+/* 两问分诊 */
+.tri h1{font-weight:800;letter-spacing:.3px}
+.big{border-radius:18px;font-weight:800}
+.big.no{background:var(--red-grad);box-shadow:var(--shadow-red)}
+.big.yes{background:var(--bg-card);border:1.5px solid var(--border-strong);box-shadow:var(--shadow-sm)}
+
+/* 帮别人 / 通知家人：白卡 + 红色浅底图标（不再整圈红框） */
+.helpbtn{border-radius:20px;padding:16px;gap:14px;margin:0 0 12px}
+.helpbtn .sg{background:var(--h-red-bg);color:var(--h-red);border-radius:14px}
+.helpbtn b{font-weight:800}
+.helpbtn:active{transform:scale(.99);box-shadow:none}
+
+/* 急救卡网格：类别色图标 */
+.grid{gap:12px}
+.tile{border-radius:20px;padding:16px 14px 14px;gap:14px;transition:transform .08s}
+.tile b{font-weight:800;letter-spacing:.2px}
+.tile .sg{width:46px;height:46px;border-radius:14px;background:var(--h-teal-bg);color:var(--h-teal)}
+.tile .sg .ic{stroke-width:2.2}
+[data-card="heart"] .sg,[data-card="icpr"] .sg{background:var(--h-rose-bg);color:var(--h-rose)}
+[data-card="choke"] .sg,[data-card="ichoke"] .sg{background:var(--h-sky-bg);color:var(--h-sky)}
+[data-card="stroke"] .sg,[data-card="seiz"] .sg,[data-card="unc"] .sg{background:var(--h-vio-bg);color:var(--h-vio)}
+[data-card="bleed"] .sg{background:var(--h-red-bg);color:var(--h-red)}
+[data-card="ana"] .sg{background:var(--h-amb-bg);color:var(--h-amb)}
+[data-card="burn"] .sg,[data-card="heat"] .sg{background:var(--h-org-bg);color:var(--h-org)}
+[data-card="poison"] .sg{background:var(--h-teal-bg);color:var(--h-teal)}
+.tile.top{background:var(--red-grad);border-color:transparent;border-radius:22px;padding:18px 16px;box-shadow:var(--shadow-red)}
+.tile.top .sg{background:#FFFFFF;color:#DC2626;border-radius:16px}
+.pend{border-radius:8px;background:var(--amber-soft);border-color:var(--amber-border);color:var(--amber);padding:1px 8px;font-weight:700}
+
+/* 号码、按钮、提示 */
+.n{border:1px solid var(--hair);border-radius:14px;background:var(--bg-subtle)}
+.btn{border-radius:14px;font-weight:700;letter-spacing:.3px}
+.btn.red{background:var(--red-grad);box-shadow:var(--shadow-red)}
+.btn.grn{background:linear-gradient(180deg,#059669 0%,#047857 100%)}
+.btn:not(.ghost):not(.warn){box-shadow:var(--shadow-sm)}
+.btn.red{box-shadow:var(--shadow-red)}
+.note{border-radius:14px;border-left-width:4px}
+.urlbox{border-radius:12px;border-color:var(--hair)}
+details.ifo summary{font-weight:600}
+input,textarea{border-radius:12px}
+.chip2,.seg3 button,.seg2 button,.seg4 button,.bchoice,.rkc{border-radius:12px}
+.chip2{border-radius:99px}
+
+/* 全屏步骤页 */
+.shead{border-bottom:1px solid var(--hair)}
+.back,.chip{border-radius:12px;border-color:var(--hair);background:var(--bg-card);box-shadow:var(--shadow-sm)}
+.seg{border-radius:14px;border-color:transparent;background:var(--seg-bg)}
+.seg span{border-radius:10px}
+.seg span.on{border-color:transparent;box-shadow:var(--shadow-sm)}
+.ttl .sg{border-radius:16px;box-shadow:0 4px 12px -4px rgba(4,120,87,.5)}
+.ttl .sg.red{background:var(--red-grad);box-shadow:var(--shadow-red)}
+.sheet h1{font-weight:800}
+.when{border-radius:14px;font-weight:600}
+.prog{gap:5px}
+.prog i{height:5px;border-radius:99px}
+.prog i.d{background:var(--red-grad)}
+.stepTxt{font-weight:700;letter-spacing:.3px}
+details.dd{border-radius:16px;border-left:4px solid var(--crimson-fill)}
+.steps li{border-radius:16px;font-weight:500}
+.steps li:before{background:var(--red-grad)}
+.dont{border-radius:16px;border-left-width:4px}
+.extra,.metro{border-radius:16px}
+.fig{border-radius:16px;border-color:var(--hair)}
+
+/* 首次确认国家 */
+.cf .flag{box-shadow:var(--shadow-md);border-color:var(--hair)}
+.cf .cn{font-weight:800}
+.rblock{background:var(--red-grad);border-radius:20px}
+.rblock.empty{background:var(--bg-subtle)}
+
+/* 分享二维码（v0.9.1） */
+.qrw{margin:14px auto 2px;text-align:center}
+.qrw img{display:block;width:100%;max-width:260px;height:auto;margin:0 auto;border-radius:16px;border:1px solid var(--hair);box-shadow:var(--shadow-md);background:#FFFFFF;-webkit-touch-callout:default;-webkit-user-select:auto;user-select:auto}
+.qrw figcaption{margin-top:10px;color:var(--text-secondary);font-weight:600;font-size:calc(17px * var(--fs));line-height:1.45}
+@media print{.qrw{display:none}}
 </style>
 </head>
 <body>
@@ -548,7 +703,7 @@ var FEEDBACK_GOOGLE = _CFG.google||"";    // Google 表单链接，例如 https:
 var FEEDBACK_TENCENT = _CFG.tencent||"";  // 腾讯问卷链接，例如 https://wj.qq.com/s2/xxxx/xxxx/
 // 可选：Google 表单里"版本/国家/语言"那道简答题的编号（形如 entry.123456789）。填了以后会自动带入，留空也能用。
 var GOOGLE_PREFILL_ENTRY = _CFG.googleEntry||"";
-var VERSION = "MVP v0.9.0";
+var VERSION = "MVP v0.9.1";
 var VERIFIED_ON = "2026-11-17";   // 全部国家号码的统一核实日期；某国单独复核后，在该国数据里加 v:"YYYY-MM-DD"
 // 固定的正式网址：分享、锁屏图片一律用它，不用当前地址栏（避免分享出 file:// 或预览地址）。分享链接里永远不放任何个人信息。
 var SITE_URL = "https://jackyyhhxjyxn.github.io/emergency-card/";
@@ -1259,6 +1414,8 @@ shareSys:["用系统分享","Share via apps"],
 shareCopy:["复制网址（发微信用）","Copy link (for WeChat)"],
 shareWx:["发到微信：点“复制网址”→ 打开微信聊天 → 长按输入框“粘贴”→ 发送。","To send on WeChat: tap “Copy link” → open a WeChat chat → long-press the text box → Paste → Send."],
 shareInWx:["你正在微信里打开本页：点右上角“···”→“发送给朋友”。","You are inside WeChat: tap “···” at the top right → “Send to Friend”."],
+qrCap:["微信里长按二维码 →「识别图中二维码」即可打开；也可长按保存图片，发给家人朋友。二维码只含网址，不含任何个人信息。","In WeChat, long-press the code and choose to scan it. You can also save the image and send it to family and friends. The code holds only the web address — no personal information."],
+qrAlt:["急救卡网站二维码","Emergency Card website QR code"],
 shareTxt:["急救卡：按所在国家显示急救电话和急救步骤（中文 / English）","Emergency Card: local emergency numbers and first-aid steps for the country you are in (Chinese / English)"]
 };
 for(var _k4 in T4)T[_k4]=T4[_k4];
@@ -1496,7 +1653,7 @@ function viewMore(c){var h=aboutHtml(c);
   }
   h+='<h2 class="secH"'+(standalone()?' style="margin-top:6px"':'')+'><b>'+t("wallT")+'</b></h2><section class="card"><div>'+t("wallS1")+'</div>'+
      '<button class="btn red" id="wallGo">'+I("phone")+t("wallBtn")+'</button>'+info('<p>'+t("wallS")+'</p>')+'</section>';
-  h+='<h2 class="secH"><b>'+t("shareT")+'</b></h2><section class="card"><div>'+t("shareS")+'</div><div class="urlbox">'+esc(SITE_URL)+'</div>'+
+  h+='<h2 class="secH"><b>'+t("shareT")+'</b></h2><section class="card"><div>'+t("shareS")+'</div><figure class="qrw"><img src="qr-wechat.png" width="782" height="978" alt="'+esc(t("qrAlt"))+'"><figcaption>'+t("qrCap")+'</figcaption></figure><div class="urlbox">'+esc(SITE_URL)+'</div>'+
      (inWx()?'<div class="note" role="note" style="margin:12px 0 0">'+I("info")+'<div>'+t("shareInWx")+'</div></div>':'')+
      '<button class="btn" id="copyUrl">'+t("shareCopy")+'</button><div class="muted" id="shareMsg" role="status"></div>'+
      (navigator.share&&!inWx()?'<button class="btn ghost" id="shareBtn">'+t("shareSys")+'</button>':'')+
