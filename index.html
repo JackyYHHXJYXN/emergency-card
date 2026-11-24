@@ -17,6 +17,10 @@
 <script>
 /* 在页面绘制前套用日/夜模式，避免闪烁 */
 (function(){try{var m=localStorage.getItem("ec_theme");if(m==="light"||m==="dark")document.documentElement.setAttribute("data-theme",m)}catch(e){}})();
+/* v0.10.1：卡片外观预览，只给测试人员比较用。?look=gloss（水珠光泽）、?look=drop（水滴角）、?look=off（恢复默认） */
+(function(){try{var q=/[?&]look=(gloss|drop|off)\b/.exec(location.search),k="ec_look",v=q?q[1]:localStorage.getItem(k);
+  if(q){if(v==="off")localStorage.removeItem(k);else localStorage.setItem(k,v)}
+  if(v==="gloss"||v==="drop")document.documentElement.setAttribute("data-look",v)}catch(e){}})();
 </script>
 <style>
 /* ==========================================================================
@@ -720,6 +724,20 @@ html.hugetext .swh{display:none}
 @keyframes swR{from{opacity:.2;transform:translateX(28px)}to{opacity:1;transform:none}}
 @keyframes swL{from{opacity:.2;transform:translateX(-28px)}to{opacity:1;transform:none}}
 .in-r{animation:swR .18s ease-out}.in-l{animation:swL .18s ease-out}
+/* v0.10.1：320 宽 + 英文 + 特大字不再横向滚动（“外观”三按钮太宽）。网格列允许缩到 0，文字可换行；窄屏大字改竖排 */
+.seg3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.seg3 button,.seg2 button,.seg4 button{min-width:0;flex-wrap:wrap;text-align:center;overflow-wrap:anywhere;line-height:1.2;padding:4px 6px}
+@media (max-width:360px){html.bigtext .seg3{grid-template-columns:1fr}}
+/* v0.10.1：卡片外观预览（默认不启用）。gloss = 大圆角 + 顶部高光 + 柔和投影；drop = 在 gloss 基础上左上角收尖，像水滴 */
+:root{--gl-a:#FFFFFF;--gl-b:#EDF2F8;--gl-hi:rgba(255,255,255,1);--gl-sh:inset 0 -3px 8px rgba(30,41,59,.05),0 2px 3px rgba(15,23,42,.06),0 16px 30px -14px rgba(30,41,59,.38)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--gl-a:#1B2740;--gl-b:#0F1624;--gl-hi:rgba(255,255,255,.10);--gl-sh:inset 0 -3px 8px rgba(0,0,0,.25),0 2px 3px rgba(0,0,0,.45),0 16px 30px -12px rgba(0,0,0,.8)}}
+:root[data-theme="dark"]{--gl-a:#1B2740;--gl-b:#0F1624;--gl-hi:rgba(255,255,255,.10);--gl-sh:inset 0 -3px 8px rgba(0,0,0,.25),0 2px 3px rgba(0,0,0,.45),0 16px 30px -12px rgba(0,0,0,.8)}
+html[data-look] .card,html[data-look] .tile:not(.top),html[data-look] .qa,html[data-look] .stepcard,html[data-look] .helpbtn{
+  border-radius:26px;border-color:var(--hair);background:radial-gradient(130% 70% at 18% 0%,var(--gl-hi) 0%,transparent 55%),linear-gradient(180deg,var(--gl-a) 0%,var(--gl-b) 100%);box-shadow:inset 0 1.5px 0 var(--gl-hi),var(--gl-sh)}
+html[data-look] .tile.top{border-radius:28px;box-shadow:inset 0 1px 0 rgba(255,255,255,.35),var(--shadow-red)}
+html[data-look] .card.crit{border-left-color:var(--crimson-fill)}
+html[data-look] .lcard.unconf{border-color:var(--amber-bar)}
+html[data-look="drop"] .card,html[data-look="drop"] .tile,html[data-look="drop"] .qa,html[data-look="drop"] .stepcard,html[data-look="drop"] .helpbtn{border-top-left-radius:6px;border-bottom-right-radius:34px}
 /* ⑥ 记时间页：节拍器仍在运行 */
 .mrun{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;margin:12px 0 0;padding:12px;border-radius:var(--radius-lg);background:var(--crimson-soft);border:1px solid var(--crimson-border)}
 .mrun .ml{flex:1 1 10em;font-weight:800;line-height:1.3}
@@ -750,7 +768,7 @@ var FEEDBACK_GOOGLE = _CFG.google||"";    // Google 表单链接，例如 https:
 var FEEDBACK_TENCENT = _CFG.tencent||"";  // 腾讯问卷链接，例如 https://wj.qq.com/s2/xxxx/xxxx/
 // 可选：Google 表单里"版本/国家/语言"那道简答题的编号（形如 entry.123456789）。填了以后会自动带入，留空也能用。
 var GOOGLE_PREFILL_ENTRY = _CFG.googleEntry||"";
-var VERSION = "MVP v0.10.0";
+var VERSION = "MVP v0.10.1";
 var VERIFIED_ON = "2026-11-17";   // 全部国家号码的统一核实日期；某国单独复核后，在该国数据里加 v:"YYYY-MM-DD"
 // 固定的正式网址：分享、锁屏图片一律用它，不用当前地址栏（避免分享出 file:// 或预览地址）。分享链接里永远不放任何个人信息。
 var SITE_URL = "https://jackyyhhxjyxn.github.io/emergency-card/";
@@ -1682,9 +1700,9 @@ function viewSos(c){var d=C[c],h="";
 
 function viewMe(){
   return '<div id="idBox"></div>'+
-    '<section class="card"><div class="ml">'+I("globe")+'<div><b>'+t("mlT")+'</b><div class="mut" style="margin-top:4px">'+t("mlS")+'</div>'+
-    '<button class="link" id="mlGo">'+t("mlGo")+I("chevR","s")+'</button></div></div></section>'+
-    '<section class="card"><div class="tip" style="border:0;padding:0;margin:0"><b>'+I("phone")+t("midT")+'</b>'+t("midWhy")+'<p>'+t("midIOS")+'</p><p class="mcs" style="margin-top:6px"><b>'+t("midShare")+'</b></p><p>'+t("midAnd")+'</p><div class="src" style="margin-top:8px">'+t("srcT")+CO()+srcLine([48,104,49])+'</div></div></section>'}
+    '<section class="card"><div class="ml">'+I("globe")+'<div><b>'+t("mlT")+'</b>'+
+    '<button class="link" id="mlGo">'+t("mlGo")+I("chevR","s")+'</button>'+info(t("mlS"))+'</div></div></section>'+
+    '<section class="card"><div class="tip" style="border:0;padding:0;margin:0"><b>'+I("phone")+t("midT")+'</b>'+t("midWhy")+info('<p>'+t("midIOS")+'</p><p class="mcs" style="margin-top:6px"><b>'+t("midShare")+'</b></p><p>'+t("midAnd")+'</p><div class="src" style="margin-top:8px">'+t("srcT")+CO()+srcLine([48,104,49])+'</div>')+'</div></section>'}
 
 function aboutHtml(c){
   return '<section class="card about"><div class="kick">'+t("aboutT")+'</div>'+
@@ -1696,13 +1714,13 @@ function viewMore(c){var h=aboutHtml(c);
   if(!standalone()){
     var ios=/iPhone|iPad|iPod/.test(navigator.userAgent||"")||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
     var and=/Android/.test(navigator.userAgent||"");
-    h+='<div id="instSec"><h2 class="secH" style="margin-top:6px"><b>'+t("instT")+'</b></h2><section class="card"><div>'+t("instHint")+'</div>'+
+    h+='<div id="instSec"><h2 class="secH" style="margin-top:6px"><b>'+t("instT")+'</b></h2><section class="card">'+info(t("instHint")).replace('details class="ifo"','details class="ifo" style="margin-top:0;border-top:0"')+
        '<button class="btn" id="instBtn"'+(dip?'':' hidden')+'>'+I("dl")+t("instBtn")+'</button>'+
        info((and?'':'<p>'+t("instIOS")+'</p>')+(ios?'':'<p>'+t("instAnd")+'</p>'))+'</section></div>';
   }
   h+='<h2 class="secH"'+(standalone()?' style="margin-top:6px"':'')+'><b>'+t("wallT")+'</b></h2><section class="card"><div>'+t("wallS1")+'</div>'+
      '<button class="btn red" id="wallGo">'+I("phone")+t("wallBtn")+'</button>'+info('<p>'+t("wallS")+'</p>')+'</section>';
-  h+='<h2 class="secH"><b>'+t("shareT")+'</b></h2><section class="card"><div>'+t("shareS")+'</div><figure class="qrw"><img src="qr-wechat.png" width="782" height="978" alt="'+esc(t("qrAlt"))+'"><figcaption>'+t(inWx()?"qrCap":"qrCapOut")+'</figcaption></figure><div class="urlbox">'+esc(SITE_URL)+'</div>'+
+  h+='<h2 class="secH"><b>'+t("shareT")+'</b></h2><section class="card"><div>'+t("shareS")+'</div><figure class="qrw"><img src="qr-wechat.png" width="782" height="978" alt="'+esc(t("qrAlt"))+'"></figure>'+info(t(inWx()?"qrCap":"qrCapOut"))+'<div class="urlbox">'+esc(SITE_URL)+'</div>'+
      (inWx()?'<div class="note" role="note" style="margin:12px 0 0">'+I("info")+'<div>'+t("shareInWx")+'</div></div>':'')+
      (inWx()?'':(qrPrefetch(),'<button class="btn" id="qrSend">'+I("dl")+t("qrSend")+'</button>'))+
      '<button class="btn'+(inWx()?'':' ghost')+'" id="copyUrl">'+t("shareCopy")+'</button><div class="muted" id="shareMsg" role="status"></div>'+
@@ -1912,7 +1930,7 @@ function openMed(){
   if(!has){h+='<div class="note" role="note" style="margin-top:12px">'+I("info")+'<div>'+t("mcEmpty")+'</div></div>'+pk;showSheet(h,callBtn(c));return}
   h+='<div class="mc"><div class="mcf"><div class="kick red" style="color:#B91C1C">'+t("mcK")+'</div></div>';
   if(rk.length)h+='<div class="mcf crit"><div class="mcl">HIGH-RISK</div><div class="mce">'+esc(T.rkK[0])+'</div><ul class="rkl">'+rk.map(function(x){return rkLi(x,lk,d)}).join("")+'</ul>'+rkNotes(rk)+
-    '<button class="chip" id="mcRead" aria-pressed="false" style="margin-top:10px">'+I("vol","s")+t("mcRead")+'</button><div class="muted" id="mcReadMsg" aria-live="polite"></div><div class="muted" style="font-size:calc(13px * var(--fs))">'+t("mcReadN")+'</div></div>';
+    '<button class="chip" id="mcRead" aria-pressed="false" style="margin-top:10px">'+I("vol","s")+t("mcRead")+'</button><div class="muted" id="mcReadMsg" aria-live="polite"></div>'+info(t("mcReadN"))+'</div>';
   F.forEach(function(f){var k=f[0],v=d[k]||"";if(f[3]&&!v)return;
     var zh=lk==="zht"||lk==="zhs";
     var loc=lk==="zht"?MCZT[k]:lk==="zhs"?T[f[1]][0]:(P&&P.f[k])||"";
@@ -1969,8 +1987,7 @@ function todayStr(){var d=new Date();return d.getFullYear()+"-"+("0"+(d.getMonth
 function openWall(){
   metroStop();hush();cur=null;
   var c=cc();
-  var h='<div class="shead"><button class="back" id="bk">'+I("chevL")+t("back")+'</button></div><h1 id="sheetT" tabindex="-1" class="pickh">'+t("wallT")+'</h1>'+
-    '<div class="muted">'+t("wallS")+'</div>'+
+  var h='<div class="shead"><button class="back" id="bk">'+I("chevL")+t("back")+'</button></div><h1 id="sheetT" tabindex="-1" class="pickh">'+t("wallT")+'</h1>'+info(t("wallS"))+
     '<div class="seg2" role="group" aria-label="iPhone / Android">'+[["ios","iPhone"],["and","Android"]].map(function(x){return '<button data-wsz="'+x[0]+'" aria-pressed="'+(wallSz===x[0])+'">'+x[1]+'</button>'}).join("")+'</div>'+
     '<div class="seg2" role="group" aria-label="'+esc(t("thT"))+'">'+[["light","wallLight"],["dark","wallDark"]].map(function(x){return '<button data-wth="'+x[0]+'" aria-pressed="'+(wallTh===x[0])+'">'+t(x[1])+'</button>'}).join("")+'</div>'+
     '<img class="wallimg" id="wallImg" alt="'+esc(t("wallAlt").replace("{c}",nm(c)).replace("{n}",C[c].amb))+'">'+
@@ -1978,7 +1995,7 @@ function openWall(){
     '<button class="btn ghost" id="wallFull">'+t("wallOpen")+'</button>'+
     (isIOS()?'':'<button class="btn ghost" id="wallDl">'+I("dl")+t("wallDl")+'</button>')+
     '<div class="muted" id="wallMsg" role="status"></div>'+
-    '<p class="muted">'+(isIOS()?t("wallHowI"):t("wallHowA"))+'</p>';
+    info(isIOS()?t("wallHowI"):t("wallHowA"));
   showSheet(h,callBtn(c));
   wallRefresh();
 }
@@ -2166,7 +2183,10 @@ nfProf:["使用档案：{p}","Using profile: {p}"],
 nfWho:["发给紧急联系人","Send to emergency contacts"],
 nfSms:["短信","Text"],nfWa:["WhatsApp","WhatsApp"],
 nfAny:["选择联系人发短信","Text someone else (pick contact)"],
-nfShare:["用微信等其他 App 发送","Send with WeChat or another app"],
+nfShare:["用其他 App 发送（WhatsApp、邮件等）","Send with another app (WhatsApp, email…)"],
+nfWxGo:["复制消息并打开微信","Copy message & open WeChat"],
+nfWxDone:["已复制。在微信里选好联系人，长按输入框 →“粘贴”→ 发送。没有自动打开微信时，请自己打开微信。","Copied. In WeChat, pick the contact, long-press the text box → Paste → Send. If WeChat didn't open, open it yourself."],
+nfWxWhy:["微信不接收“系统分享”发来的纯文字（会提示“不支持的分享类型”），所以这里先复制，再打开微信粘贴。","WeChat does not accept plain text from the system share sheet (it says the share type is not supported), so this copies the message first and opens WeChat for you to paste."],
 nfCopy:["复制消息（粘贴到微信等）","Copy message (to paste into WeChat etc.)"],
 nfCopied:["已复制。打开微信或其他 App，粘贴后发送。","Copied. Open WeChat or another app, paste and send."],
 nfNone:["这个档案还没有紧急联系人电话。现在可以先“选择联系人发短信”，或者稍后在“我的卡”里填上。","This profile has no emergency contact number yet. You can still “Text someone else” now, or add contacts in My card later."],
@@ -2250,13 +2270,14 @@ function openNotify(){
         '<a class="btn ghost nfp" href="'+tel(x.n)+'" aria-label="'+esc(t("iceCall")+SEP()+digits(x.n))+'">'+phoneIco()+'</a></div></div>'});
     h+='<a class="btn ghost" data-nfs="" href="#">'+t("nfAny")+'</a>'}
   else h+='<p>'+t("nfNone")+'</p><a class="btn grn" data-nfs="" href="#">'+I("msg")+t("nfAny")+'</a><button class="btn ghost" id="nfAdd">'+t("nfAdd")+'</button>';
-  h+=(navigator.share&&!inWx()?'<button class="btn ghost" id="nfShare">'+t("nfShare")+'</button>':'')+
+  h+=(inWx()?'':'<button class="btn ghost" id="nfWxGo">'+I("msg")+t("nfWxGo")+'</button>')+
+     (navigator.share&&!inWx()?'<button class="btn ghost" id="nfShare">'+t("nfShare")+'</button>':'')+
      '<button class="btn ghost" id="nfCopy">'+t("nfCopy")+'</button><div class="muted" id="nfMsgS" role="status"></div></section>';
   h+='<section class="card"><div class="kick">'+t("nfLocK")+'</div><div id="nfLocS" class="nfloc wait" aria-live="polite"></div>'+
      '<button class="btn ghost" id="nfLocRe" hidden>'+I("pin")+t("nfLocRe")+'</button>'+
      '<label>'+t("nfPrev")+'<textarea id="nfTxt" rows="8" autocomplete="off"></textarea></label></section>';
-  h+='<section class="card"><p style="margin:0">'+t("nfHow")+'</p><p class="muted">'+t("nfPriv")+'</p>'+(anyLocal?'<p class="muted">'+t("nfWaN")+'</p>':'')+
-     '<div class="src">'+t("srcT")+CO()+srcLine([120,121,122,87].concat(c==="CN"?[123]:[]))+'</div></section>';
+  h+='<section class="card" style="padding-top:6px;padding-bottom:6px">'+info('<p>'+t("nfHow")+'</p><p>'+t("nfWxWhy")+'</p><p>'+t("nfPriv")+'</p>'+(anyLocal?'<p>'+t("nfWaN")+'</p>':'')+
+     '<div class="src">'+t("srcT")+CO()+srcLine([120,121,122,87].concat(c==="CN"?[123]:[]))+'</div>').replace('details class="ifo"','details class="ifo" style="margin-top:0;border-top:0"')+'</section>';
   showSheet(h,callBtn(c));
   $("nfTxt").value=nfMsg();nfLocUi();nfRefresh();nfLocate()}
 
@@ -2363,7 +2384,7 @@ function pfLabel(p,i){var x=p.list[i];return x.n||(i===0?t("pfMe"):t("pfFam").re
 function pfBar(P){
   return '<section class="card pfbar"><div class="kick">'+I("users","s")+t("pfK")+'</div><div class="chips" role="group" aria-label="'+esc(t("pfK"))+'">'+
     P.list.map(function(x,i){return '<button class="chip2" data-pf="'+i+'" aria-pressed="'+(i===P.cur)+'">'+esc(pfLabel(P,i))+'</button>'}).join("")+
-    (P.list.length<PF_MAX?'<button class="chip2" id="pfAdd">+ '+t("pfAdd")+'</button>':'')+'</div><div class="muted" style="margin-top:8px">'+t("pfHint")+'</div></section>'}
+    (P.list.length<PF_MAX?'<button class="chip2" id="pfAdd">+ '+t("pfAdd")+'</button>':'')+'</div>'+info(t("pfHint"))+'</section>'}
 
 /* ---------- 高危勾选项 ----------
    顺序 p 按美国急诊医师学会（ACEP，经 MedicAlert 转述，来源 101）：1 严重过敏 → 2 药物 → 3 疾病 → 4 体内器械。
@@ -2405,8 +2426,8 @@ function brLines(d){var rk=riskOf(d),L2=[];
   return L2}
 function brHtml(d){var rk=riskOf(d);if(!rk.some(function(x){return BR_KEYS[x.k]}))return "";
   var lines=brLines(d),txt=lines.join("\n");
-  return '<section class="card"><div class="kick">'+I("idc","s")+t("brT")+'</div><p style="margin:6px 0 0">'+t("brS")+'</p><p class="muted">'+t("brOrder")+'</p>'+
-    '<div class="brbox">'+esc(txt)+'</div><p class="muted">'+t("brNote")+'</p>'+
+  return '<section class="card"><div class="kick">'+I("idc","s")+t("brT")+'</div><p style="margin:6px 0 0">'+t("brS")+'</p>'+
+    '<div class="brbox">'+esc(txt)+'</div>'+info('<p>'+t("brOrder")+'</p><p>'+t("brNote")+'</p>')+
     '<button class="btn ghost" id="brCopy" data-v="'+esc(txt)+'">'+t("brCopy")+'</button>'+
     '<div class="src">'+t("srcT")+CO()+srcLine([101,102,103])+'</div></section>'}
 
@@ -2514,7 +2535,7 @@ function openTimer(){
   hush();var kp=cur||cardKeep;if(!(kp&&kp.k.metro))metroStop();cardKeep=kp;cur=null;
   var c=cc(),N=C[c].amb,o=tmLoad();
   var h='<div class="shead"><button class="back" id="bk">'+I("chevL")+t("back")+'</button></div>'+
-    '<h1 id="sheetT" tabindex="-1" class="pickh">'+I("clock")+' '+t("tmT")+'</h1><div class="muted">'+t("tmS")+'</div>'+
+    '<h1 id="sheetT" tabindex="-1" class="pickh">'+I("clock")+' '+t("tmT")+'</h1>'+info(t("tmS"))+
     '<div class="note red" role="alert" id="tmWarn" style="margin-top:12px"'+(seizOver(o)?'':' hidden')+'>'+I("alert")+'<div><b>'+esc(t("tmSeizOver").replace("{N}",N))+'</b></div></div>'+
     '<section class="card" style="margin-top:12px">'+TM.map(function(x){var k=x[0],v=o[k];
       return '<div class="tmr"><div class="tml"><b>'+t(x[1])+'</b><div class="tmv'+(v?'':' none')+'">'+(v?hmOf(v):t("tmNone"))+'</div><div class="tma" id="tm_'+k+'" aria-live="off"></div></div>'+
@@ -2538,12 +2559,12 @@ function openHelper(){
     (c==="XX"?'<div class="note" role="note">'+I("alert")+'<div>'+esc(t("xxNote").replace("{z}",tzLabel()))+'</div></div>':'')+
     '<h2 class="secH"><b>'+t("hlSayT")+'</b></h2><section class="card crit"><ol class="say">'+["hl1","hl2","hl3","hl4","hl5"].map(function(k){return '<li>'+t(k)+'</li>'}).join("")+'</ol>'+
     '<div class="src">'+t("srcT")+CO()+srcLine([105,106])+'</div></section>'+
-    '<h2 class="secH"><b>'+t("hlLoc")+'</b></h2><section class="card"><div class="muted">'+t("hlAml")+'</div><div id="hlocOut" aria-live="polite"></div>'+
-    '<button class="btn ghost" id="hlocBtn">'+I("pin")+t("locBtn")+'</button><div class="src">'+t("srcT")+CO()+srcLine([108,109])+'</div></section>'+
+    '<h2 class="secH"><b>'+t("hlLoc")+'</b></h2><section class="card"><div id="hlocOut" aria-live="polite"></div>'+
+    '<button class="btn ghost" id="hlocBtn">'+I("pin")+t("locBtn")+'</button>'+info('<p>'+t("hlAml")+'</p><div class="src">'+t("srcT")+CO()+srcLine([108,109])+'</div>')+'</section>'+
     '<h2 class="secH"><b>'+t("hlAfterT")+'</b></h2><section class="card"><ul class="notes" style="margin-top:0">'+["hlA1","hlA2","hlA3"].map(function(k){return '<li>'+t(k)+'</li>'}).join("")+'</ul>'+
     '<div class="src">'+t("srcT")+CO()+srcLine([106,107,105])+'</div></section>'+
     '<h2 class="secH"><b>'+t("hmT")+'</b></h2><section class="card"><ul class="notes" style="margin-top:0">'+["hm1","hm2","hm3","hm4"].map(function(k){return '<li>'+t(k)+'</li>'}).join("")+'</ul>'+
-    '<div class="mcs">'+I("alert","s")+' '+t("hmPriv")+'</div><div class="src">'+t("srcT")+CO()+srcLine([117,118])+'</div></section>'+
+    '<div class="src">'+t("srcT")+CO()+srcLine([117,118])+'</div>'+info('<div class="mcs">'+I("alert","s")+' '+t("hmPriv")+'</div>')+'</section>'+
     '<button class="btn" id="tmGo">'+I("clock")+t("hlTm")+'</button><button class="btn ghost" data-tab="">'+t("hlCards")+'</button>'+awkHtml();
   showSheet(h,callBtn(c));awake(true);
 }
@@ -2581,7 +2602,7 @@ function openPrint(){
   metroStop();hush();cur=null;
   var c=cc(),P=profs(),d=getId(),has=idHas(d);
   var h='<div class="shead"><button class="back" id="bk">'+I("chevL")+t("back")+'</button></div>'+
-    '<h1 id="sheetT" tabindex="-1" class="pickh">'+t("prT")+'</h1><div class="muted">'+t("prS")+'</div>';
+    '<h1 id="sheetT" tabindex="-1" class="pickh">'+t("prT")+'</h1>'+info(t("prS"));
   if(!has){h+='<div class="note" role="note" style="margin-top:12px">'+I("info")+'<div>'+t("prEmpty")+'</div></div>';showSheet(h,callBtn(c));return}
   h+='<div class="note" role="note" style="margin-top:12px">'+I("users")+'<div>'+esc(t("prWho").replace("{p}",pfLabel(P,P.cur)))+'</div></div>'+
     (inWx()?'<div class="note" role="note">'+I("alert")+'<div>'+t("prWx")+'</div></div>':'')+
@@ -2590,8 +2611,7 @@ function openPrint(){
     '<button class="btn red" data-print="w">'+I("print")+t("prGo")+'</button>'+
     '<h2 class="secH"><b>'+t("prF")+'</b></h2><div class="prv">'+fridgeHtml(c,d)+'</div>'+
     '<button class="btn red" data-print="f">'+I("print")+t("prGo")+'</button>'+
-    '<p class="muted">'+t("prPriv")+'</p><p class="muted">'+t("prQr")+'</p><p class="muted">'+t("prHow")+'</p>'+
-    '<div class="src">'+t("srcT")+CO()+srcLine([100,102])+'</div>';
+    '<p class="muted">'+t("prPriv")+'</p>'+info('<p>'+t("prQr")+'</p><p>'+t("prHow")+'</p><div class="src">'+t("srcT")+CO()+srcLine([100,102])+'</div>');
   showSheet(h,callBtn(c));
   try{var over=[].some.call(document.querySelectorAll("#sheetBody .wface"),function(x){return x.scrollHeight>x.clientHeight+2});$("prOver").hidden=!over}catch(e){}
 }
@@ -2721,6 +2741,7 @@ document.addEventListener("click",function(e){
   if(el.id==="nfAdd"){closeSheet();goHash("me");setTimeout(function(){renderId(true);var f=document.querySelector('#idBox [data-f="ice"]');if(f)try{f.scrollIntoView({block:"center"});f.focus()}catch(x){}},60);return}
   if(el.id==="nfLocRe"){nfLocate();return}
   if(el.id==="nfCopy"){var tv=$("nfTxt");copyText(tv?tv.value:nfMsg(),function(){var m=$("nfMsgS");if(m)m.textContent=t("nfCopied")});return}
+  if(el.id==="nfWxGo"){var tv3=$("nfTxt"),m3=$("nfMsgS");copyText(tv3?tv3.value:nfMsg(),function(){if(m3)m3.textContent=t("nfWxDone");setTimeout(function(){try{location.href="weixin://"}catch(x){}},350)});return}
   if(el.id==="nfShare"){var tv2=$("nfTxt");navigator.share({text:tv2?tv2.value:nfMsg()}).catch(function(){});return}
   if(el.id==="hoGo"){goHash("hand");return}
   if(el.id==="prGo"){goHash("print");return}
