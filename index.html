@@ -703,7 +703,7 @@ var FEEDBACK_GOOGLE = _CFG.google||"";    // Google 表单链接，例如 https:
 var FEEDBACK_TENCENT = _CFG.tencent||"";  // 腾讯问卷链接，例如 https://wj.qq.com/s2/xxxx/xxxx/
 // 可选：Google 表单里"版本/国家/语言"那道简答题的编号（形如 entry.123456789）。填了以后会自动带入，留空也能用。
 var GOOGLE_PREFILL_ENTRY = _CFG.googleEntry||"";
-var VERSION = "MVP v0.9.1";
+var VERSION = "MVP v0.9.2";
 var VERIFIED_ON = "2026-11-17";   // 全部国家号码的统一核实日期；某国单独复核后，在该国数据里加 v:"YYYY-MM-DD"
 // 固定的正式网址：分享、锁屏图片一律用它，不用当前地址栏（避免分享出 file:// 或预览地址）。分享链接里永远不放任何个人信息。
 var SITE_URL = "https://jackyyhhxjyxn.github.io/emergency-card/";
@@ -1416,6 +1416,10 @@ shareWx:["发到微信：点“复制网址”→ 打开微信聊天 → 长按�
 shareInWx:["你正在微信里打开本页：点右上角“···”→“发送给朋友”。","You are inside WeChat: tap “···” at the top right → “Send to Friend”."],
 qrCap:["微信里长按二维码 →「识别图中二维码」即可打开；也可长按保存图片，发给家人朋友。二维码只含网址，不含任何个人信息。","In WeChat, long-press the code and choose to scan it. You can also save the image and send it to family and friends. The code holds only the web address — no personal information."],
 qrAlt:["急救卡网站二维码","Emergency Card website QR code"],
+qrCapOut:["这里不是微信，长按二维码不会“识别”。点下面的按钮，把二维码图片发到微信（或存到相册）；在微信聊天里长按这张图就能打开。二维码只含网址，不含任何个人信息。","You are not in WeChat, so long-press will not scan the code here. Tap the button below to send the QR picture to WeChat (or save it to Photos); in a WeChat chat, long-press the picture to open it. The code holds only the web address — no personal information."],
+qrSend:["发送二维码图片（微信 / 相册）","Send QR picture (WeChat / Photos)"],
+qrFull:["二维码图片：长按 →“存储到照片”或“分享”","QR picture: long-press → Save to Photos or Share"],
+qrSendFail:["这台手机不支持直接发送图片：已打开大图，请长按保存。","This phone can't send the picture directly: the full-size image is open — long-press to save it."],
 shareTxt:["急救卡：按所在国家显示急救电话和急救步骤（中文 / English）","Emergency Card: local emergency numbers and first-aid steps for the country you are in (Chinese / English)"]
 };
 for(var _k4 in T4)T[_k4]=T4[_k4];
@@ -1653,9 +1657,10 @@ function viewMore(c){var h=aboutHtml(c);
   }
   h+='<h2 class="secH"'+(standalone()?' style="margin-top:6px"':'')+'><b>'+t("wallT")+'</b></h2><section class="card"><div>'+t("wallS1")+'</div>'+
      '<button class="btn red" id="wallGo">'+I("phone")+t("wallBtn")+'</button>'+info('<p>'+t("wallS")+'</p>')+'</section>';
-  h+='<h2 class="secH"><b>'+t("shareT")+'</b></h2><section class="card"><div>'+t("shareS")+'</div><figure class="qrw"><img src="qr-wechat.png" width="782" height="978" alt="'+esc(t("qrAlt"))+'"><figcaption>'+t("qrCap")+'</figcaption></figure><div class="urlbox">'+esc(SITE_URL)+'</div>'+
+  h+='<h2 class="secH"><b>'+t("shareT")+'</b></h2><section class="card"><div>'+t("shareS")+'</div><figure class="qrw"><img src="qr-wechat.png" width="782" height="978" alt="'+esc(t("qrAlt"))+'"><figcaption>'+t(inWx()?"qrCap":"qrCapOut")+'</figcaption></figure><div class="urlbox">'+esc(SITE_URL)+'</div>'+
      (inWx()?'<div class="note" role="note" style="margin:12px 0 0">'+I("info")+'<div>'+t("shareInWx")+'</div></div>':'')+
-     '<button class="btn" id="copyUrl">'+t("shareCopy")+'</button><div class="muted" id="shareMsg" role="status"></div>'+
+     (inWx()?'':(qrPrefetch(),'<button class="btn" id="qrSend">'+I("dl")+t("qrSend")+'</button>'))+
+     '<button class="btn'+(inWx()?'':' ghost')+'" id="copyUrl">'+t("shareCopy")+'</button><div class="muted" id="shareMsg" role="status"></div>'+
      (navigator.share&&!inWx()?'<button class="btn ghost" id="shareBtn">'+t("shareSys")+'</button>':'')+
      info('<p>'+t("shareWx")+'</p>')+'</section>';
   h+='<h2 class="secH"><b>'+t("thT")+'</b></h2><section class="card"><div class="seg3" role="group" aria-label="'+esc(t("thT"))+'">'+
@@ -1896,6 +1901,23 @@ function openWallFull(){var u=wallUrl||($("wallImg")||{}).src;if(!u)return;
   var d=document.createElement("div");d.id="wallFullBox";d.className="wallfull";
   d.innerHTML='<div class="wfbar"><button class="back" id="wallFullBk">'+I("chevL")+t("back")+'</button><b>'+t("wallFull")+'</b></div><img src="'+u+'" alt="'+esc(t("wallT"))+'">';
   document.body.appendChild(d)}
+/* v0.9.2：把二维码图片本身交给系统分享（可选微信），比“长按图片”更可靠：
+   iOS 主屏幕 App 模式和“实况文本”下，长按网页图片常常不弹菜单。不支持时打开大图让用户长按保存。 */
+function qrFullOpen(){var d=document.createElement("div");d.id="qrFullBox";d.className="wallfull";
+  d.innerHTML='<div class="wfbar"><button class="back" id="qrFullBk">'+I("chevL")+t("back")+'</button><b>'+t("qrFull")+'</b></div><img src="qr-wechat.png" alt="'+esc(t("qrAlt"))+'" style="-webkit-touch-callout:default;-webkit-user-select:auto;user-select:auto;background:#FFFFFF">';
+  document.body.appendChild(d)}
+/* 预先取好图片：iOS 要求“分享”必须在点按的同一瞬间发起，不能先等下载 */
+var qrFile=null;
+function qrPrefetch(){if(qrFile||!window.fetch)return;fetch("qr-wechat.png").then(function(r){return r.blob()}).then(function(b){qrFile=new File([b],"emergency-card-qr.png",{type:"image/png"})}).catch(function(){})}
+function qrSendPic(){var sm=$("shareMsg");
+  if(qrFile&&navigator.canShare&&navigator.canShare({files:[qrFile]})){navigator.share({files:[qrFile]}).catch(function(){});return}
+  fetch("qr-wechat.png").then(function(r){return r.blob()}).then(function(b){
+    var f=new File([b],"emergency-card-qr.png",{type:"image/png"});qrFile=f;
+    if(navigator.canShare&&navigator.canShare({files:[f]})){return navigator.share({files:[f]}).catch(function(){qrFullOpen()})}
+    if(isIOS()){qrFullOpen();if(sm)sm.textContent=t("qrSendFail");return}
+    var u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download="emergency-card-qr.png";document.body.appendChild(a);a.click();a.remove();
+    setTimeout(function(){try{URL.revokeObjectURL(u)}catch(e){}},4000)
+  }).catch(function(){qrFullOpen();if(sm)sm.textContent=t("qrSendFail")})}
 function todayStr(){var d=new Date();return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2)}
 function openWall(){
   metroStop();hush();cur=null;
@@ -2584,6 +2606,8 @@ document.addEventListener("click",function(e){
   if(el.id==="shareBtn"){var sm=$("shareMsg");
     if(navigator.share){navigator.share({title:t("brand"),text:t("shareTxt"),url:SITE_URL}).catch(function(){})}
     else copyText(SITE_URL,function(){if(sm)sm.textContent=t("shareDone")});return}
+  if(el.id==="qrSend"){qrSendPic();return}
+  if(el.id==="qrFullBk"){var qb=$("qrFullBox");if(qb)qb.remove();return}
   if(el.id==="copyUrl"){var sm2=$("shareMsg");copyText(SITE_URL,function(){if(sm2)sm2.textContent=t("shareDone")});return}
   if(el.dataset.fs){fsMode=el.dataset.fs;store("ec_fs",fsMode==="sys"?null:fsMode);applyFs();
     document.querySelectorAll("[data-fs]").forEach(function(x){x.setAttribute("aria-pressed",x.dataset.fs===fsMode?"true":"false")});return}
