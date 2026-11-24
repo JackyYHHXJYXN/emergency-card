@@ -17,10 +17,12 @@
 <script>
 /* 在页面绘制前套用日/夜模式，避免闪烁 */
 (function(){try{var m=localStorage.getItem("ec_theme");if(m==="light"||m==="dark")document.documentElement.setAttribute("data-theme",m)}catch(e){}})();
-/* v0.10.2：测试投票选定方案 B“水珠光泽”为默认外观。仍保留预览开关供对比：?look=drop（水滴角）、?look=off（旧外观）、?look=gloss（回到默认） */
-(function(){var v="gloss";try{var q=/[?&]look=(gloss|drop|off)\b/.exec(location.search),k="ec_look";
+/* v0.10.3：外观测试投票（第二轮）。默认仍是 B（gloss）。可选：gloss2=B+ 加强水珠，blue=C 蓝色水珠白字（全部卡片），bluetile=D 蓝色水珠白字（只用于入口按钮），tint=E 浅蓝水珠，drop=A 水滴角，off=旧外观。
+   可用网址 ?look=xxx 或“更多 → 显示模式 → 外观（测试投票）”切换；选了非默认会记住，选 gloss 回到默认 */
+var LOOKS=["gloss","gloss2","blue","bluetile","tint","drop","off"];
+(function(){var v="gloss";try{var q=/[?&]look=(gloss2|gloss|bluetile|blue|tint|drop|off)\b/.exec(location.search),k="ec_look";
   if(q){if(q[1]==="gloss")localStorage.removeItem(k);else localStorage.setItem(k,q[1])}
-  var st=localStorage.getItem(k);if(st==="drop"||st==="off")v=st}catch(e){}
+  var st=localStorage.getItem(k);if(st&&LOOKS.indexOf(st)>0)v=st}catch(e){}
   if(v!=="off")document.documentElement.setAttribute("data-look",v)})();
 </script>
 <style>
@@ -232,6 +234,11 @@ details.ifo .ifb{padding-bottom:4px;color:var(--text-muted)}
 .loc{font-family:var(--font-num);font-size:calc(24px * var(--fs));font-weight:800;font-variant-numeric:tabular-nums;margin:12px 0 2px;word-break:break-all;
   background:var(--bg-subtle);border:1px solid var(--border-card);border-radius:8px;padding:10px 12px}
 .src{font-size:calc(17px * var(--fs));color:var(--text-muted);margin-top:14px;word-break:break-word}
+details.srcd>summary{list-style:none;cursor:pointer;min-height:44px;display:inline-flex;align-items:center;gap:6px;color:var(--text-muted);font-weight:700}
+details.srcd>summary::-webkit-details-marker{display:none}
+details.srcd>summary:after{content:"›";font-size:1.3em;line-height:1;transition:transform .15s}
+details.srcd[open]>summary:after{transform:rotate(90deg)}
+details.srcd .srcb{padding:2px 0 4px}
 
 /* ---------- 我的卡 ---------- */
 .pname{font-size:calc(26px * var(--fs));font-weight:900;line-height:1.2;letter-spacing:-.2px;word-break:break-word}
@@ -408,6 +415,10 @@ details.dd li{margin-top:6px}
 .seg4{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px}
 .seg4 button{min-height:50px;border-radius:var(--radius-md);border:2px solid var(--border-card);background:var(--bg-card);font-weight:800;font-size:calc(16px * var(--fs));padding:0 4px;line-height:1.15}
 .seg4 button[aria-pressed="true"]{border-color:var(--crimson-fill);background:var(--crimson-soft)}
+.seglk{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:8px}
+.seglk button{min-height:50px;border-radius:12px;border:2px solid var(--border-card);background:var(--bg-card);font-weight:800;font-size:calc(16px * var(--fs));padding:4px 8px;line-height:1.2;min-width:0;overflow-wrap:anywhere;text-align:center}
+.seglk button[aria-pressed="true"]{border-color:var(--crimson-fill);background:var(--crimson-soft)}
+html.bigtext .seglk,html.hugetext .seglk{grid-template-columns:1fr}
 .wallfull{position:fixed;inset:0;z-index:60;background:#000;display:flex;flex-direction:column;overflow:auto}
 .wallfull .wfbar{display:flex;align-items:center;gap:10px;padding:calc(8px + env(safe-area-inset-top)) 12px 8px;background:#111827;color:#fff}
 .wallfull img{display:block;width:100%;max-width:520px;margin:0 auto;height:auto}
@@ -744,6 +755,32 @@ html[data-look] .tile.top{border-radius:28px;box-shadow:inset 0 1px 0 rgba(255,2
 html[data-look] .card.crit{border-left-color:var(--crimson-fill)}
 html[data-look] .lcard.unconf{border-color:var(--amber-bar)}
 html[data-look="drop"] .card,html[data-look="drop"] .tile,html[data-look="drop"] .qa,html[data-look="drop"] .stepcard,html[data-look="drop"] .helpbtn{border-top-left-radius:6px;border-bottom-right-radius:34px}
+/* v0.10.3 外观候选（测试投票第二轮）。所有候选都修好了夜间水珠几乎看不见的问题；文字对比度按 4.5:1 校核 */
+html[data-look="gloss2"],html[data-look="bluetile"]{--gl-a:#FFFFFF;--gl-b:#E3EBF5;--gl-hi:rgba(255,255,255,1);--gl-rim:rgba(15,23,42,.07);--gl-sh:inset 0 -10px 18px rgba(30,64,120,.11),0 1px 0 rgba(15,23,42,.05),0 2px 4px rgba(15,23,42,.06),0 18px 32px -14px rgba(30,41,59,.48)}
+@media (prefers-color-scheme:dark){html:not([data-theme="light"])[data-look="gloss2"]{--text-muted:#BAC6D8;--crimson:#FCA5A5;--link:#BFDBFE;--emerald:#6EE7B7;--gl-a:#26375A;--gl-b:#111A2C;--gl-hi:rgba(255,255,255,.10);--gl-rim:rgba(148,163,184,.26);--gl-sh:inset 0 1px 0 rgba(255,255,255,.26),inset 0 -8px 16px rgba(0,0,0,.30),0 2px 3px rgba(0,0,0,.5),0 18px 32px -12px rgba(0,0,0,.85)}}
+html[data-theme="dark"][data-look="gloss2"]{--text-muted:#BAC6D8;--crimson:#FCA5A5;--link:#BFDBFE;--emerald:#6EE7B7;--gl-a:#26375A;--gl-b:#111A2C;--gl-hi:rgba(255,255,255,.10);--gl-rim:rgba(148,163,184,.26);--gl-sh:inset 0 1px 0 rgba(255,255,255,.26),inset 0 -8px 16px rgba(0,0,0,.30),0 2px 3px rgba(0,0,0,.5),0 18px 32px -12px rgba(0,0,0,.85)}
+
+@media (prefers-color-scheme:dark){html:not([data-theme="light"])[data-look="bluetile"]{--text-muted:#BAC6D8;--crimson:#FCA5A5;--link:#BFDBFE;--emerald:#6EE7B7;--gl-a:#26375A;--gl-b:#111A2C;--gl-hi:rgba(255,255,255,.10);--gl-rim:rgba(148,163,184,.26);--gl-sh:inset 0 1px 0 rgba(255,255,255,.26),inset 0 -8px 16px rgba(0,0,0,.30),0 2px 3px rgba(0,0,0,.5),0 18px 32px -12px rgba(0,0,0,.85)}}
+html[data-theme="dark"][data-look="bluetile"]{--text-muted:#BAC6D8;--crimson:#FCA5A5;--link:#BFDBFE;--emerald:#6EE7B7;--gl-a:#26375A;--gl-b:#111A2C;--gl-hi:rgba(255,255,255,.10);--gl-rim:rgba(148,163,184,.26);--gl-sh:inset 0 1px 0 rgba(255,255,255,.26),inset 0 -8px 16px rgba(0,0,0,.30),0 2px 3px rgba(0,0,0,.5),0 18px 32px -12px rgba(0,0,0,.85)}
+
+html[data-look="tint"]{--gl-a:#F5F9FF;--gl-b:#E0EAFA;--gl-hi:rgba(255,255,255,1);--gl-rim:rgba(37,99,235,.16);--gl-sh:inset 0 -8px 16px rgba(37,99,235,.10),0 2px 4px rgba(30,58,138,.08),0 18px 32px -14px rgba(30,58,138,.45)}
+@media (prefers-color-scheme:dark){html:not([data-theme="light"])[data-look="tint"]{--text-muted:#BAC6D8;--crimson:#FCA5A5;--link:#BFDBFE;--emerald:#6EE7B7;--amber:#FCD34D;--gl-a:#1D3A70;--gl-b:#0E1C3A;--gl-hi:rgba(255,255,255,.10);--gl-rim:rgba(147,197,253,.30);--gl-sh:inset 0 1px 0 rgba(255,255,255,.26),inset 0 -8px 16px rgba(0,0,0,.30),0 2px 3px rgba(0,0,0,.5),0 18px 32px -12px rgba(0,0,0,.85)}}
+html[data-theme="dark"][data-look="tint"]{--text-muted:#BAC6D8;--crimson:#FCA5A5;--link:#BFDBFE;--emerald:#6EE7B7;--amber:#FCD34D;--gl-a:#1D3A70;--gl-b:#0E1C3A;--gl-hi:rgba(255,255,255,.10);--gl-rim:rgba(147,197,253,.30);--gl-sh:inset 0 1px 0 rgba(255,255,255,.26),inset 0 -8px 16px rgba(0,0,0,.30),0 2px 3px rgba(0,0,0,.5),0 18px 32px -12px rgba(0,0,0,.85)}
+
+html[data-look="gloss2"] .card,html[data-look="gloss2"] .tile:not(.top),html[data-look="gloss2"] .qa,html[data-look="gloss2"] .stepcard,html[data-look="gloss2"] .helpbtn{border-color:var(--gl-rim);background:radial-gradient(20px 9px at 88% 10px,var(--gl-hi) 0%,transparent 100%),radial-gradient(120% 60% at 22% 0%,var(--gl-hi) 0%,transparent 60%),linear-gradient(180deg,var(--gl-a) 0%,var(--gl-b) 100%);box-shadow:inset 0 1.5px 0 var(--gl-hi),var(--gl-sh)}
+html[data-look="tint"] .card,html[data-look="tint"] .tile:not(.top),html[data-look="tint"] .qa,html[data-look="tint"] .stepcard,html[data-look="tint"] .helpbtn{border-color:var(--gl-rim);background:radial-gradient(20px 9px at 88% 10px,var(--gl-hi) 0%,transparent 100%),radial-gradient(120% 60% at 22% 0%,var(--gl-hi) 0%,transparent 60%),linear-gradient(180deg,var(--gl-a) 0%,var(--gl-b) 100%);box-shadow:inset 0 1.5px 0 var(--gl-hi),var(--gl-sh)}
+html[data-look="bluetile"] .card,html[data-look="bluetile"] .tile:not(.top),html[data-look="bluetile"] .qa,html[data-look="bluetile"] .stepcard,html[data-look="bluetile"] .helpbtn{border-color:var(--gl-rim);background:radial-gradient(20px 9px at 88% 10px,var(--gl-hi) 0%,transparent 100%),radial-gradient(120% 60% at 22% 0%,var(--gl-hi) 0%,transparent 60%),linear-gradient(180deg,var(--gl-a) 0%,var(--gl-b) 100%);box-shadow:inset 0 1.5px 0 var(--gl-hi),var(--gl-sh)}
+html[data-look="blue"] .card,html[data-look="blue"] .tile:not(.top),html[data-look="blue"] .qa,html[data-look="blue"] .stepcard,html[data-look="blue"] .helpbtn{--bd-a:#1D4ED8;--bd-b:#1E3A8A;color:#FFFFFF;--text-primary:#FFFFFF;--text-secondary:#F1F5FF;--text-muted:#F1F5FF;--link:#FFFFFF;--crimson:#FFE4E4;--emerald:#D1FAE5;--emerald-soft:rgba(6,78,59,.45);--emerald-border:rgba(167,243,208,.55);--amber:#FEF3C7;--amber-soft:rgba(15,23,42,.28);--amber-border:rgba(253,230,138,.6);--crimson-soft:rgba(15,23,42,.28);--crimson-border:rgba(254,202,202,.6);--bg-card:rgba(255,255,255,.10);--bg-subtle:rgba(15,23,42,.22);--bg-canvas:#1E3A8A;--border-card:rgba(255,255,255,.38);--border-strong:rgba(255,255,255,.6);--hair:rgba(255,255,255,.24);--seg-bg:rgba(15,23,42,.22);border-color:rgba(255,255,255,.22);background:radial-gradient(20px 9px at 88% 10px,rgba(255,255,255,.35) 0%,transparent 100%),linear-gradient(180deg,rgba(255,255,255,.12) 0,rgba(255,255,255,0) 30px),linear-gradient(180deg,var(--bd-a) 0%,var(--bd-b) 100%);box-shadow:inset 0 1.5px 0 rgba(255,255,255,.45),inset 0 -8px 16px rgba(10,20,60,.30),0 2px 4px rgba(30,58,138,.18),0 16px 30px -12px rgba(29,78,216,.55)}
+html[data-look="bluetile"] .tile:not(.top),html[data-look="bluetile"] .qa,html[data-look="bluetile"] .helpbtn{--bd-a:#1D4ED8;--bd-b:#1E3A8A;color:#FFFFFF;--text-primary:#FFFFFF;--text-secondary:#F1F5FF;--text-muted:#F1F5FF;--link:#FFFFFF;--crimson:#FFE4E4;--emerald:#D1FAE5;--emerald-soft:rgba(6,78,59,.45);--emerald-border:rgba(167,243,208,.55);--amber:#FEF3C7;--amber-soft:rgba(15,23,42,.28);--amber-border:rgba(253,230,138,.6);--crimson-soft:rgba(15,23,42,.28);--crimson-border:rgba(254,202,202,.6);--bg-card:rgba(255,255,255,.10);--bg-subtle:rgba(15,23,42,.22);--bg-canvas:#1E3A8A;--border-card:rgba(255,255,255,.38);--border-strong:rgba(255,255,255,.6);--hair:rgba(255,255,255,.24);--seg-bg:rgba(15,23,42,.22);border-color:rgba(255,255,255,.22);background:radial-gradient(20px 9px at 88% 10px,rgba(255,255,255,.35) 0%,transparent 100%),linear-gradient(180deg,rgba(255,255,255,.12) 0,rgba(255,255,255,0) 30px),linear-gradient(180deg,var(--bd-a) 0%,var(--bd-b) 100%);box-shadow:inset 0 1.5px 0 rgba(255,255,255,.45),inset 0 -8px 16px rgba(10,20,60,.30),0 2px 4px rgba(30,58,138,.18),0 16px 30px -12px rgba(29,78,216,.55)}
+@media (prefers-color-scheme:dark){html:not([data-theme="light"])[data-look="blue"] .card,html:not([data-theme="light"])[data-look="blue"] .tile:not(.top),html:not([data-theme="light"])[data-look="blue"] .qa,html:not([data-theme="light"])[data-look="blue"] .stepcard,html:not([data-theme="light"])[data-look="blue"] .helpbtn{--bd-a:#1E40AF;--bd-b:#172554;box-shadow:inset 0 1.5px 0 rgba(255,255,255,.40),inset 0 -8px 16px rgba(0,0,0,.30),0 2px 3px rgba(0,0,0,.5),0 16px 30px -12px rgba(0,0,0,.85)}}
+html[data-theme="dark"][data-look="blue"] .card,html[data-theme="dark"][data-look="blue"] .tile:not(.top),html[data-theme="dark"][data-look="blue"] .qa,html[data-theme="dark"][data-look="blue"] .stepcard,html[data-theme="dark"][data-look="blue"] .helpbtn{--bd-a:#1E40AF;--bd-b:#172554;box-shadow:inset 0 1.5px 0 rgba(255,255,255,.40),inset 0 -8px 16px rgba(0,0,0,.30),0 2px 3px rgba(0,0,0,.5),0 16px 30px -12px rgba(0,0,0,.85)}
+@media (prefers-color-scheme:dark){html:not([data-theme="light"])[data-look="bluetile"] .tile:not(.top),html:not([data-theme="light"])[data-look="bluetile"] .qa,html:not([data-theme="light"])[data-look="bluetile"] .helpbtn{--bd-a:#1E40AF;--bd-b:#172554;box-shadow:inset 0 1.5px 0 rgba(255,255,255,.40),inset 0 -8px 16px rgba(0,0,0,.30),0 2px 3px rgba(0,0,0,.5),0 16px 30px -12px rgba(0,0,0,.85)}}
+html[data-theme="dark"][data-look="bluetile"] .tile:not(.top),html[data-theme="dark"][data-look="bluetile"] .qa,html[data-theme="dark"][data-look="bluetile"] .helpbtn{--bd-a:#1E40AF;--bd-b:#172554;box-shadow:inset 0 1.5px 0 rgba(255,255,255,.40),inset 0 -8px 16px rgba(0,0,0,.30),0 2px 3px rgba(0,0,0,.5),0 16px 30px -12px rgba(0,0,0,.85)}
+html[data-look="blue"] .card a:not(.btn),html[data-look="blue"] .card .link{color:#FFFFFF;text-decoration:underline}
+html[data-look="blue"] .card input,html[data-look="blue"] .card textarea,html[data-look="blue"] .card select{background:#FFFFFF;color:#0F172A;border-color:rgba(255,255,255,.6)}
+html[data-look="blue"] .card.crit:before{background:#FCA5A5}
+html[data-look="blue"] .helpbtn,html[data-look="bluetile"] .helpbtn{border-color:#FCA5A5}
+html[data-look="blue"] .helpbtn .chev,html[data-look="bluetile"] .helpbtn .chev{color:#FFFFFF}
 /* ⑥ 记时间页：节拍器仍在运行 */
 .mrun{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;margin:12px 0 0;padding:12px;border-radius:var(--radius-lg);background:var(--crimson-soft);border:1px solid var(--crimson-border)}
 .mrun .ml{flex:1 1 10em;font-weight:800;line-height:1.3}
@@ -774,7 +811,7 @@ var FEEDBACK_GOOGLE = _CFG.google||"";    // Google 表单链接，例如 https:
 var FEEDBACK_TENCENT = _CFG.tencent||"";  // 腾讯问卷链接，例如 https://wj.qq.com/s2/xxxx/xxxx/
 // 可选：Google 表单里"版本/国家/语言"那道简答题的编号（形如 entry.123456789）。填了以后会自动带入，留空也能用。
 var GOOGLE_PREFILL_ENTRY = _CFG.googleEntry||"";
-var VERSION = "MVP v0.10.2";
+var VERSION = "MVP v0.10.3";
 var VERIFIED_ON = "2026-11-17";   // 全部国家号码的统一核实日期；某国单独复核后，在该国数据里加 v:"YYYY-MM-DD"
 // 固定的正式网址：分享、锁屏图片一律用它，不用当前地址栏（避免分享出 file:// 或预览地址）。分享链接里永远不放任何个人信息。
 var SITE_URL = "https://jackyyhhxjyxn.github.io/emergency-card/";
@@ -1165,7 +1202,7 @@ edit:["填写 / 修改","Add / edit"],save:["保存","Save"],clear:["清空","Cl
 fName:["姓名","Name"],fBlood:["血型","Blood type"],fAll:["过敏","Allergies"],fCond:["疾病史","Medical conditions"],fMed:["正在用药","Current medication"],fIce:["紧急联系人及电话","Emergency contact & phone"],
 fbT:["反馈","Feedback"],fbQ:["这张卡片对你有用吗？哪里看不懂、哪里不对？","Was this card useful? What was unclear or wrong?"],
 fbPh:["写下你的意见…","Write your feedback…"],fbSend:["提交反馈","Send feedback"],fbG:["Google 表单","Google Form"],fbT2:["腾讯问卷（中国大陆可用）","Tencent Survey (works in mainland China)"],fbCtx:["填表时请照抄这一行","Please copy this line into the form"],fbNoPII:["请不要填写姓名、电话或病史。","Please do not include names, phone numbers or medical history."],fbDone:["反馈文字已复制，请粘贴发送给项目方。谢谢！","Feedback copied — please paste and send it to the project team. Thank you!"],
-srcAll:["信息来源","Sources"],verified:["核实日期","Verified on"],
+srcAll:["信息来源","Sources"],srcFoldS:["依据（{n} 条来源）","Based on {n} source(s)"],srcFoldS1:["依据（1 条来源）","Based on 1 source"],srcBoxS:["查看来源与可信度（共 {n} 条，官方 {g} 条）","Sources and reliability ({n} sources, {g} official)"],srcBoxP:["每张急救卡、每个国家的号码都有出处；各国号码按 A / B / C 标可信度。","Every card and every country's numbers have a source; country numbers are graded A / B / C."],verified:["核实日期","Verified on"],
 disc:["本卡为公众急救科普与应急参考，不能替代专业医疗救治或急救培训。各国号码与规程可能变动，请以当地官方信息为准。本页面不收集、不上传你填写的任何信息（网站托管方 GitHub 会按其政策记录访问 IP）。",
       "This card is public first-aid information for reference in an emergency. It does not replace professional medical care or first-aid training. Numbers and procedures can change — rely on local official information. This page does not collect or upload anything you enter (the host, GitHub, logs visitor IP addresses under its own policy)."],
 pick:["选择国家或地区","Choose country or region"],useAuto:["恢复自动识别","Use automatic detection"],
@@ -1242,6 +1279,9 @@ function srcL(i){return '<a href="'+SRC[i][2]+'" target="_blank" rel="noopener">
 function stag(i){var k=SRCK[i]||"other";return ' <span class="stag '+k+'">'+t("sk_"+k)+'</span>'}
 /* v0.10.2：各处“依据”行里，非官方来源后面直接标“其他（非官方）” */
 function srcA(i){return srcL(i)+(SRCK[i]==="other"?stag(i):"")}
+function curLook(){return document.documentElement.getAttribute("data-look")||"off"}
+/* v0.10.3：各页底部的“依据”默认折叠，只显示“依据（N 条来源）”，点开才看到来源名称（测试反馈：显示太多，用户不会看） */
+function srcFold(ids){return '<details class="srcd"><summary>'+(ids.length===1?t("srcFoldS1"):t("srcFoldS").replace("{n}",ids.length))+'</summary><div class="srcb">'+srcLine(ids)+'</div></details>'}
 function srcLine(ids){return ids.map(srcA).join(" · ")}
 /* v0.9.0：说明文字统一收进“ⓘ 说明”，点开才显示（急救路径每屏最多一句说明） */
 function info(inner){return inner?'<details class="ifo"><summary>'+t("infoT")+'</summary><div class="ifb">'+inner+'</div></details>':""}
@@ -1392,7 +1432,7 @@ function fig(cardId,i){var f=(FIGMAP[cardId]||{})[i];if(!f)return "";
 /* ===================== v0.3.2-oc：新增界面文字（只涉及界面，不新增医学内容） ===================== */
 var T2={
 tabHome:["急救","First aid"],tabSos:["呼救","Call"],tabMe:["我的卡","My card"],tabMore:["更多","More"],navA:["主导航","Main navigation"],
-thT:["显示模式","Display"],thAuto:["跟随系统","System"],thLight:["日间","Light"],thDark:["夜间","Dark"],
+thT:["显示模式","Display"],lkT:["外观（测试投票，选好后会去掉）","Look (test vote — removed after the vote)"],lk_gloss:["B 水珠（现版）","B Gloss (current)"],lk_gloss2:["B+ 加强水珠","B+ Stronger gloss"],lk_blue:["C 蓝底白字·全部卡片","C Blue, white text — all cards"],lk_bluetile:["D 蓝底白字·只用于入口","D Blue, white text — buttons only"],lk_tint:["E 浅蓝水珠","E Light-blue gloss"],lk_drop:["A 水滴角","A Drop corner"],lk_off:["旧外观","Old look"],lkHint:["换一种外观后，日间、夜间都看一下，再在反馈表里写上你选的字母。","After switching, check both light and dark mode, then put the letter you prefer in the feedback form."],thAuto:["跟随系统","System"],thLight:["日间","Light"],thDark:["夜间","Dark"],
 thToL:["切换到日间模式","Switch to light mode"],thToD:["切换到夜间模式","Switch to dark mode"],thDone:["已切换","Switched"],
 callTap:["点击拨打","Tap to call"],callShort:["呼叫救护车","Call ambulance"],
 idK:["急救信息 · MEDICAL ID","MEDICAL ID · 急救信息"],bloodK:["血型","BLOOD"],nameNone:["尚未填写姓名","Name not added"],
@@ -1694,7 +1734,7 @@ function hospHtml(c){var N=C[c].amb,cn=c==="CN",b=[];
     '<p class="hw">'+I("alert","s")+' '+esc(t("hospWarn").replace("{N}",N))+'</p>'+
     '<div class="hb">'+b.join("")+'</div><div class="hs" id="hospMsg" aria-live="polite"></div>'+
     info(old+'<p class="ht">'+t("hospNote")+'</p><p class="ht">'+t(cn?"hospPrivCN":"hospPriv")+'</p>'+
-    '<div class="src">'+t("srcT")+CO()+srcLine(srcs)+'</div>')+'</section>'}
+    '<div class="src">'+srcFold(srcs)+'</div>')+'</section>'}
 
 function viewSos(c){var d=C[c],h="";
   h+='<button class="helpbtn" id="helperGo"><span class="sg" aria-hidden="true">'+I("phone")+'</span><span><b>'+t("helpOT")+'</b><small>'+t("helpOS")+'</small></span>'+I("chevR","chev")+'</button>';
@@ -1707,7 +1747,7 @@ function viewSos(c){var d=C[c],h="";
      if(noTel(n[0]))return '<div class="n nolink"><span>'+esc(lb)+'</span><b>'+esc(n[0])+'</b><span class="nh">'+t("manualDial")+'</span></div>';
      return '<a class="n" href="'+tel(n[0])+'" aria-label="'+esc(lb+SEP()+digits(n[0]))+'"><span aria-hidden="true">'+esc(lb)+'</span><b aria-hidden="true">'+esc(n[0])+'</b></a>'}).join("")+'</div>'}
   h+='<ul class="notes"'+(d.nums.length?'':' style="margin-top:0"')+'>'+d.notes.map(function(n){return '<li>'+esc(L(n))+'</li>'}).join("")+'</ul>';
-  if(d.src.length)h+='<div class="src">'+t("srcT")+CO()+srcLine(d.src)+'<br>'+t("verOn")+CO()+esc(verOf(c))+'</div>';
+  if(d.src.length)h+='<div class="src">'+srcFold(d.src)+t("verOn")+CO()+esc(verOf(c))+'</div>';
   h+='</section>';
   h+=hospHtml(c);
   h+='<h2 class="secH"><b>'+t("say")+'</b></h2><section class="card crit"><ol class="say">'+["s1","s2","s3","s4","s5"].map(function(k){return '<li>'+t(k)+'</li>'}).join("")+'</ol>'+
@@ -1733,17 +1773,19 @@ function srcAllHtml(){
   var ks=Object.keys(SRC).map(Number).filter(function(i){return !off[i]}).sort(function(a,b){return a-b});
   var cnt={gov:0,guide:0,pro:0,tech:0,other:0};ks.forEach(function(i){cnt[SRCK[i]||"other"]++});
   var cs=Object.keys(C),nA=0;cs.forEach(function(c){if(C[c].lvl==="A")nA++});
-  var h='<h2 class="secH"><b>'+t("srcAll")+'</b></h2><section class="card">'+
-    '<div class="kick">'+t("srcCT")+'</div><div class="muted" style="margin-top:6px">'+t("srcCH")+'</div>'+
-    '<div class="muted" style="margin-top:6px">A = '+t("lvlA")+SEP()+'B = '+t("lvlB")+SEP()+'C = '+t("lvlC")+'</div>'+
+  var h='<h2 class="secH"><b>'+t("srcAll")+'</b></h2><section class="card"><div class="muted">'+t("srcBoxP")+'</div>'+
+    '<details class="sl srcbox"><summary>'+t("srcBoxS").replace("{n}",ks.length).replace("{g}",cnt.gov)+'</summary>'+
+    '<div class="kick" style="margin-top:10px">'+t("srcCT")+'</div>'+
+    info('<p>'+t("srcCH")+'</p><p>A = '+t("lvlA")+SEP()+'B = '+t("lvlB")+SEP()+'C = '+t("lvlC")+'</p>').replace('details class="ifo"','details class="ifo" style="margin-top:4px;border-top:0"')+
     '<details class="sl"><summary>'+t("srcCN").replace("{n}",cs.length).replace("{a}",nA)+'</summary><ul class="srcs ctl">'+
     cs.map(function(c){var d=C[c];return '<li><span aria-hidden="true">'+d.f+'</span> '+esc(nm(c))+' <span class="badge '+d.lvl+'">'+d.lvl+'</span> '+
       '<span class="mut">'+t("srcNo")+CO()+d.src.join(SEP())+' · '+t("verified")+CO()+verOf(c)+'</span></li>'}).join("")+'</ul></details>'+
-    '<div class="kick" style="margin-top:18px">'+t("srcLT")+'</div><div class="muted" style="margin-top:6px">'+t("srcLH")+'</div>'+
+    '<div class="kick" style="margin-top:18px">'+t("srcLT")+'</div>'+
     '<div class="muted" style="margin-top:6px">'+["gov","guide","pro","tech","other"].map(function(k){return t("sk_"+k)+" "+cnt[k]}).join(SEP())+'</div>'+
+    info('<p>'+t("srcLH")+'</p>').replace('details class="ifo"','details class="ifo" style="margin-top:4px;border-top:0"')+
     '<details class="sl"><summary>'+t("srcN")+PL(ks.length)+'</summary><ol class="srcs">'+
     ks.map(function(i){return '<li value="'+i+'">'+srcL(i)+stag(i)+'</li>'}).join("")+'</ol></details>'+
-    '<div class="muted" style="margin-top:10px">'+t("srcOff").replace("{n}",SRC_OFF.length)+'</div></section>';
+    '<div class="muted" style="margin-top:10px">'+t("srcOff").replace("{n}",SRC_OFF.length)+'</div></details></section>';
   return h}
 function viewMore(c){var h=aboutHtml(c);
   if(!standalone()){
@@ -1765,7 +1807,10 @@ function viewMore(c){var h=aboutHtml(c);
      [["auto","thAuto","auto"],["light","thLight","sun"],["dark","thDark","moon"]].map(function(x){return '<button data-th="'+x[0]+'" aria-pressed="'+(theme===x[0])+'">'+I(x[2],"s")+t(x[1])+'</button>'}).join("")+'</div>'+
      '<div class="kick" style="margin-top:16px">'+t("fsT")+'</div><div class="seg4" role="group" aria-label="'+esc(t("fsT"))+'">'+
      [["sys","fsSys"],["m","fsM"],["l","fsL"],["xl","fsXL"]].map(function(x){return '<button data-fs="'+x[0]+'" aria-pressed="'+(fsMode===x[0])+'">'+t(x[1])+'</button>'}).join("")+'</div>'+
-     info('<p>'+t("fsHint")+'</p>')+'</section>';
+     info('<p>'+t("fsHint")+'</p>')+
+     '<div class="kick" style="margin-top:16px">'+t("lkT")+'</div><div class="seglk" role="group" aria-label="'+esc(t("lkT"))+'">'+
+     LOOKS.map(function(x){return '<button data-lk="'+x+'" aria-pressed="'+(curLook()===x)+'">'+t("lk_"+x)+'</button>'}).join("")+'</div>'+
+     info('<p>'+t("lkHint")+'</p>')+'</section>';
   h+='<h2 class="secH" id="fb" tabindex="-1"><b>'+t("fbT")+'</b></h2><section class="card"><div>'+t("fbQ")+'</div>'+fbBlock(c)+'</section>';
   h+=srcAllHtml();
   h+='<h2 class="secH"><b>'+t("clrT")+'</b></h2><section class="card"><div>'+t("clrS")+'</div>'+
@@ -1874,14 +1919,14 @@ function renderCard(keep){
     }else{
       h+='<div class="dont'+swCls()+'" aria-live="polite"><b>'+I("xc")+t("dontT")+'</b>'+dont+'</div>'+
          (k.extra?'<div class="extra">'+esc(L(k.extra))+'</div>':'')+
-         '<div class="src">'+t("srcT")+CO()+srcLine(k.src)+'</div>';
+         '<div class="src">'+srcFold(k.src)+'</div>';
     }
   }else{
     h+='<div class="when" style="margin-top:12px">'+esc(L(k.when))+'</div>'+
       '<ol class="steps">'+k.steps.map(function(s,j){return '<li><span>'+fill(L(s))+fig(k.id,j)+'</span></li>'}).join("")+'</ol>'+
       '<div class="dont"><b>'+I("xc")+t("dontT")+'</b>'+dont+'</div>'+
       (k.extra?'<div class="extra">'+esc(L(k.extra))+'</div>':'')+
-      '<div class="src">'+t("srcT")+CO()+srcLine(k.src)+'</div>';
+      '<div class="src">'+srcFold(k.src)+'</div>';
   }
   var nav=step?'<div class="snav"><button class="pv" id="pv"'+(i===0?' disabled':'')+'>'+I("chevL")+t("prev")+'</button>'+
     '<button class="nx" id="nx">'+(i<n?t("next")+I("chevR"):t("finish"))+'</button></div>':'';
@@ -2334,7 +2379,7 @@ function openNotify(){
      '<button class="btn ghost" id="nfLocRe" hidden>'+I("pin")+t("nfLocRe")+'</button>'+
      '<label>'+t("nfPrev")+'<textarea id="nfTxt" rows="8" autocomplete="off"></textarea></label></section>';
   h+='<section class="card" style="padding-top:6px;padding-bottom:6px">'+info('<p>'+t("nfHow")+'</p><p>'+t("nfWxWhy")+'</p><p>'+t("nfPriv")+'</p>'+(anyLocal?'<p>'+t("nfWaN")+'</p>':'')+
-     '<div class="src">'+t("srcT")+CO()+srcLine([120,121,122,87].concat(c==="CN"?[123]:[]))+'</div>').replace('details class="ifo"','details class="ifo" style="margin-top:0;border-top:0"')+'</section>';
+     '<div class="src">'+srcFold([120,121,122,87].concat(c==="CN"?[123]:[]))+'</div>').replace('details class="ifo"','details class="ifo" style="margin-top:0;border-top:0"')+'</section>';
   showSheet(h,callBtn(c));
   $("nfTxt").value=nfMsg();nfLocUi();nfRefresh();nfLocate()}
 
@@ -2486,7 +2531,7 @@ function brHtml(d){var rk=riskOf(d);if(!rk.some(function(x){return BR_KEYS[x.k]}
   return '<section class="card"><div class="kick">'+I("idc","s")+t("brT")+'</div><p style="margin:6px 0 0">'+t("brS")+'</p>'+
     '<div class="brbox">'+esc(txt)+'</div>'+info('<p>'+t("brOrder")+'</p><p>'+t("brNote")+'</p>')+
     '<button class="btn ghost" id="brCopy" data-v="'+esc(txt)+'">'+t("brCopy")+'</button>'+
-    '<div class="src">'+t("srcT")+CO()+srcLine([101,102,103])+'</div></section>'}
+    '<div class="src">'+srcFold([101,102,103])+'</div></section>'}
 
 /* ---------- 我的卡（v0.6.0：多档案 + 高危勾选 + 平时状态 / 药放哪 / 保险） ---------- */
 var IDF=[["name","fName"],["blood","fBlood"],["allergy","fAll"],["cond","fCond"],["med","fMed"],["ice","fIce"],["base","fBase"],["medloc","fMedLoc"],["ins","fIns"],["insTel","fInsTel"],["acp","fAcp"]];
@@ -2597,8 +2642,8 @@ function openTimer(){
     '<section class="card" style="margin-top:12px">'+TM.map(function(x){var k=x[0],v=o[k];
       return '<div class="tmr"><div class="tml"><b>'+t(x[1])+'</b><div class="tmv'+(v?'':' none')+'">'+(v?hmOf(v):t("tmNone"))+'</div><div class="tma" id="tm_'+k+'" aria-live="off"></div></div>'+
         '<div class="tmb"><button class="btn red" data-tm="'+k+'">'+t("tmNow")+'</button><label class="tmset">'+t("tmSet")+'<input type="time" data-tmi="'+k+'" value="'+(v?hmOf(v):"")+'"></label></div></div>'}).join("")+'</section>'+
-    '<section class="card"><p style="margin:0">'+t("tmStroke")+'</p><div class="src">'+t("srcT")+CO()+srcLine([98])+'</div>'+
-    '<p style="margin:12px 0 0">'+esc(t("tmSeiz").replace("{N}",N))+'</p><div class="src">'+t("srcT")+CO()+srcLine([99])+'</div>'+
+    '<section class="card"><p style="margin:0">'+t("tmStroke")+'</p><div class="src">'+srcFold([98])+'</div>'+
+    '<p style="margin:12px 0 0">'+esc(t("tmSeiz").replace("{N}",N))+'</p><div class="src">'+srcFold([99])+'</div>'+
     '<p class="muted">'+t("tmNoDx")+'</p></section>'+
     '<button class="btn warn" id="tmClr">'+t("tmClr")+'</button>'+awkHtml();
   if(cardKeep&&mt)h=h.replace('</div>','</div>'+mrunHtml());
@@ -2615,13 +2660,13 @@ function openHelper(){
     '<p class="hlc">'+I("phone")+' '+esc(t("hlCall").replace("{N}",N))+'</p>'+
     (c==="XX"?'<div class="note" role="note">'+I("alert")+'<div>'+esc(t("xxNote").replace("{z}",tzLabel()))+'</div></div>':'')+
     '<h2 class="secH"><b>'+t("hlSayT")+'</b></h2><section class="card crit"><ol class="say">'+["hl1","hl2","hl3","hl4","hl5"].map(function(k){return '<li>'+t(k)+'</li>'}).join("")+'</ol>'+
-    '<div class="src">'+t("srcT")+CO()+srcLine([105,106])+'</div></section>'+
+    '<div class="src">'+srcFold([105,106])+'</div></section>'+
     '<h2 class="secH"><b>'+t("hlLoc")+'</b></h2><section class="card"><div id="hlocOut" aria-live="polite"></div>'+
     '<button class="btn ghost" id="hlocBtn">'+I("pin")+t("locBtn")+'</button>'+info('<p>'+t("hlAml")+'</p><div class="src">'+t("srcT")+CO()+srcLine([108,109])+'</div>')+'</section>'+
     '<h2 class="secH"><b>'+t("hlAfterT")+'</b></h2><section class="card"><ul class="notes" style="margin-top:0">'+["hlA1","hlA2","hlA3"].map(function(k){return '<li>'+t(k)+'</li>'}).join("")+'</ul>'+
-    '<div class="src">'+t("srcT")+CO()+srcLine([106,107,105])+'</div></section>'+
+    '<div class="src">'+srcFold([106,107,105])+'</div></section>'+
     '<h2 class="secH"><b>'+t("hmT")+'</b></h2><section class="card"><ul class="notes" style="margin-top:0">'+["hm1","hm2","hm3","hm4"].map(function(k){return '<li>'+t(k)+'</li>'}).join("")+'</ul>'+
-    '<div class="src">'+t("srcT")+CO()+srcLine([117,118])+'</div>'+info('<div class="mcs">'+I("alert","s")+' '+t("hmPriv")+'</div>')+'</section>'+
+    '<div class="src">'+srcFold([117,118])+'</div>'+info('<div class="mcs">'+I("alert","s")+' '+t("hmPriv")+'</div>')+'</section>'+
     '<button class="btn" id="tmGo">'+I("clock")+t("hlTm")+'</button><button class="btn ghost" data-tab="">'+t("hlCards")+'</button>'+awkHtml();
   showSheet(h,callBtn(c));awake(true);
 }
@@ -2777,11 +2822,14 @@ document.addEventListener("click",function(e){
   if(el.id==="qrSend"){qrSendPic();return}
   if(el.id==="qrFullBk"){var qb=$("qrFullBox");if(qb)qb.remove();return}
   if(el.id==="copyUrl"){var sm2=$("shareMsg");copyText(SITE_URL,function(){if(sm2)sm2.textContent=t("shareDone")});return}
+  if(el.dataset.lk){var lk=el.dataset.lk;store("ec_look",lk==="gloss"?null:lk);
+    if(lk==="off")document.documentElement.removeAttribute("data-look");else document.documentElement.setAttribute("data-look",lk);
+    document.querySelectorAll("[data-lk]").forEach(function(x){x.setAttribute("aria-pressed",x.dataset.lk===lk?"true":"false")});return}
   if(el.dataset.fs){fsMode=el.dataset.fs;store("ec_fs",fsMode==="sys"?null:fsMode);applyFs();
     document.querySelectorAll("[data-fs]").forEach(function(x){x.setAttribute("aria-pressed",x.dataset.fs===fsMode?"true":"false")});return}
   if(el.id==="clrBtn"){
     if(el.dataset.armed!=="1"){el.dataset.armed="1";el.textContent=t("clrArm");setTimeout(function(){if(document.contains(el)){el.dataset.armed="";el.textContent=t("clrBtn")}},6000);return}
-    ["ec_id","ec_prof","ec_tm","ec_geo","ec_lang","ec_theme","ec_mode","ec_voice","ec_snd","ec_fs","ec_mlang"].forEach(function(k){store(k,null)});
+    ["ec_id","ec_prof","ec_tm","ec_geo","ec_lang","ec_theme","ec_mode","ec_voice","ec_snd","ec_fs","ec_mlang","ec_look"].forEach(function(k){store(k,null)});
     hush();location.replace(location.pathname);return}
   if(el.id==="pv"){go(-1);return}
   if(el.id==="nx"){go(1);return}
