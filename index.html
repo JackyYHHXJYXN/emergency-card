@@ -677,6 +677,53 @@ details.dd{border-radius:16px;border-left:4px solid var(--crimson-fill)}
 .qrw img{display:block;width:100%;max-width:260px;height:auto;margin:0 auto;border-radius:16px;border:1px solid var(--hair);box-shadow:var(--shadow-md);background:#FFFFFF;-webkit-touch-callout:default;-webkit-user-select:auto;user-select:auto}
 .qrw figcaption{margin-top:10px;color:var(--text-secondary);font-weight:600;font-size:calc(17px * var(--fs));line-height:1.45}
 @media print{.qrw{display:none}}
+
+/* ===================== v0.10.0：Pro 设计移植 ===================== */
+/* ① 国家未确认：呼叫栏旁“未确认”，位置卡内就地确认 */
+.callrow{display:flex;gap:8px;align-items:stretch}
+.callrow .call{flex:1 1 auto;min-width:0}
+.ucf{flex:none;min-width:76px;max-width:34%;padding:4px 8px;border-radius:var(--radius-lg);background:var(--amber-soft);border:2px solid var(--amber-bar);color:var(--amber);
+  font-weight:800;font-size:calc(17px * var(--fs));line-height:1.15;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-align:center;box-shadow:var(--shadow-sm)}
+.ucf .ic{width:20px;height:20px}
+body:not(.sheet-on) .dock .ucf{background:var(--bg-card)}
+.lcard.unconf{border:2px solid var(--amber-bar)}
+.ucfrow{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;margin-top:10px;padding:10px 12px;border-radius:var(--radius-md);background:var(--amber-soft);color:var(--amber);font-weight:700;line-height:1.35}
+.ucfrow>span{flex:1 1 12em;min-width:0}
+.ucfrow .btn{margin:0;min-height:48px;width:auto;flex:none;padding:0 16px}
+/* ② 首页三按钮横排 */
+.qa3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0 0 12px}
+.qa{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:8px;min-height:104px;padding:14px 6px 12px;background:var(--bg-card);
+  border:1px solid var(--border-card);border-radius:18px;text-align:center;box-shadow:var(--shadow-sm)}
+.qa:active{transform:scale(.98);box-shadow:none}
+.qa .sg{width:44px;height:44px;border-radius:14px;background:var(--h-red-bg);color:var(--h-red)}
+.qa b{font-size:calc(17px * var(--fs));line-height:1.25;font-weight:800;overflow-wrap:anywhere}
+html.hugetext .qa3{grid-template-columns:1fr}
+html.hugetext .qa{flex-direction:row;min-height:64px;padding:10px 14px;text-align:left}
+/* ③ 分类标签 */
+.cats{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
+.cat{flex:none;min-height:44px;padding:0 14px;border-radius:99px;background:var(--bg-card);border:1px solid var(--border-card);font-weight:700;font-size:calc(17px * var(--fs));white-space:nowrap}
+.cat[aria-pressed="true"]{background:var(--text-primary);color:var(--bg-canvas);border-color:var(--text-primary)}
+.cat[data-cat="life"][aria-pressed="true"]{background:var(--crimson-fill);border-color:var(--crimson-fill);color:#FFFFFF}
+/* ④ 我的卡：功能按钮在医疗卡底部 */
+.idacts.in{margin:14px 0 0;padding-top:14px;border-top:1px solid var(--border-card)}
+#idBox .pfbar{margin-top:4px}
+/* ⑤ 步骤卡片 + 按压计时 + 滑动 */
+.stepcard{background:var(--bg-card);border:1px solid var(--border-card);border-radius:20px;padding:16px 16px 18px;box-shadow:var(--shadow-md)}
+.stepcard .stepK{display:flex;align-items:center;gap:10px}
+.stepcard .sn{width:36px;height:36px;border-radius:99px;background:var(--crimson-fill);color:#FFFFFF;display:grid;place-items:center;font-family:var(--font-num);font-size:calc(19px * var(--fs));flex:none}
+.stepcard .stepTxt{margin-top:10px}
+.stepcard svg:not(.ic){max-width:100%;height:auto}
+.ctime{display:block;margin-top:2px;font-weight:700;color:var(--text-muted)}
+.ctime b{font-family:var(--font-num);font-variant-numeric:tabular-nums;color:var(--text-primary);font-size:calc(22px * var(--fs));letter-spacing:.5px}
+.swh{margin-left:auto;color:var(--text-muted);font-weight:600;font-size:calc(17px * var(--fs));white-space:nowrap}
+html.hugetext .swh{display:none}
+@keyframes swR{from{opacity:.2;transform:translateX(28px)}to{opacity:1;transform:none}}
+@keyframes swL{from{opacity:.2;transform:translateX(-28px)}to{opacity:1;transform:none}}
+.in-r{animation:swR .18s ease-out}.in-l{animation:swL .18s ease-out}
+/* ⑥ 记时间页：节拍器仍在运行 */
+.mrun{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;margin:12px 0 0;padding:12px;border-radius:var(--radius-lg);background:var(--crimson-soft);border:1px solid var(--crimson-border)}
+.mrun .ml{flex:1 1 10em;font-weight:800;line-height:1.3}
+.mrun .chip{flex:none}
 </style>
 </head>
 <body>
@@ -703,7 +750,7 @@ var FEEDBACK_GOOGLE = _CFG.google||"";    // Google 表单链接，例如 https:
 var FEEDBACK_TENCENT = _CFG.tencent||"";  // 腾讯问卷链接，例如 https://wj.qq.com/s2/xxxx/xxxx/
 // 可选：Google 表单里"版本/国家/语言"那道简答题的编号（形如 entry.123456789）。填了以后会自动带入，留空也能用。
 var GOOGLE_PREFILL_ENTRY = _CFG.googleEntry||"";
-var VERSION = "MVP v0.9.2";
+var VERSION = "MVP v0.10.0";
 var VERIFIED_ON = "2026-11-17";   // 全部国家号码的统一核实日期；某国单独复核后，在该国数据里加 v:"YYYY-MM-DD"
 // 固定的正式网址：分享、锁屏图片一律用它，不用当前地址栏（避免分享出 file:// 或预览地址）。分享链接里永远不放任何个人信息。
 var SITE_URL = "https://jackyyhhxjyxn.github.io/emergency-card/";
@@ -1168,7 +1215,7 @@ function CO(){return lang==="zh"?"：":": "}
 function SEP(){return lang==="zh"?"，":", "}
 function PL(n){return lang==="zh"?"（"+n+"）":" ("+n+")"}
 function callBtn(c){var d=C[c];
-  return '<a class="call" href="'+tel(d.amb)+'" aria-label="'+esc(t("callAmb")+"，"+nm(c)+"，"+digits(d.amb))+'"><span aria-hidden="true"><span class="lbl">'+t("callShort")+'</span><span class="num">'+esc(d.amb)+'</span></span><span class="ico" aria-hidden="true">'+phoneIco()+'</span></a>'}
+  return (confirmed?'':'<div class="callrow">')+'<a class="call" href="'+tel(d.amb)+'" aria-label="'+esc(t("callAmb")+"，"+nm(c)+"，"+digits(d.amb))+'"><span aria-hidden="true"><span class="lbl">'+t("callShort")+'</span><span class="num">'+esc(d.amb)+'</span></span><span class="ico" aria-hidden="true">'+phoneIco()+'</span></a>'+(confirmed?'':'<button class="ucf" id="ucfBtn" aria-label="'+esc(t("ucfA"))+'">'+I("alert","s")+'<span>'+t("ucf")+'</span></button></div>')}
 function emo(s){return '<span aria-hidden="true">'+s+'</span>'}
 
 /* ===================== 图标（v0.3.2：取代表情符号，各平台显示一致） ===================== */
@@ -1559,13 +1606,13 @@ function triHtml(){
     '<div class="tri-b"><button class="big no" data-tri="1">'+t("t1n")+'</button><button class="big yes" data-tri="2">'+t("t1y")+'</button></div>';
 }
 function heroHtml(c){var d=C[c];
-  return '<section class="card lcard" aria-label="'+esc(t("youAre")+CO()+nm(c))+'"><div class="lrow">'+
+  return '<section class="card lcard'+(confirmed?'':' unconf')+'" aria-label="'+esc(t("youAre")+CO()+nm(c))+'"><div class="lrow">'+
     '<span class="lflag" aria-hidden="true">'+d.f+'</span>'+
     '<div class="linfo"><div class="lname">'+esc(nm(c))+'</div>'+
     '<div class="lmeta"><span class="badge '+d.lvl+'">'+I(d.lvl==="A"?"check":"info")+t("lvl"+d.lvl)+'</span><span class="mut">'+(manual?esc(t("manualAuto").replace("{c}",DET==="XX"?t("autoNone"):nm(DET))):esc(t("autoTz").replace("{z}",tzLabel())))+'</span></div>'+
     (manual?'<button class="link" data-pick="" style="margin-top:0;min-height:44px">'+I("pin","s")+t("backAuto")+'</button>':'')+'</div>'+
     '<button class="tbtn" id="chg" aria-label="'+esc(t("change")+CO()+t("pick"))+'">'+t("change")+I("chevR","s")+'</button>'+
-    '</div></section>'}
+    '</div>'+(confirmed?'':'<div class="ucfrow">'+I("alert","s")+'<span>'+t(c==="XX"?"ucfHeroX":"ucfHero")+'</span>'+(c==="XX"?'':'<button class="btn" id="cfYes">'+t("ucfYes")+'</button>')+'</div>')+'</section>'}
 
 function inWx(){return /MicroMessenger/i.test(navigator.userAgent||"")}
 function standalone(){try{return (window.matchMedia&&matchMedia("(display-mode: standalone)").matches)||navigator.standalone===true}catch(e){return false}}
@@ -1578,13 +1625,11 @@ function viewHome(c){var h="";
   if(c==="XX")h+='<div class="note" role="note">'+I("alert")+'<div>'+esc(t("xxNote").replace("{z}",tzLabel()))+'</div></div>';
   h+=staleNote(c);
   h+='<section class="card crit tri" id="tri" aria-labelledby="triQ">'+triHtml()+'</section>';
-  h+='<button class="helpbtn" id="helperGo"><span class="sg" aria-hidden="true">'+I("phone")+'</span><span><b>'+t("helpOT")+'</b><small>'+t("helpOS")+'</small></span>'+I("chevR","chev")+'</button>';
-  h+='<button class="helpbtn" id="nfGo"><span class="sg" aria-hidden="true">'+I("msg")+'</span><span><b>'+t("nfBtn")+'</b><small>'+t("nfBtnS")+'</small></span>'+I("chevR","chev")+'</button>';
-  h+='<div class="hentry"><button class="btn ghost" id="hospGo">'+I("pin")+t("hospGo")+'</button></div>';
+  h+='<div class="qa3">'+qaBtn("helperGo","phone","qaHelp")+qaBtn("nfGo","msg","nfBtn")+qaBtn("hospGo","pin","qaHosp")+'</div>';
   h+='<div class="note" role="note">'+I("info")+'<div>'+t("beta")+'</div></div>';
-  h+='<h2 class="secH" id="cardsH" tabindex="-1"><b>'+t("cards")+'</b></h2><div class="grid">'+CARDS.map(function(k){
-     return '<button class="tile'+(k.top?" top":"")+'" data-card="'+k.id+'">'+sign(k.id)+'<span><b>'+esc(k[lang])+'</b><small>'+esc(lang==="zh"?k.szh:k.sen)+'</small>'+(k.pend?'<em class="pend">'+t("pendT")+'</em>':'')+'</span>'+(k.top?I("chevR","chev"):"")+'</button>'}).join("")+'</div>';
+  h+='<h2 class="secH" id="cardsH" tabindex="-1"><b>'+t("cards")+'</b></h2>'+catHtml()+gridHtml();
   return h}
+function tileHtml(k){return '<button class="tile'+(k.top?" top":"")+'" data-card="'+k.id+'">'+sign(k.id)+'<span><b>'+esc(k[lang])+'</b><small>'+esc(lang==="zh"?k.szh:k.sen)+'</small>'+(k.pend?'<em class="pend">'+t("pendT")+'</em>':'')+'</span>'+(k.top?I("chevR","chev"):"")+'</button>'}
 
 /* ===================== v0.5.1 附近的急诊医院（第 1 级：只跳转地图 App，不存数据、不读位置） =====================
    来源 87–91。Google / 苹果不传坐标：由地图 App 用自己的定位搜索。高德：仅中国大陆，按用户点击请求一次位置，
@@ -1745,9 +1790,11 @@ function closeSheet(){
 function openCard(id){
   var k=CARDS.filter(function(x){return x.id===id})[0];if(!k){closeSheet();return}
   if(!cur||cur.k!==k){
-    var v=load("ec_voice");
-    cur={k:k,i:0,mode:load("ec_mode")==="list"?"list":"step",voice:v===null?!!k.metro:v==="1"};
+    if(cardKeep&&cardKeep.k===k)cur=cardKeep;
+    else{var v=load("ec_voice");
+    cur={k:k,i:0,mode:load("ec_mode")==="list"?"list":"step",voice:v===null?!!k.metro:v==="1",t0:k.metro?Date.now():0};}
   }
+  cardKeep=null;
   awake(true);
   if(k.metro)metroStart();else metroStop();
   renderCard(false);
@@ -1763,19 +1810,19 @@ function renderCard(keep){
     '</div>'+
     '<div class="ttl">'+sign(k.id,k.top?"red":"")+'<h1 id="sheetT" tabindex="-1">'+esc(k[lang])+'</h1></div>'+(k.pend?'<div class="pendN" role="note">'+t("pendN")+'</div>':'')+
     '<button class="seg wide" id="modeBtn" aria-label="'+esc(step?t("modeList"):t("modeStep"))+'"><span'+(step?' class="on"':'')+' aria-hidden="true">'+t("modeStep")+'</span><span'+(step?'':' class="on"')+' aria-hidden="true">'+t("modeList")+'</span></button>';
-  if(k.metro)h+='<div class="metro"><div class="dot" id="dot" aria-hidden="true">'+I("cpr")+'</div><div class="ml">'+t("beatLbl")+'</div><button class="chip" id="sndBtn">'+sndLabel()+'</button></div>';
+  if(k.metro)h+='<div class="metro"><div class="dot" id="dot" aria-hidden="true">'+I("cpr")+'</div><div class="ml">'+t("beatLbl")+'<span class="ctime" role="timer" aria-label="'+esc(t("ctA"))+'">'+t("ctL")+' <b id="ctime">'+ctStr()+'</b></span></div><button class="chip" id="sndBtn">'+sndLabel()+'</button></div>';
   h+='<div class="status" id="awk"'+(wl?'':' hidden')+'>'+I("sun","s")+t("awake")+'</div><details class="when" id="noawk" style="margin-top:8px;padding:6px 12px"'+(wlFail?'':' hidden')+'><summary style="min-height:36px;display:flex;align-items:center;gap:6px;cursor:pointer">'+I("alert","s")+t("noAwakeS")+'</summary><div style="padding-bottom:6px">'+t("noAwake")+'</div></details>';
   if(step){
     h+='<div class="prog" aria-hidden="true">';
     for(var j=0;j<=n;j++)h+='<i'+(j<=i?' class="d"':'')+'></i>';
     h+='</div>';
     if(i<n){
-      h+='<div aria-live="polite" aria-atomic="true"><div class="stepK">'+t("stepOf").replace("{a}",i+1).replace("{b}",n)+'</div>'+
-         '<p class="stepTxt">'+fill(L(k.steps[i]))+'</p></div>'+fig(k.id,i)+
+      h+='<div class="stepcard'+swCls()+'"><div aria-live="polite" aria-atomic="true"><div class="stepK"><span class="sn" aria-hidden="true">'+(i+1)+'</span>'+t("stepOf").replace("{a}",i+1).replace("{b}",n)+'<span class="swh" aria-hidden="true">'+t("swipeH")+'</span></div>'+
+         '<p class="stepTxt">'+fill(L(k.steps[i]))+'</p></div>'+fig(k.id,i)+'</div>'+
          (i===0?'<div class="when" style="margin-top:16px">'+esc(L(k.when))+'</div>':'')+
          '<details class="dd"><summary>'+I("xc")+t("dontT")+PL(k.dont.length)+I("chevR","s chev")+'</summary>'+dont+'</details>';
     }else{
-      h+='<div class="dont" aria-live="polite"><b>'+I("xc")+t("dontT")+'</b>'+dont+'</div>'+
+      h+='<div class="dont'+swCls()+'" aria-live="polite"><b>'+I("xc")+t("dontT")+'</b>'+dont+'</div>'+
          (k.extra?'<div class="extra">'+esc(L(k.extra))+'</div>':'')+
          '<div class="src">'+t("srcT")+CO()+srcLine(k.src)+'</div>';
     }
@@ -1797,7 +1844,7 @@ function renderCard(keep){
 }
 function go(d){if(!cur)return;var n=cur.k.steps.length,i=cur.i+d;
   if(i>n){location.hash="";return}
-  if(i<0)return;cur.i=i;renderCard(true)}
+  if(i<0)return;cur.i=i;cur.dir=d;renderCard(true);cur.dir=0}
 
 function openPicker(){
   metroStop();hush();cur=null;
@@ -1809,7 +1856,7 @@ function openPicker(){
 }
 function openConfirm(){
   var c=DET,d=C[c],x=c==="XX";
-  var h='<div class="cf"><div class="mk">'+LOGO_SVG+t("brand")+'</div><div class="flag" aria-hidden="true">'+d.f+'</div>'+
+  var h='<div class="shead"><button class="back" id="bk">'+I("chevL")+t("back")+'</button></div><div class="cf"><div class="mk">'+LOGO_SVG+t("brand")+'</div><div class="flag" aria-hidden="true">'+d.f+'</div>'+
     '<h1 id="sheetT" tabindex="-1">'+(x?t("cfX"):t("cfQ"))+'</h1>'+
     (x?'':'<div class="cn">'+esc(nm(c))+'</div>')+
     '<a class="rblock" href="'+tel(d.amb)+'" aria-label="'+esc(t("callAmb")+SEP()+digits(d.amb))+'"><span class="rk" aria-hidden="true">'+t("ambLbl")+'</span><span class="rv" aria-hidden="true">'+esc(d.amb)+'</span><span class="rc" aria-hidden="true">'+t("callTap")+'</span></a><p class="muted">'+t("cfS")+'<br>'+esc(t("cfTz").replace("{z}",tzLabel()))+'</p>'+
@@ -1976,7 +2023,7 @@ function drawWall(c){
 
 function route(){var h=location.hash.slice(1);
   if(h==="pick"){openPicker();return}
-  if(!confirmed){openConfirm();return}
+  if(h==="cf"){openConfirm();return}
   if(h==="help"){openHelp();return}
   if(h==="wall"){openWall();return}
   if(h==="med"){openMed();return}
@@ -1999,12 +2046,13 @@ function audio(){try{if(navigator.audioSession&&navigator.audioSession.type!=="p
 function sndLabel(){return !snd?I("belloff","s")+t("soundOff"):(ac&&ac.state==="running")?I("bell","s")+t("soundOn"):I("bell","s")+t("soundTap")}
 function sndShow(){var b=$("sndBtn");if(b){var s=sndLabel();if(b.innerHTML!==s)b.innerHTML=s}}
 function beat(){
+  ctShow();
   var d=$("dot");if(d){d.classList.remove("beat");void d.offsetWidth;d.classList.add("beat")}
   if(snd&&ac&&ac.state==="running"){try{var o=ac.createOscillator(),g=ac.createGain();o.frequency.value=880;g.gain.setValueAtTime(.35,ac.currentTime);
     g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+.09);o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+.1)}catch(e){}}
 }
 function metroStart(){if(mt)return;if(snd)audio();beat();mt=setInterval(beat,60000/110)}
-function metroStop(){if(mt){clearInterval(mt);mt=null}}
+function metroStop(){if(mt){clearInterval(mt);mt=null}cardKeep=null}
 
 function voiceFor(l){l=l||lang;try{var want,alt;
   if(l==="zh"){want=/^zh[-_](CN|Hans)/i;alt=/^zh/i}else if(l==="en"){want=/^en[-_]GB/i;alt=/^en/i}
@@ -2388,13 +2436,12 @@ function renderId(editing){
        (P.cur>0?'<button class="btn warn" id="pfDel">'+t("pfDel")+'</button>':'')+'</section>';
     box.innerHTML=h;return;
   }
-  h+=pfBar(P);
   var bl=d.blood||"",lg=bl.length>4;
-  if(has)h+='<div class="idacts"><button class="btn red" id="mcGo">'+I("globe")+t("mcBtn")+'</button><button class="btn" id="hoGo">'+I("idc")+t("hoBtn")+'</button><button class="btn ghost" id="prGo">'+I("print")+t("prBtn")+'</button></div>';
   h+='<section class="card"><div class="hrow"><div class="hinfo"><div class="kick red">'+t("idK")+'</div>'+
      '<div class="pname'+(d.name?'':' ph')+'">'+esc(d.name||t("nameNone"))+'</div><div class="mut">'+t("idHint")+'</div></div>'+
-     '<div class="rblock'+(bl?'':' empty')+'" role="img" aria-label="'+esc(t("fBlood")+CO()+(bl||t("none")))+'"><span class="rk" aria-hidden="true">'+t("bloodK")+'</span><span class="rv'+(lg?' long':'')+'" aria-hidden="true">'+esc(bl||"?")+'</span></div></div></section>';
-  if(!has){box.innerHTML=h+'<button class="btn red" id="idEdit" style="margin:0 0 12px">'+t("edit")+'</button>';return}
+     '<div class="rblock'+(bl?'':' empty')+'" role="img" aria-label="'+esc(t("fBlood")+CO()+(bl||t("none")))+'"><span class="rk" aria-hidden="true">'+t("bloodK")+'</span><span class="rv'+(lg?' long':'')+'" aria-hidden="true">'+esc(bl||"?")+'</span></div></div>'+
+     (has?'<div class="idacts in"><button class="btn red" id="mcGo">'+I("globe")+t("mcBtn")+'</button><button class="btn" id="hoGo">'+I("idc")+t("hoBtn")+'</button><button class="btn ghost" id="prGo">'+I("print")+t("prBtn")+'</button></div>':'')+'</section>';
+  if(!has){box.innerHTML=h+'<button class="btn red" id="idEdit" style="margin:0 0 12px">'+t("edit")+'</button>'+pfBar(P);return}
   h+=pregNote(d);
   if(rk.length)h+='<section class="card crit"><div class="kick red">'+I("alert","s")+bi("rkK")+'</div><ul class="rkl">'+rk.map(function(x){return rkLi(x,lang==="zh"?"zhs":"",d)}).join("")+'</ul>'+rkNotes(rk)+'</section>';
   h+='<section class="card crit"><div class="kick red">'+I("alert","s")+bi("fAll")+'</div>'+fval(d.allergy)+'</section>';
@@ -2410,7 +2457,7 @@ function renderId(editing){
        (ip?'<a class="btn grn" href="'+tel(ip)+'" aria-label="'+esc(t("insCall")+SEP()+digits(ip))+'">'+phoneIco()+t("insCall")+'</a>':'')+
        '<div class="src">'+t("insWhy")+' '+srcLine([113])+'</div></section>'}
   h+=brHtml(d);
-  h+='<button class="btn ghost" id="idEdit" style="margin:0 0 12px">'+t("edit")+'</button>';
+  h+='<button class="btn ghost" id="idEdit" style="margin:0 0 12px">'+t("edit")+'</button>'+pfBar(P);
   box.innerHTML=h;
 }
 
@@ -2464,7 +2511,7 @@ function tmTick(){if(!$("tmWarn")){if(tmInt){clearInterval(tmInt);tmInt=null}ret
   TM.forEach(function(x){var e=$("tm_"+x[0]);if(e)e.textContent=o[x[0]]?t("tmAgo").replace("{t}",dur(now-o[x[0]])):""});
   $("tmWarn").hidden=!seizOver(o)}
 function openTimer(){
-  metroStop();hush();cur=null;
+  hush();var kp=cur||cardKeep;if(!(kp&&kp.k.metro))metroStop();cardKeep=kp;cur=null;
   var c=cc(),N=C[c].amb,o=tmLoad();
   var h='<div class="shead"><button class="back" id="bk">'+I("chevL")+t("back")+'</button></div>'+
     '<h1 id="sheetT" tabindex="-1" class="pickh">'+I("clock")+' '+t("tmT")+'</h1><div class="muted">'+t("tmS")+'</div>'+
@@ -2476,6 +2523,7 @@ function openTimer(){
     '<p style="margin:12px 0 0">'+esc(t("tmSeiz").replace("{N}",N))+'</p><div class="src">'+t("srcT")+CO()+srcLine([99])+'</div>'+
     '<p class="muted">'+t("tmNoDx")+'</p></section>'+
     '<button class="btn warn" id="tmClr">'+t("tmClr")+'</button>'+awkHtml();
+  if(cardKeep&&mt)h=h.replace('</div>','</div>'+mrunHtml());
   showSheet(h,callBtn(c),!!openTimer.keep);openTimer.keep=false;
   awake(true);tmTick();if(!tmInt)tmInt=setInterval(tmTick,1000);
 }
@@ -2556,6 +2604,47 @@ function doPrint(k){
 }
 window.addEventListener("afterprint",function(){document.documentElement.classList.remove("printing")});
 
+
+/* ===================== v0.10.0：移植 Pro 设计（只涉及界面，不新增医学内容） ===================== */
+var T10={
+ucf:["未确认","Unconfirmed"],ucfA:["所在国家未确认，点此确认","Country not confirmed — tap to confirm"],
+ucfHero:["未确认：号码按手机时区推测，请核对国家","Not confirmed: the number is a guess from the phone's time zone. Check the country."],
+ucfHeroX:["未识别所在国家，请点“更换”选择","Country not detected. Tap Change to choose."],
+ucfYes:["是，就在这里","Yes, I am here"],
+qaHelp:["帮别人呼救","Help someone"],qaHosp:["附近急诊","Nearby A&E / ER"],
+catAll:["全部","All"],catLife:["危及生命","Life-threatening"],catHb:["心脑","Heart & brain"],catEnv:["外伤环境","Injury & environment"],catA:["按类别筛选","Filter by type"],
+ctL:["已按压","Elapsed"],ctA:["开始按压后经过的时间","Time since compressions started"],
+swipeH:["‹ 可左右滑动 ›","‹ swipe ›"],
+mrun:["节拍器仍在运行，计时未中断","Metronome still running, timer not reset"],mrBack:["返回心肺复苏","Back to CPR"]
+};
+for(var _k10 in T10)T[_k10]=T10[_k10];
+/* 首页三按钮横排 */
+function qaBtn(id,ic,k){return '<button class="qa" id="'+id+'"><span class="sg" aria-hidden="true">'+I(ic)+'</span><b>'+t(k)+'</b></button>'}
+/* 分类标签：严重出血归“危及生命”。心肺复苏大卡始终显示，不受筛选影响；没有归类的新卡在每个类别里都显示 */
+var CAT={cpr:"life",icpr:"life",choke:"life",ichoke:"life",bleed:"life",ana:"life",unc:"life",heart:"hb",stroke:"hb",seiz:"hb",burn:"env",heat:"env",poison:"env"};
+var catSel="all";
+function catHtml(){return '<div class="cats" role="group" aria-label="'+esc(t("catA"))+'">'+[["all","catAll"],["life","catLife"],["hb","catHb"],["env","catEnv"]].map(function(x){
+  return '<button class="cat" data-cat="'+x[0]+'" aria-pressed="'+(catSel===x[0])+'">'+t(x[1])+'</button>'}).join("")+'</div>'}
+function gridHtml(){return '<div class="grid" id="cardGrid">'+CARDS.filter(function(k){return catSel==="all"||k.top||!CAT[k.id]||CAT[k.id]===catSel}).map(tileHtml).join("")+'</div>'}
+/* 按压计时器（保存在当前卡片状态里，去“记时间”再回来不清零） */
+var cardKeep=null;
+function ctCur(){return cur&&cur.t0?cur:(cardKeep&&cardKeep.t0?cardKeep:null)}
+function ctStr(){var c=ctCur();if(!c)return "00:00";var s=Math.max(0,Math.floor((Date.now()-c.t0)/1000));return p2(Math.floor(s/60))+":"+p2(s%60)}
+function ctShow(){var v=ctStr();["ctime","ctime2"].forEach(function(id){var e=$(id);if(e&&e.textContent!==v)e.textContent=v})}
+function mrunHtml(){return '<div class="mrun" role="status"><div class="dot" aria-hidden="true">'+I("cpr")+'</div><div class="ml">'+t("mrun")+'<span class="ctime">'+t("ctL")+' <b id="ctime2">'+ctStr()+'</b></span></div><button class="chip" id="mrBack">'+t("mrBack")+'</button></div>'}
+/* 步骤滑动：只有横向移动大于纵向、且超过 60px 才翻页；屏幕左右边缘 24px 内起手不算（留给系统返回手势）；最后一页不会被滑出 */
+function swCls(){return cur&&cur.dir?(cur.dir>0?" in-r":" in-l"):""}
+(function(){var sh=$("sheet"),sw=null;if(!sh)return;
+  sh.addEventListener("touchstart",function(e){sw=null;if(!cur||cur.mode!=="step"||e.touches.length!==1)return;
+    var p=e.touches[0],W=window.innerWidth||document.documentElement.clientWidth;
+    if(p.clientX<24||p.clientX>W-24)return;if(e.target.closest&&e.target.closest("input,textarea,select,summary,.snav"))return;
+    sw={x:p.clientX,y:p.clientY}},{passive:true});
+  sh.addEventListener("touchend",function(e){if(!sw||!cur||cur.mode!=="step")return;var p=e.changedTouches[0],dx=p.clientX-sw.x,dy=p.clientY-sw.y;sw=null;
+    if(Math.abs(dx)<60||Math.abs(dx)<=Math.abs(dy))return;
+    var n=cur.k.steps.length;if(dx<0){if(cur.i<n)go(1)}else if(cur.i>0)go(-1)},{passive:true});
+  sh.addEventListener("touchcancel",function(){sw=null},{passive:true});
+})();
+
 /* ===================== 事件 ===================== */
 function goTab(k){
   var h=k||"";
@@ -2569,9 +2658,11 @@ document.addEventListener("click",function(e){
   if(el.dataset.th){theme=el.dataset.th;store("ec_theme",theme==="auto"?null:theme);applyTheme();return}
   if(el.hasAttribute("data-tab")){goTab(el.dataset.tab);return}
   if(el.id==="chg"||el.id==="cfN"){location.hash="pick";return}
-  if(el.id==="cfY"){manual=null;saveGeo();render();return}
+  if(el.id==="cfY"||el.id==="cfYes"){manual=null;saveGeo();if(location.hash)history.replaceState(null,"",location.pathname+location.search);closeSheet();render();return}
+  if(el.id==="ucfBtn"){goHash("cf");return}
+  if(el.id==="mrBack"){var bb=$("bk");if(bb)bb.click();return}
+  if(el.dataset.cat){catSel=el.dataset.cat;var gw=$("cardGrid");if(gw)gw.outerHTML=gridHtml();document.querySelectorAll("[data-cat]").forEach(function(x){x.setAttribute("aria-pressed",x.dataset.cat===catSel?"true":"false")});return}
   if(el.id==="bk"){
-    if(!confirmed){history.replaceState(null,"",location.pathname+location.search);openConfirm();return}
     if(history.length>1)history.back();else location.hash="";return}
   if(el.dataset.tri){tri=+el.dataset.tri;$("tri").innerHTML=triHtml();
     if(tri===2){var ch=$("cardsH");try{ch.scrollIntoView({behavior:"smooth",block:"start"});ch.focus({preventScroll:true})}catch(x){}}
