@@ -17,10 +17,11 @@
 <script>
 /* 在页面绘制前套用日/夜模式，避免闪烁 */
 (function(){try{var m=localStorage.getItem("ec_theme");if(m==="light"||m==="dark")document.documentElement.setAttribute("data-theme",m)}catch(e){}})();
-/* v0.10.1：卡片外观预览，只给测试人员比较用。?look=gloss（水珠光泽）、?look=drop（水滴角）、?look=off（恢复默认） */
-(function(){try{var q=/[?&]look=(gloss|drop|off)\b/.exec(location.search),k="ec_look",v=q?q[1]:localStorage.getItem(k);
-  if(q){if(v==="off")localStorage.removeItem(k);else localStorage.setItem(k,v)}
-  if(v==="gloss"||v==="drop")document.documentElement.setAttribute("data-look",v)}catch(e){}})();
+/* v0.10.2：测试投票选定方案 B“水珠光泽”为默认外观。仍保留预览开关供对比：?look=drop（水滴角）、?look=off（旧外观）、?look=gloss（回到默认） */
+(function(){var v="gloss";try{var q=/[?&]look=(gloss|drop|off)\b/.exec(location.search),k="ec_look";
+  if(q){if(q[1]==="gloss")localStorage.removeItem(k);else localStorage.setItem(k,q[1])}
+  var st=localStorage.getItem(k);if(st==="drop"||st==="off")v=st}catch(e){}
+  if(v!=="off")document.documentElement.setAttribute("data-look",v)})();
 </script>
 <style>
 /* ==========================================================================
@@ -269,6 +270,11 @@ input:focus,textarea:focus{outline:2px solid var(--crimson-fill);outline-offset:
 details.sl summary{min-height:48px;font-weight:800;cursor:pointer;display:flex;align-items:center}
 .srcs{font-size:calc(17px * var(--fs));color:var(--text-muted);padding-left:26px;margin:8px 0 0}
 .srcs li{margin-top:6px;word-break:break-word}
+.srcs.ctl{list-style:none;padding-left:0}.srcs.ctl .badge{padding:0 8px}
+.stag{display:inline-block;font-size:.85em;font-weight:700;line-height:1.35;padding:0 7px;border-radius:99px;border:1px solid var(--border-card);color:var(--text-muted);white-space:nowrap}
+.stag.gov{color:var(--emerald);border-color:var(--emerald-border);background:var(--emerald-soft)}
+.stag.guide{color:var(--link);border-color:currentColor}
+.stag.other{color:var(--amber);border-color:var(--amber-border);background:var(--amber-soft)}
 footer{font-size:calc(17px * var(--fs));color:var(--text-muted);margin:22px 4px 0;line-height:1.6}
 
 /* ---------- 全屏层（急救步骤、选国家、首次确认） ---------- */
@@ -728,7 +734,7 @@ html.hugetext .swh{display:none}
 .seg3{grid-template-columns:repeat(3,minmax(0,1fr))}
 .seg3 button,.seg2 button,.seg4 button{min-width:0;flex-wrap:wrap;text-align:center;overflow-wrap:anywhere;line-height:1.2;padding:4px 6px}
 @media (max-width:360px){html.bigtext .seg3{grid-template-columns:1fr}}
-/* v0.10.1：卡片外观预览（默认不启用）。gloss = 大圆角 + 顶部高光 + 柔和投影；drop = 在 gloss 基础上左上角收尖，像水滴 */
+/* v0.10.1 起：卡片外观（v0.10.2 起默认 gloss）。gloss = 大圆角 + 顶部高光 + 柔和投影；drop = 在 gloss 基础上左上角收尖，像水滴 */
 :root{--gl-a:#FFFFFF;--gl-b:#EDF2F8;--gl-hi:rgba(255,255,255,1);--gl-sh:inset 0 -3px 8px rgba(30,41,59,.05),0 2px 3px rgba(15,23,42,.06),0 16px 30px -14px rgba(30,41,59,.38)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--gl-a:#1B2740;--gl-b:#0F1624;--gl-hi:rgba(255,255,255,.10);--gl-sh:inset 0 -3px 8px rgba(0,0,0,.25),0 2px 3px rgba(0,0,0,.45),0 16px 30px -12px rgba(0,0,0,.8)}}
 :root[data-theme="dark"]{--gl-a:#1B2740;--gl-b:#0F1624;--gl-hi:rgba(255,255,255,.10);--gl-sh:inset 0 -3px 8px rgba(0,0,0,.25),0 2px 3px rgba(0,0,0,.45),0 16px 30px -12px rgba(0,0,0,.8)}
@@ -768,7 +774,7 @@ var FEEDBACK_GOOGLE = _CFG.google||"";    // Google 表单链接，例如 https:
 var FEEDBACK_TENCENT = _CFG.tencent||"";  // 腾讯问卷链接，例如 https://wj.qq.com/s2/xxxx/xxxx/
 // 可选：Google 表单里"版本/国家/语言"那道简答题的编号（形如 entry.123456789）。填了以后会自动带入，留空也能用。
 var GOOGLE_PREFILL_ENTRY = _CFG.googleEntry||"";
-var VERSION = "MVP v0.10.1";
+var VERSION = "MVP v0.10.2";
 var VERIFIED_ON = "2026-11-17";   // 全部国家号码的统一核实日期；某国单独复核后，在该国数据里加 v:"YYYY-MM-DD"
 // 固定的正式网址：分享、锁屏图片一律用它，不用当前地址栏（避免分享出 file:// 或预览地址）。分享链接里永远不放任何个人信息。
 var SITE_URL = "https://jackyyhhxjyxn.github.io/emergency-card/";
@@ -793,43 +799,43 @@ MO:{f:"🇲🇴",zh:"中国澳门",en:"Macao",lvl:"A",amb:"999",
   nums:[["119","消防局紧急报案","Fire Services emergency line"],["120","消防局紧急报案","Fire Services emergency line"],["28572222","消防局固话","Fire Services"]],
   notes:[["需要救护车可拨治安警察局紧急电话 999。","For an ambulance call the Public Security Police emergency line, 999."],
          ["也可直接拨消防局紧急报案热线 119、120 或 2857 2222。","You can also call the Fire Services emergency lines: 119, 120 or 2857 2222."]],src:[30,29]},
-TW:{f:"🇹🇼",zh:"中国台湾",en:"Taiwan",lvl:"A",amb:"119",nums:[["110","报警","Police"],["112","无 SIM 卡 / 讯号差时","No SIM / poor signal"]],
+TW:{f:"🇹🇼",zh:"中国台湾",en:"Taiwan",lvl:"A",v:"2026-11-24",amb:"119",nums:[["110","报警","Police"],["112","无 SIM 卡 / 讯号差时","No SIM / poor signal"]],
   notes:[["119 为消防与紧急救护报案电话；接通后说明需要救护车。","119 is the fire and emergency ambulance line; say you need an ambulance."],
-         ["手机讯号正常时优先拨 119 或 110；112 需按语音提示转接（0 警察、9 消防），会多花时间。","With normal signal call 119 or 110 first; 112 goes through a voice menu (0 police, 9 fire) and takes longer."]],src:[31,32]},
+         ["手机讯号正常时优先拨 119 或 110；112 需按语音提示转接（0 警察、9 消防），会多花时间。","With normal signal call 119 or 110 first; 112 goes through a voice menu (0 police, 9 fire) and takes longer."]],src:[31,142,32]},
 JP:{f:"🇯🇵",zh:"日本",en:"Japan",lvl:"A",amb:"119",
   nums:[["110","报警","Police"],["119","火警","Fire"],["#7119","急救咨询（部分地区）","Medical advice line (some areas)"],["118","海上保安","Coast guard"]],
   notes:[["接通 119 后先说明是「急救」而不是「火灾」：「救急です」(kyūkyū desu)。","On 119, first say it is a medical emergency, not a fire: “Kyūkyū desu”."],
          ["依次说明：发生了什么 → 地址或附近地标 → 自己的姓名。","Then give: what happened → address or nearby landmark → your name."],
          ["不确定是否需要救护车，可拨 #7119 咨询；明显危及生命时直接拨 119。","Unsure if you need an ambulance? Call #7119. If clearly life-threatening, call 119 directly."]],
   src:[3,4]},
-KR:{f:"🇰🇷",zh:"韩国",en:"South Korea",lvl:"A",amb:"119",
+KR:{f:"🇰🇷",zh:"韩国",en:"South Korea",lvl:"A",v:"2026-11-24",amb:"119",
   nums:[["112","报警","Police"],["119","火警","Fire"],["1330","旅游热线 / 口译","Travel helpline / interpretation"]],
   notes:[["119 为火灾、急救、救援统一号码；说不了话时可向 119 发短信（可附照片）。","119 covers fire, ambulance and rescue; if you cannot speak you can text 119 (photos can be attached)."],
          ["不会韩语可直接说英语，多地消防本部为 119 提供三方口译。","If you do not speak Korean, speak English — many fire headquarters connect 119 callers to a three-way interpreter."],
-         ["1339 现为疾病管理厅传染病咨询热线，急救请拨 119。","1339 is now an infectious-disease helpline; for emergencies call 119."]],src:[33,34,5,6]},
-TH:{f:"🇹🇭",zh:"泰国",en:"Thailand",lvl:"A",amb:"1669",
+         ["1339 现为疾病管理厅传染病咨询热线，急救请拨 119。","1339 is now an infectious-disease helpline; for emergencies call 119."]],src:[33,34,137]},
+TH:{f:"🇹🇭",zh:"泰国",en:"Thailand",lvl:"A",v:"2026-11-24",amb:"1669",
   nums:[["191","报警","Police"],["199","火警 / 救援","Fire / rescue"],["1155","旅游警察（英语）","Tourist Police (English)"]],
   notes:[["医疗急救全国统一拨 1669。","Call 1669 nationwide for medical emergencies."],
          ["1155 旅游警察可讲英语，但不能派救护车——需要救护车请直接拨 1669。","Tourist Police (1155) speak English but cannot dispatch an ambulance — call 1669 directly."],
          ["191 接线员不一定会英语；沟通困难时请身边的泰国人或酒店前台协助。","191 operators may not speak English; ask a local or hotel staff to help."]],
-  src:[7,8]},
+  src:[138,139,7,8]},
 SG:{f:"🇸🇬",zh:"新加坡",en:"Singapore",lvl:"A",amb:"995",
   nums:[["999","报警","Police"],["995","火警","Fire"],["70995","紧急短信（无法通话时）","Emergency SMS (if unable to call)"]],
   notes:[["995 仅用于危及生命的紧急情况；紧急个案送院不收费。","995 is for life-threatening emergencies only; SCDF does not charge for emergency cases."],
          ["非紧急救护热线 1777 将于 2027-01-01 停用。","The 1777 non-emergency ambulance hotline ceases on 1 Jan 2027."]],src:[9,10]},
 MY:{f:"🇲🇾",zh:"马来西亚",en:"Malaysia",lvl:"A",amb:"999",nums:[["999","报警 / 消防","Police / Fire"]],
   notes:[["999 为全国统一紧急号码（MERS 999），连接警察、消防、医疗和民防；免费。","999 is the single national emergency number (MERS 999) for police, fire, medical and civil defence; calls are free."]],src:[35,36]},
-VN:{f:"🇻🇳",zh:"越南",en:"Vietnam",lvl:"B",amb:"115",nums:[["113","报警","Police"],["114","火警","Fire"]],
+VN:{f:"🇻🇳",zh:"越南",en:"Vietnam",lvl:"A",v:"2026-11-24",amb:"115",nums:[["113","报警","Police"],["114","火警","Fire"]],
   notes:[["越南为三个独立号码：113 警察、114 消防、115 医疗急救。","Vietnam uses three separate numbers: 113 police, 114 fire, 115 medical emergency."],
-         ["112 在越南用于灾害、事故与搜救信息，不是通用急救号码；医疗急救请拨 115。","In Vietnam 112 is for disaster, incident and search-and-rescue reports, not a general emergency number; for medical emergencies call 115."]],src:[37,47,11]},
+         ["112 在越南用于灾害、事故与搜救信息，不是通用急救号码；医疗急救请拨 115。","In Vietnam 112 is for disaster, incident and search-and-rescue reports, not a general emergency number; for medical emergencies call 115."]],src:[140,141]},
 ID:{f:"🇮🇩",zh:"印度尼西亚",en:"Indonesia",lvl:"A",amb:"112",
   nums:[["119","卫生部医疗急救","Medical emergency (Ministry of Health)"],["118","救护车","Ambulance"],["110","报警","Police"],["113","火警","Fire"]],
   notes:[["112 为法定统一紧急号码，但由各地方政府分别实施，并非所有地区可用；打不通时改拨 119。","112 is the statutory single emergency number but is run by local governments and is not available everywhere; if it fails, call 119."],
          ["119 为卫生部的医疗急救号码，手机和固话均可拨打，免费。","119 is the Ministry of Health medical emergency number, free from mobiles and landlines."]],src:[39,38]},
 PH:{f:"🇵🇭",zh:"菲律宾",en:"Philippines",lvl:"A",amb:"911",nums:[],
   notes:[["911 为全国统一紧急热线（2025 年 9 月 11 日起全国推行），连接警察、消防、医疗和灾害救援。","911 is the unified national emergency hotline (rolled out nationwide from 11 Sept 2025) for police, fire, medical and disaster response."]],src:[40]},
-IN:{f:"🇮🇳",zh:"印度",en:"India",lvl:"A",amb:"112",nums:[["108","救护车（多数邦）","Ambulance (most states)"],["100","报警","Police"],["101","火警","Fire"]],
-  notes:[["112 为全国统一紧急号码（ERSS）；不少地区仍使用 108 / 102 叫救护车。","112 is the national single emergency number (ERSS); 108/102 are still widely used for ambulances."]],src:[41,21]},
+IN:{f:"🇮🇳",zh:"印度",en:"India",lvl:"A",v:"2026-11-24",amb:"112",nums:[["108","救护车（多数邦）","Ambulance (most states)"],["100","报警","Police"],["101","火警","Fire"]],
+  notes:[["112 为全国统一紧急号码（ERSS）；不少地区仍使用 108 / 102 叫救护车。","112 is the national single emergency number (ERSS); 108/102 are still widely used for ambulances."]],src:[41,143]},
 AE:{f:"🇦🇪",zh:"阿联酋",en:"United Arab Emirates",lvl:"A",amb:"998",nums:[["999","报警","Police"],["997","火警（民防）","Fire (Civil Defence)"]],
   notes:[["998 救护车，999 警察，997 消防；全国通用。","998 ambulance, 999 police, 997 fire — from anywhere in the UAE."]],src:[42]},
 GB:{f:"🇬🇧",zh:"英国",en:"United Kingdom",lvl:"A",amb:"999",nums:[["112","同样有效","Also works"],["111","非紧急医疗咨询 NHS","NHS non-emergency advice"]],
@@ -837,32 +843,32 @@ GB:{f:"🇬🇧",zh:"英国",en:"United Kingdom",lvl:"A",amb:"999",nums:[["112",
          ["急需医疗帮助但不危及生命：拨 111。","Need medical help fast but it is not life-threatening: call 111."]],src:[12,13]},
 IE:{f:"🇮🇪",zh:"爱尔兰",en:"Ireland",lvl:"A",amb:"112",nums:[["999","同样有效","Also works"]],
   notes:[["112 与 999 均可使用。","112 and 999 both work."]],src:[14]},
-FR:{f:"🇫🇷",zh:"法国",en:"France",lvl:"A",amb:"15",nums:[["112","欧盟统一号码","EU emergency number"],["17","报警","Police"],["18","消防","Fire brigade"]],
-  notes:[["15 为 SAMU 医疗急救；记不住就拨 112。","15 is SAMU (medical). If in doubt, dial 112."]],src:[15]},
-DE:{f:"🇩🇪",zh:"德国",en:"Germany",lvl:"A",amb:"112",nums:[["110","报警","Police"]],
-  notes:[["112 为消防与急救；110 为警察。","112 is fire and ambulance; 110 is police."]],src:[43,15]},
-IT:{f:"🇮🇹",zh:"意大利",en:"Italy",lvl:"A",amb:"112",nums:[["118","医疗急救（未启用统一 112 的大区）","Medical (regions without unified 112)"]],
+FR:{f:"🇫🇷",zh:"法国",en:"France",lvl:"A",v:"2026-11-24",amb:"15",nums:[["112","欧盟统一号码","EU emergency number"],["17","报警","Police"],["18","消防","Fire brigade"]],
+  notes:[["15 为 SAMU 医疗急救；记不住就拨 112。","15 is SAMU (medical). If in doubt, dial 112."]],src:[133,132]},
+DE:{f:"🇩🇪",zh:"德国",en:"Germany",lvl:"A",v:"2026-11-24",amb:"112",nums:[["110","报警","Police"]],
+  notes:[["112 为消防与急救；110 为警察。","112 is fire and ambulance; 110 is police."]],src:[43,132]},
+IT:{f:"🇮🇹",zh:"意大利",en:"Italy",lvl:"A",v:"2026-11-24",amb:"112",nums:[["118","医疗急救（未启用统一 112 的大区）","Medical (regions without unified 112)"]],
   notes:[["统一紧急号码 112（NUE）已在多个大区启用，由同一中心接听 112、113、115、118。","The single emergency number 112 (NUE) is active in many regions, where one centre answers 112, 113, 115 and 118."],
-         ["其余大区医疗急救仍拨 118。","Elsewhere, call 118 for medical emergencies."]],src:[44,15]},
-ES:{f:"🇪🇸",zh:"西班牙",en:"Spain",lvl:"A",amb:"112",nums:[["061","医疗急救（部分地区）","Medical (some regions)"]],
-  notes:[["112 为全国统一紧急号码，外国手机也直接拨 112，无需加区号。","112 is the general emergency number; dial 112 with no prefix, even from a foreign phone."]],src:[45,15]},
+         ["其余大区医疗急救仍拨 118。","Elsewhere, call 118 for medical emergencies."]],src:[44,132]},
+ES:{f:"🇪🇸",zh:"西班牙",en:"Spain",lvl:"A",v:"2026-11-24",amb:"112",nums:[["061","医疗急救（部分地区）","Medical (some regions)"]],
+  notes:[["112 为全国统一紧急号码，外国手机也直接拨 112，无需加区号。","112 is the general emergency number; dial 112 with no prefix, even from a foreign phone."]],src:[45,132]},
 CH:{f:"🇨🇭",zh:"瑞士",en:"Switzerland",lvl:"A",amb:"144",v:"2026-11-22",nums:[["112","欧洲统一号码（接通警察紧急中心，外国 SIM 卡也能拨）","European emergency number (police control centre; works with a foreign SIM)"],["145","中毒咨询","Poison control"],["117","报警","Police"],["118","消防","Fire service"]],
   notes:[["144 为救护车号码；记不住就拨 112。","144 is the ambulance number. If in doubt, dial 112."]],src:[92]},
-EU:{f:"🇪🇺",zh:"欧盟其他国家",en:"Other EU countries",lvl:"A",amb:"112",nums:[],
+EU:{f:"🇪🇺",zh:"欧盟其他国家",en:"Other EU countries",lvl:"A",v:"2026-11-24",amb:"112",nums:[],
   notes:[["112 在全部 27 个欧盟成员国免费、全天可用，可接通急救、消防和警察。","112 works free of charge, 24/7, in all 27 EU member states for ambulance, fire and police."],
-         ["部分国家另有本国号码，但 112 始终可用。","Some countries also keep national numbers, but 112 always works."]],src:[15]},
-US:{f:"🇺🇸",zh:"美国",en:"United States",lvl:"A",amb:"911",nums:[],
-  notes:[["911 为警察、消防、急救统一号码。","911 covers police, fire and ambulance."]],src:[17]},
-CA:{f:"🇨🇦",zh:"加拿大",en:"Canada",lvl:"A",amb:"911",nums:[],
-  notes:[["911 为统一紧急号码。","911 is the emergency number."]],src:[17]},
+         ["部分国家另有本国号码，但 112 始终可用。","Some countries also keep national numbers, but 112 always works."]],src:[132]},
+US:{f:"🇺🇸",zh:"美国",en:"United States",lvl:"A",v:"2026-11-24",amb:"911",nums:[],
+  notes:[["911 为警察、消防、急救统一号码。","911 covers police, fire and ambulance."]],src:[134]},
+CA:{f:"🇨🇦",zh:"加拿大",en:"Canada",lvl:"A",v:"2026-11-24",amb:"911",nums:[],
+  notes:[["911 为统一紧急号码。","911 is the emergency number."]],src:[135]},
 AU:{f:"🇦🇺",zh:"澳大利亚",en:"Australia",lvl:"A",amb:"000",nums:[["112","手机备用","From mobiles"],["106","听障文字电话 TTY","TTY (deaf / speech-impaired)"]],
   notes:[["000（Triple Zero）为主要紧急号码，免费。","Triple Zero (000) is the main emergency number and is free."],
          ["在澳大利亚不要拨 911；000 不能通过短信联系。","Do not use 911 in Australia; 000 cannot be reached by SMS."]],src:[16,17]},
 NZ:{f:"🇳🇿",zh:"新西兰",en:"New Zealand",lvl:"A",amb:"111",nums:[],
   notes:[["111 为警察、消防、急救统一号码；接通后说明需要 Ambulance（救护车）。","111 covers police, fire and ambulance; tell the operator you need “Ambulance”."]],src:[46]},
-XX:{f:"🌐",zh:"其他地区 / 未识别",en:"Other / not detected",lvl:"B",amb:"112",nums:[["911","美洲等地区","Americas & others"]],
+XX:{f:"🌐",zh:"其他地区 / 未识别",en:"Other / not detected",lvl:"B",v:"2026-11-24",amb:"112",nums:[["911","美洲等地区","Americas & others"]],
   notes:[["未能识别所在国家。请点上方按钮手动选择。","Country not detected. Tap the button above to choose it."],
-         ["112 在很多国家的手机上可接通当地紧急服务，但并非所有国家都可靠（例如中国大陆、泰国不适用）。","112 reaches local emergency services from mobiles in many countries, but not reliably everywhere (e.g. not mainland China or Thailand)."]],src:[15,20]}
+         ["112 在很多国家的手机上可接通当地紧急服务，但并非所有国家都可靠（例如中国大陆、泰国不适用）。","112 reaches local emergency services from mobiles in many countries, but not reliably everywhere (e.g. not mainland China or Thailand)."]],src:[136,132]}
 };
 var ORDER=["CN","HK","MO","TW","JP","KR","TH","SG","MY","VN","ID","PH","IN","AE","GB","IE","FR","DE","IT","ES","CH","EU","US","CA","AU","NZ","XX"];
 
@@ -908,7 +914,7 @@ var CARDS=[
   ["持续到急救人员接手，或患者恢复正常呼吸。","Continue until professionals take over or normal breathing returns."]],
  dont:[["不要因为怕做错而不做——不按压一定更糟。","Do not hold back for fear of doing it wrong — doing nothing is worse."],
   ["按压中断不要超过 10 秒。","Do not pause compressions for more than 10 seconds."]],
- metro:1,src:[18]},
+ metro:1,src:[144]},
 {id:"choke",i:"🫁",zh:"气道异物 · 噎住",en:"Choking",szh:"不能说话、咳嗽或呼吸",sen:"Cannot speak, cough or breathe",
  when:["手抓喉咙、说不出话、咳不出声、脸色发紫。","Clutching the throat, unable to speak or cough, turning blue."],
  steps:[["还能咳嗽：鼓励用力咳，守在旁边。","If they can cough: encourage hard coughing and stay with them."],
@@ -919,7 +925,7 @@ var CARDS=[
  dont:[["不要盲目用手指去掏看不见的异物。","Do not sweep the mouth blindly with your fingers."]],
  extra:["1 岁以下婴儿：脸朝下趴在前臂上，头低于胸，拍背 5 次；翻转后用掌根在胸部正中按压 5 次，交替进行。不要做腹部冲击。",
         "Infants under 1: face-down along your forearm, head lower than chest, 5 back blows; turn over and give 5 chest thrusts with the heel of one hand; alternate. No abdominal thrusts."],
- src:[18]},
+ src:[144,145]},
 {id:"icpr",i:"👶",pend:1,zh:"婴儿心肺复苏（1 岁以下）",en:"Baby CPR (under 1)",
  szh:"1 岁以下：没反应、没有正常呼吸",sen:"Under 1: unresponsive, not breathing normally",
  when:["1 岁以下婴儿叫不醒，并且不呼吸或只有喘息样呼吸（喘息不算正常呼吸）。","A baby under 1 does not respond, and is not breathing or only gasping (gasping is not normal breathing)."],
@@ -954,7 +960,7 @@ var CARDS=[
   ["如果手边有阿司匹林，且患者不过敏、年满 16 岁：慢慢嚼服 1 片 300 毫克。","If aspirin is available, they are not allergic and are 16 or over: slowly chew one 300 mg tablet."],
   ["患者自带的心绞痛药物（如硝酸甘油），可协助其按医嘱使用。","If they carry their own angina medicine (e.g. GTN), help them take it as prescribed."],
   ["守在旁边观察。若失去反应且没有正常呼吸：立即心肺复苏。","Stay and watch. If they become unresponsive and stop breathing normally: start CPR."]],
- dont:[["不要自己开车去医院。","Do not drive yourself to hospital."],["对阿司匹林过敏者、16 岁以下不要给阿司匹林。","No aspirin if allergic or under 16."]],src:[12,19]},
+ dont:[["不要自己开车去医院。","Do not drive yourself to hospital."],["对阿司匹林过敏者、16 岁以下不要给阿司匹林。","No aspirin if allergic or under 16."]],src:[146,147,12,19]},
 {id:"stroke",i:"🧠",zh:"中风（脑卒中）",en:"Stroke",szh:"脸歪、手臂无力、说话不清",sen:"Face droop, arm weakness, slurred speech",
  when:["FAST 快速识别：任何一项异常都要立即呼救。","Use FAST: any single sign means call now."],
  steps:[["F 脸：让他微笑，是否一侧下垂？","F — Face: ask them to smile. Has one side dropped?"],
@@ -972,7 +978,7 @@ var CARDS=[
   ["血渗透敷料：在上面再加一层，继续按压。","If blood soaks through: add another dressing on top and keep pressing."],
   ["四肢危及生命的大出血压不住：在伤口上方使用止血带（有且会用时），记下时间。","Life-threatening limb bleeding that pressure cannot stop: apply a tourniquet above the wound (if available and you know how); note the time."],
   ["让伤者躺下、保暖、保持不动，持续观察反应。","Lay them down, keep them warm and still, monitor their response."]],
- dont:[["不要反复掀开看伤口。","Do not keep lifting the dressing to look."]],src:[19,22]},
+ dont:[["不要反复掀开看伤口。","Do not keep lifting the dressing to look."]],src:[145,19,22]},
 {id:"ana",i:"⚠️",zh:"严重过敏反应",en:"Anaphylaxis",szh:"喉咙肿、喘不上气、晕厥",sen:"Throat swelling, wheeze, collapse",
  when:["进食、用药或蜂蜇后突然出现：嘴唇/舌头/喉咙肿胀、呼吸困难或喘鸣、头晕或晕倒。","Sudden swelling of lips, tongue or throat, difficulty breathing or wheeze, dizziness or collapse — after food, medicine or a sting."],
  steps:[["患者带有肾上腺素自动注射笔：立刻在大腿外侧中部注射（可隔着衣物，按笔身说明操作）。","If they have an adrenaline (epinephrine) auto-injector: use it at once in the outer mid-thigh (through clothing if needed; follow the label)."],
@@ -987,7 +993,7 @@ var CARDS=[
   ["记下开始时间。","Note the time it started."],
   ["抽搐停止后：让其侧卧（复原体位），陪伴直到完全清醒。","When jerking stops: roll them onto their side (recovery position) and stay until fully awake."],
   ["出现以下任一情况拨打 {N}：超过 5 分钟、反复发作、第一次发作、受伤、怀孕、在水中发作、之后不清醒。","Call {N} if: it lasts over 5 minutes, repeats, is a first seizure, they are injured, pregnant, it happened in water, or they do not wake afterwards."]],
- dont:[["不要按压、束缚肢体。","Do not hold them down."],["不要往嘴里塞任何东西。","Do not put anything in their mouth."]],src:[24]},
+ dont:[["不要按压、束缚肢体。","Do not hold them down."],["不要往嘴里塞任何东西。","Do not put anything in their mouth."]],src:[148,99]},
 {id:"burn",i:"🔥",zh:"烧伤 · 烫伤",en:"Burns & scalds",szh:"流动冷水冲 20 分钟",sen:"Cool running water, 20 minutes",
  when:["任何热力、热液烧烫伤。","Any burn from heat or hot liquid."],
  steps:[["先让人离开热源、扑灭火焰，确保自己安全。","Stop the burning: move away from the heat, put out flames; keep yourself safe."],
@@ -1198,7 +1204,14 @@ figRec:["示意图（从上方看）：侧卧，上方的手垫在脸颊下，�
 figTop:["从上方看","Seen from above"],
 noAwakeS:["屏幕可能会自动熄灭（点此查看）","Screen may turn off (tap for help)"],
 noAwake:["本机网页无法让屏幕常亮。请把自动锁屏时间调长：iPhone 设置 › 显示与亮度 › 自动锁定；安卓 设置 › 显示 › 屏幕超时（各品牌名称略有不同）。","This phone cannot keep the screen on from a web page. Make auto-lock longer: iPhone Settings › Display & Brightness › Auto-Lock; Android Settings › Display › Screen timeout (names vary by brand)."],
-fbA:["反馈内容","Feedback text"],srcN:["查看全部来源","Show all sources"]
+fbA:["反馈内容","Feedback text"],srcN:["查看全部来源","Show all sources"],
+srcCT:["① 各国急救号码可信度","① How reliable each country's numbers are"],
+srcCH:["A / B / C 只用来给各国急救号码分级，不是给下面每条来源分级。每个国家后面是它的依据编号，对应下面“全部来源”里的同一编号。","A / B / C grades each country's emergency numbers only — not the individual sources below. The numbers after each country point to the same numbers in “All sources”."],
+srcCN:["按国家查看（{n} 个，其中 {a} 个为 A）","By country ({n}; {a} graded A)"],srcNo:["依据编号","Source no."],
+srcLT:["② 全部来源","② All sources"],
+srcLH:["每条后面标出来源类别。官方 = 政府、公共卫生服务、国际组织或官方媒体；指南 = 急救与复苏指南的制定机构；专业机构 = 公认的急救培训、医疗或行业组织；技术文档 = 手机、地图等平台的官方说明；其他 = 非官方网站，只在找不到官方出处时保留。","Each source is labelled. Official = government, public health service, international body or state media; Guideline = bodies that write first-aid and resuscitation guidelines; Professional = recognised first-aid, medical or industry organisations; Tech docs = official platform documentation; Other = unofficial sites, kept only where no official source was found."],
+srcOff:["另有 {n} 条旧来源已被官方来源替代，不再列出（编号保留不再使用）。","{n} older sources were replaced by official ones and are no longer listed (their numbers are not reused)."],
+sk_gov:["官方","Official"],sk_guide:["指南","Guideline"],sk_pro:["专业机构","Professional"],sk_tech:["技术文档","Tech docs"],sk_other:["其他（非官方）","Other (unofficial)"]
 };
 
 /* ===================== 状态与工具 ===================== */
@@ -1225,7 +1238,10 @@ function tel(n){return "tel:"+encodeURIComponent(n)}
 function $(id){return document.getElementById(id)}
 function digits(n){return String(n).split("").join(" ")}
 function phoneIco(){return '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>'}
-function srcA(i){return '<a href="'+SRC[i][2]+'" target="_blank" rel="noopener">'+esc(SRC[i][lang==="zh"?0:1])+'</a>'}
+function srcL(i){return '<a href="'+SRC[i][2]+'" target="_blank" rel="noopener">'+esc(SRC[i][lang==="zh"?0:1])+'</a>'}
+function stag(i){var k=SRCK[i]||"other";return ' <span class="stag '+k+'">'+t("sk_"+k)+'</span>'}
+/* v0.10.2：各处“依据”行里，非官方来源后面直接标“其他（非官方）” */
+function srcA(i){return srcL(i)+(SRCK[i]==="other"?stag(i):"")}
 function srcLine(ids){return ids.map(srcA).join(" · ")}
 /* v0.9.0：说明文字统一收进“ⓘ 说明”，点开才显示（急救路径每屏最多一句说明） */
 function info(inner){return inner?'<details class="ifo"><summary>'+t("infoT")+'</summary><div class="ifb">'+inner+'</div></details>':""}
@@ -1399,8 +1415,8 @@ for(var _k in T2)T[_k]=T2[_k];
    母语者核对通过后把 ok 改为 1（页面上的“待核对”标记会自动消失）。查不到可靠来源的语言不显示。
    l = 朗读用的语言代码；r = 来源里给出的读音（来源没给就不写）；dir:"rtl" = 从右往左书写。 */
 var LP={
-JP:{l:"ja-JP",n:["日语","Japanese"],t:"救急車を呼んでください。",r:"Kyūkyūsha o yonde kudasai",src:[52,53],ok:0},
-KR:{l:"ko-KR",n:["韩语","Korean"],t:"구급차를 불러 주세요.",r:"Gugeupchareul bulleo juseyo",src:[54,55],ok:0},
+JP:{l:"ja-JP",n:["日语","Japanese"],t:"救急車を呼んでください。",r:"Kyūkyūsha o yonde kudasai",src:[149],ok:0},
+KR:{l:"ko-KR",n:["韩语","Korean"],t:"구급차를 불러 주세요.",r:"Gugeupchareul bulleo juseyo",src:[150],ok:0},
 TH:{l:"th-TH",n:["泰语","Thai"],t:"ช่วยเรียกรถพยาบาลหน่อย",r:"",src:[56,57],ok:0},
 VN:{l:"vi-VN",n:["越南语","Vietnamese"],t:"Gọi xe cấp cứu giúp tôi",r:"",src:[58],ok:0},
 ID:{l:"id-ID",n:["印尼语","Indonesian"],t:"Tolong panggilkan ambulans.",r:"",src:[59],ok:0},
@@ -1710,6 +1726,25 @@ function aboutHtml(c){
     '<details class="sl"><summary>'+t("diagT")+'</summary><div class="muted diag">'+
     t("diagTz")+CO()+esc(tzLabel())+'<br>'+t("diagDet")+CO()+esc(DET==="XX"?t("autoNone"):nm(DET))+' ('+DET+')<br>'+
     t("diagUse")+CO()+esc(nm(c))+' ('+c+')<br>'+t("diagMode")+CO()+(manual?t("diagMan"):t("diagAuto"))+'<br>'+t("diagFs")+CO()+TZOOM+'×<br>'+esc(VERSION)+' · '+esc(navigator.language||"")+'</div></details></section>'}
+/* v0.10.2：“信息来源”分两块，避免把国家等级 A/B/C 和每条来源混在一起：
+   ① 各国急救号码可信度（A/B/C 只用于这里，逐国列出依据编号）；② 全部来源，每条标类别（官方 / 指南 / 专业机构 / 技术文档 / 其他） */
+function srcAllHtml(){
+  var off={};SRC_OFF.forEach(function(i){off[i]=1});
+  var ks=Object.keys(SRC).map(Number).filter(function(i){return !off[i]}).sort(function(a,b){return a-b});
+  var cnt={gov:0,guide:0,pro:0,tech:0,other:0};ks.forEach(function(i){cnt[SRCK[i]||"other"]++});
+  var cs=Object.keys(C),nA=0;cs.forEach(function(c){if(C[c].lvl==="A")nA++});
+  var h='<h2 class="secH"><b>'+t("srcAll")+'</b></h2><section class="card">'+
+    '<div class="kick">'+t("srcCT")+'</div><div class="muted" style="margin-top:6px">'+t("srcCH")+'</div>'+
+    '<div class="muted" style="margin-top:6px">A = '+t("lvlA")+SEP()+'B = '+t("lvlB")+SEP()+'C = '+t("lvlC")+'</div>'+
+    '<details class="sl"><summary>'+t("srcCN").replace("{n}",cs.length).replace("{a}",nA)+'</summary><ul class="srcs ctl">'+
+    cs.map(function(c){var d=C[c];return '<li><span aria-hidden="true">'+d.f+'</span> '+esc(nm(c))+' <span class="badge '+d.lvl+'">'+d.lvl+'</span> '+
+      '<span class="mut">'+t("srcNo")+CO()+d.src.join(SEP())+' · '+t("verified")+CO()+verOf(c)+'</span></li>'}).join("")+'</ul></details>'+
+    '<div class="kick" style="margin-top:18px">'+t("srcLT")+'</div><div class="muted" style="margin-top:6px">'+t("srcLH")+'</div>'+
+    '<div class="muted" style="margin-top:6px">'+["gov","guide","pro","tech","other"].map(function(k){return t("sk_"+k)+" "+cnt[k]}).join(SEP())+'</div>'+
+    '<details class="sl"><summary>'+t("srcN")+PL(ks.length)+'</summary><ol class="srcs">'+
+    ks.map(function(i){return '<li value="'+i+'">'+srcL(i)+stag(i)+'</li>'}).join("")+'</ol></details>'+
+    '<div class="muted" style="margin-top:10px">'+t("srcOff").replace("{n}",SRC_OFF.length)+'</div></section>';
+  return h}
 function viewMore(c){var h=aboutHtml(c);
   if(!standalone()){
     var ios=/iPhone|iPad|iPod/.test(navigator.userAgent||"")||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
@@ -1732,10 +1767,7 @@ function viewMore(c){var h=aboutHtml(c);
      [["sys","fsSys"],["m","fsM"],["l","fsL"],["xl","fsXL"]].map(function(x){return '<button data-fs="'+x[0]+'" aria-pressed="'+(fsMode===x[0])+'">'+t(x[1])+'</button>'}).join("")+'</div>'+
      info('<p>'+t("fsHint")+'</p>')+'</section>';
   h+='<h2 class="secH" id="fb" tabindex="-1"><b>'+t("fbT")+'</b></h2><section class="card"><div>'+t("fbQ")+'</div>'+fbBlock(c)+'</section>';
-  var ks=Object.keys(SRC);
-  h+='<h2 class="secH"><b>'+t("srcAll")+'</b></h2><section class="card"><div class="muted">'+t("verified")+CO()+VERIFIED_ON+'<br>A = '+t("lvlA")+SEP()+'B = '+t("lvlB")+SEP()+'C = '+t("lvlC")+'</div>'+
-     '<details class="sl"><summary>'+t("srcN")+'（'+ks.length+'）</summary><ol class="srcs">'+
-     ks.map(function(i){return '<li>'+srcA(i)+'</li>'}).join("")+'</ol></details></section>';
+  h+=srcAllHtml();
   h+='<h2 class="secH"><b>'+t("clrT")+'</b></h2><section class="card"><div>'+t("clrS")+'</div>'+
      '<button class="btn warn" id="clrBtn">'+t("clrBtn")+'</button></section>';
   h+='<footer>'+t("disc1")+info('<p>'+t("disc")+' '+srcLine([51])+'</p><p>'+t("offline")+'</p>')+'<b>'+t("ver")+CO()+VERSION+' · '+t("contentVer")+CO()+CONTENT_VER+'</b></footer>';
@@ -2174,6 +2206,31 @@ SRC[129]=["NHS：如何帮噎住的孩子","NHS: How to stop a child from chokin
 SRC[130]=["英国红十字会：婴儿噎住","British Red Cross: Choking baby","https://redcross.org.uk/first-aid/learn-first-aid-for-babies-and-children/choking-baby"];
 SRC[131]=["美国心脏协会 2025：婴儿噎住不做腹部冲击","American Heart Association 2025: no abdominal thrusts for choking infants","https://newsroom.heart.org/news/updated-cpr-guidelines-released-for-pediatric-and-neonatal-emergency-care-and-resuscitation"];
 SRC[123]=["高德开放平台：URI API（中国大陆地图链接）","AMap Open Platform: URI API (maps links in mainland China)","https://lbs.amap.com/api/uri-api/guide/search/search"];
+
+/* v0.10.2 来源复核（2026-11-24）：追加官方来源 132–150；编号只追加不删改。
+   SRCK = 来源类别：gov 官方（政府、公共卫生服务、国际组织、官方媒体）/ guide 指南机构 / pro 专业机构 / tech 技术文档 / other 其他（非官方）。
+   SRC_OFF = 已被官方来源替代、页面不再引用、也不再列出的旧来源。 */
+SRC[132]=["欧盟委员会：112 欧盟紧急号码（全欧盟免费可拨）", "European Commission: 112, the EU emergency number (free, everywhere in the EU)", "https://digital-strategy.ec.europa.eu/en/policies/112"];
+SRC[133]=["法国政府 Service-Public.fr：紧急号码（15 SAMU、17 警察、18 消防、112 欧洲号码）", "French Government (Service-Public.fr): emergency numbers (15 SAMU, 17 police, 18 fire, 112 Europe)", "https://www.service-public.gouv.fr/particuliers/vosdroits/F33954"];
+SRC[134]=["美国政府 911.gov：Calling 911（警察、消防、救护车）", "U.S. Government 911.gov: Calling 911 (police, fire, ambulance)", "https://www.911.gov/calling-911"];
+SRC[135]=["加拿大广播电视和电信委员会 CRTC：9-1-1 服务", "Canadian Radio-television and Telecommunications Commission (CRTC): 9-1-1 services", "https://crtc.gc.ca/eng/phone/911/"];
+SRC[136]=["国际电信联盟 ITU-T E.161.1：紧急号码选择指南（112 / 911）", "ITU-T Recommendation E.161.1: guidelines to select an emergency number (112 / 911)", "https://www.itu.int/rec/T-REC-E.161.1"];
+SRC[137]=["韩国疾病管理厅：1339 呼叫中心（疾病咨询与传染病申报；外国人经 1330 三方通话）", "Korea Disease Control and Prevention Agency: 1339 call centre (disease advice and infectious-disease reports; foreigners via a three-way call with 1330)", "https://kdca.go.kr/KDCAtemp/5289/subview.do"];
+SRC[138]=["英国政府 GOV.UK 泰国旅行建议·求助（救护车 1669、警察 191、消防 199、旅游警察 1155）", "GOV.UK travel advice, Thailand — getting help (ambulance 1669, police 191, fire 199, tourist police 1155)", "https://www.gov.uk/foreign-travel-advice/thailand/getting-help"];
+SRC[139]=["泰国国家旅游局 TAT：旅游警察热线 1155（24 小时、多语种）", "Tourism Authority of Thailand: Tourist Police hotline 1155 (24 hours, multilingual)", "https://tatnews.org/?p=80592"];
+SRC[140]=["越南之声 VOV（国家电台）：通信部第 22/2014 号通知——112 搜救、113 公安、114 消防、115 医疗急救", "Voice of Vietnam (state broadcaster): Ministry of Information and Communications Circular 22/2014 — 112 search & rescue, 113 police, 114 fire, 115 medical emergency", "https://vov.vn/xa-hoi/thay-doi-ma-vung-dien-thoai-co-dinh-tren-toan-quoc-tu-132015-376213.vov"];
+SRC[141]=["越南农业与环境部：112 热线全国接收事故与灾害报告（与 113、114、115 连通）", "Viet Nam Ministry of Agriculture and Environment: hotline 112 receives incident and disaster reports nationwide (linked to 113, 114, 115)", "https://en.mae.gov.vn/hotline-112-to-receive-disaster-and-emergency-reports-nationwide-9018.htm"];
+SRC[142]=["台中市政府（消防局）：手机讯号弱时拨 112 再按 9，或拨 119", "Taichung City Government (Fire Bureau): with a weak signal dial 112 then press 9, or dial 119", "https://english.taichung.gov.tw/2371185/post"];
+SRC[143]=["印度议会人民院（卫生部书面答复，2025-08-08）：全国救护车服务免费号码 108 / 102", "Lok Sabha, Government of India (Health Ministry written answer, 8 Aug 2025): National Ambulance Service toll-free 108 / 102", "https://eparlib.sansad.in/bitstream/123456789/2995114/1/AU3368_6xS0Z8.pdf"];
+SRC[144]=["美国心脏协会 2025 指南第 7 部分：成人基础生命支持（含成人噎住：5 次拍背 + 5 次腹部冲击）", "2025 AHA Guidelines, Part 7: Adult Basic Life Support (incl. adult choking: 5 back blows + 5 abdominal thrusts)", "https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/adult-basic-life-support"];
+SRC[145]=["英国复苏委员会 RCUK 2025 急救指南（依据欧洲复苏委员会 ERC 2025：严重出血先直接按压，必要时止血带；成人噎住：咳嗽、拍背、腹部冲击）", "Resuscitation Council UK 2025 First Aid Guidelines (based on ERC 2025: direct pressure first, then a tourniquet if needed; adult choking: cough, back blows, abdominal thrusts)", "https://www.resus.org.uk/library/2025-resuscitation-guidelines/first-aid-guidelines"];
+SRC[146]=["NHS：心脏病发作——等待救助时（坐下、阿司匹林 300 mg、GTN、需要时心肺复苏、不要自己开车去急诊）", "NHS: Heart attack — while you wait for help (sit down, aspirin 300 mg, GTN, CPR if needed, do not drive yourself to A&E)", "https://www.nhs.uk/heartattack"];
+SRC[147]=["NHS：心脏病发作症状（不过敏时慢慢嚼服一片 300 mg 阿司匹林）", "NHS: Heart attack symptoms (if not allergic, slowly chew one 300 mg aspirin)", "https://www.nhs.uk/conditions/heart-attack/symptoms/"];
+SRC[148]=["美国疾控中心 CDC：抽搐急救（超过 5 分钟、反复、首次、受伤、在水中、怀孕等要拨急救电话）", "US CDC: First aid for seizures (call for help if over 5 minutes, repeated, first seizure, injured, in water, pregnant, etc.)", "https://www.cdc.gov/epilepsy/first-aid-for-seizures/index.html"];
+SRC[149]=["日本《身体不适时的指南》（日本医师会监修，大分县政府网站发布）：「救急車を呼んでください。」", "Japan guidebook for visitors who feel unwell (supervised by the Japan Medical Association, on Oita Prefecture's site): 救急車を呼んでください。", "https://www.pref.oita.jp/uploaded/attachment/1039445.pdf"];
+SRC[150]=["韩国京畿道政府网站：外国人安全教育教材（英文版）「구급차를 불러 주세요.」", "Gyeonggi Provincial Government (Korea): safety training book for foreigners (English edition): 구급차를 불러 주세요.", "https://ggsec.gg.go.kr/resources/files/%EC%99%B8%EA%B5%AD%EC%9D%B8%EC%9A%A9%20%EA%B5%90%EC%9E%AC_%EC%98%81%EC%96%B4%ED%8C%90_a15c742f-5f11-4166-92ca-55428ec72cb6.pdf"];
+var SRCK={"1":"gov","2":"gov","3":"gov","4":"gov","5":"other","6":"other","7":"gov","8":"other","9":"gov","10":"gov","11":"other","12":"gov","13":"gov","14":"gov","15":"pro","16":"gov","17":"gov","18":"other","19":"pro","20":"other","21":"other","22":"pro","23":"gov","24":"other","25":"gov","26":"gov","27":"gov","28":"gov","29":"gov","30":"gov","31":"gov","32":"other","33":"gov","34":"gov","35":"gov","36":"gov","37":"other","38":"gov","39":"gov","40":"gov","41":"gov","42":"gov","43":"gov","44":"gov","45":"gov","46":"gov","47":"other","48":"tech","49":"tech","50":"tech","51":"tech","52":"other","53":"other","54":"other","55":"other","56":"other","57":"other","58":"other","59":"other","60":"other","61":"other","62":"other","63":"other","64":"other","65":"other","66":"other","67":"other","68":"other","69":"other","70":"other","71":"gov","72":"gov","73":"gov","74":"gov","75":"gov","76":"gov","77":"gov","78":"gov","79":"gov","80":"gov","81":"gov","82":"gov","83":"gov","84":"gov","85":"gov","86":"other","87":"tech","88":"tech","89":"tech","90":"gov","91":"gov","92":"gov","93":"pro","94":"pro","95":"gov","96":"gov","97":"tech","98":"gov","99":"gov","100":"gov","101":"pro","102":"pro","103":"gov","104":"tech","105":"gov","106":"gov","107":"pro","108":"gov","109":"pro","110":"gov","111":"pro","112":"gov","113":"gov","114":"guide","115":"pro","116":"gov","117":"gov","118":"gov","119":"gov","120":"tech","121":"other","122":"tech","123":"tech","124":"guide","125":"pro","126":"pro","127":"gov","128":"pro","129":"gov","130":"pro","131":"guide","132":"gov","133":"gov","134":"gov","135":"gov","136":"gov","137":"gov","138":"gov","139":"gov","140":"gov","141":"gov","142":"gov","143":"gov","144":"guide","145":"guide","146":"gov","147":"gov","148":"gov","149":"gov","150":"gov"};
+var SRC_OFF=[5, 6, 11, 15, 18, 20, 21, 24, 37, 47, 52, 53, 54, 55];
 var T8={
 nfBtn:["通知家人","Notify family"],
 nfBtnS:["把“需要急救 + 位置”发给紧急联系人（先打急救电话）","Send “need emergency help + location” to your emergency contacts (call the emergency number first)"],
