@@ -17,13 +17,8 @@
 <script>
 /* 在页面绘制前套用日/夜模式，避免闪烁 */
 (function(){try{var m=localStorage.getItem("ec_theme");if(m==="light"||m==="dark")document.documentElement.setAttribute("data-theme",m)}catch(e){}})();
-/* v0.10.3：外观测试投票（第二轮）。默认仍是 B（gloss）。可选：gloss2=B+ 加强水珠，blue=C 蓝色水珠白字（全部卡片），bluetile=D 蓝色水珠白字（只用于入口按钮），tint=E 浅蓝水珠，drop=A 水滴角，off=旧外观。
-   可用网址 ?look=xxx 或“更多 → 显示模式 → 外观（测试投票）”切换；选了非默认会记住，选 gloss 回到默认 */
-var LOOKS=["gloss","gloss2","blue","bluetile","tint","drop","off"];
-(function(){var v="gloss";try{var q=/[?&]look=(gloss2|gloss|bluetile|blue|tint|drop|off)\b/.exec(location.search),k="ec_look";
-  if(q){if(q[1]==="gloss")localStorage.removeItem(k);else localStorage.setItem(k,q[1])}
-  var st=localStorage.getItem(k);if(st&&LOOKS.indexOf(st)>0)v=st}catch(e){}
-  if(v!=="off")document.documentElement.setAttribute("data-look",v)})();
+/* v0.11.0：外观定稿为 F 临床蓝，投票开关已去掉；清掉旧的外观选择记录 */
+(function(){try{localStorage.removeItem("ec_look")}catch(e){}})();
 </script>
 <style>
 /* ==========================================================================
@@ -415,10 +410,6 @@ details.dd li{margin-top:6px}
 .seg4{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px}
 .seg4 button{min-height:50px;border-radius:var(--radius-md);border:2px solid var(--border-card);background:var(--bg-card);font-weight:800;font-size:calc(16px * var(--fs));padding:0 4px;line-height:1.15}
 .seg4 button[aria-pressed="true"]{border-color:var(--crimson-fill);background:var(--crimson-soft)}
-.seglk{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:8px}
-.seglk button{min-height:50px;border-radius:12px;border:2px solid var(--border-card);background:var(--bg-card);font-weight:800;font-size:calc(16px * var(--fs));padding:4px 8px;line-height:1.2;min-width:0;overflow-wrap:anywhere;text-align:center}
-.seglk button[aria-pressed="true"]{border-color:var(--crimson-fill);background:var(--crimson-soft)}
-html.bigtext .seglk,html.hugetext .seglk{grid-template-columns:1fr}
 .wallfull{position:fixed;inset:0;z-index:60;background:#000;display:flex;flex-direction:column;overflow:auto}
 .wallfull .wfbar{display:flex;align-items:center;gap:10px;padding:calc(8px + env(safe-area-inset-top)) 12px 8px;background:#111827;color:#fff}
 .wallfull img{display:block;width:100%;max-width:520px;margin:0 auto;height:auto}
@@ -745,42 +736,66 @@ html.hugetext .swh{display:none}
 .seg3{grid-template-columns:repeat(3,minmax(0,1fr))}
 .seg3 button,.seg2 button,.seg4 button{min-width:0;flex-wrap:wrap;text-align:center;overflow-wrap:anywhere;line-height:1.2;padding:4px 6px}
 @media (max-width:360px){html.bigtext .seg3{grid-template-columns:1fr}}
-/* v0.10.1 起：卡片外观（v0.10.2 起默认 gloss）。gloss = 大圆角 + 顶部高光 + 柔和投影；drop = 在 gloss 基础上左上角收尖，像水滴 */
-:root{--gl-a:#FFFFFF;--gl-b:#EDF2F8;--gl-hi:rgba(255,255,255,1);--gl-sh:inset 0 -3px 8px rgba(30,41,59,.05),0 2px 3px rgba(15,23,42,.06),0 16px 30px -14px rgba(30,41,59,.38)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--gl-a:#1B2740;--gl-b:#0F1624;--gl-hi:rgba(255,255,255,.10);--gl-sh:inset 0 -3px 8px rgba(0,0,0,.25),0 2px 3px rgba(0,0,0,.45),0 16px 30px -12px rgba(0,0,0,.8)}}
-:root[data-theme="dark"]{--gl-a:#1B2740;--gl-b:#0F1624;--gl-hi:rgba(255,255,255,.10);--gl-sh:inset 0 -3px 8px rgba(0,0,0,.25),0 2px 3px rgba(0,0,0,.45),0 16px 30px -12px rgba(0,0,0,.8)}
-html[data-look] .card,html[data-look] .tile:not(.top),html[data-look] .qa,html[data-look] .stepcard,html[data-look] .helpbtn{
-  border-radius:26px;border-color:var(--hair);background:radial-gradient(130% 70% at 18% 0%,var(--gl-hi) 0%,transparent 55%),linear-gradient(180deg,var(--gl-a) 0%,var(--gl-b) 100%);box-shadow:inset 0 1.5px 0 var(--gl-hi),var(--gl-sh)}
-html[data-look] .tile.top{border-radius:28px;box-shadow:inset 0 1px 0 rgba(255,255,255,.35),var(--shadow-red)}
-html[data-look] .card.crit{border-left-color:var(--crimson-fill)}
-html[data-look] .lcard.unconf{border-color:var(--amber-bar)}
-html[data-look="drop"] .card,html[data-look="drop"] .tile,html[data-look="drop"] .qa,html[data-look="drop"] .stepcard,html[data-look="drop"] .helpbtn{border-top-left-radius:6px;border-bottom-right-radius:34px}
-/* v0.10.3 外观候选（测试投票第二轮）。所有候选都修好了夜间水珠几乎看不见的问题；文字对比度按 4.5:1 校核 */
-html[data-look="gloss2"],html[data-look="bluetile"]{--gl-a:#FFFFFF;--gl-b:#E3EBF5;--gl-hi:rgba(255,255,255,1);--gl-rim:rgba(15,23,42,.07);--gl-sh:inset 0 -10px 18px rgba(30,64,120,.11),0 1px 0 rgba(15,23,42,.05),0 2px 4px rgba(15,23,42,.06),0 18px 32px -14px rgba(30,41,59,.48)}
-@media (prefers-color-scheme:dark){html:not([data-theme="light"])[data-look="gloss2"]{--text-muted:#BAC6D8;--crimson:#FCA5A5;--link:#BFDBFE;--emerald:#6EE7B7;--gl-a:#26375A;--gl-b:#111A2C;--gl-hi:rgba(255,255,255,.10);--gl-rim:rgba(148,163,184,.26);--gl-sh:inset 0 1px 0 rgba(255,255,255,.26),inset 0 -8px 16px rgba(0,0,0,.30),0 2px 3px rgba(0,0,0,.5),0 18px 32px -12px rgba(0,0,0,.85)}}
-html[data-theme="dark"][data-look="gloss2"]{--text-muted:#BAC6D8;--crimson:#FCA5A5;--link:#BFDBFE;--emerald:#6EE7B7;--gl-a:#26375A;--gl-b:#111A2C;--gl-hi:rgba(255,255,255,.10);--gl-rim:rgba(148,163,184,.26);--gl-sh:inset 0 1px 0 rgba(255,255,255,.26),inset 0 -8px 16px rgba(0,0,0,.30),0 2px 3px rgba(0,0,0,.5),0 18px 32px -12px rgba(0,0,0,.85)}
-
-@media (prefers-color-scheme:dark){html:not([data-theme="light"])[data-look="bluetile"]{--text-muted:#BAC6D8;--crimson:#FCA5A5;--link:#BFDBFE;--emerald:#6EE7B7;--gl-a:#26375A;--gl-b:#111A2C;--gl-hi:rgba(255,255,255,.10);--gl-rim:rgba(148,163,184,.26);--gl-sh:inset 0 1px 0 rgba(255,255,255,.26),inset 0 -8px 16px rgba(0,0,0,.30),0 2px 3px rgba(0,0,0,.5),0 18px 32px -12px rgba(0,0,0,.85)}}
-html[data-theme="dark"][data-look="bluetile"]{--text-muted:#BAC6D8;--crimson:#FCA5A5;--link:#BFDBFE;--emerald:#6EE7B7;--gl-a:#26375A;--gl-b:#111A2C;--gl-hi:rgba(255,255,255,.10);--gl-rim:rgba(148,163,184,.26);--gl-sh:inset 0 1px 0 rgba(255,255,255,.26),inset 0 -8px 16px rgba(0,0,0,.30),0 2px 3px rgba(0,0,0,.5),0 18px 32px -12px rgba(0,0,0,.85)}
-
-html[data-look="tint"]{--gl-a:#F5F9FF;--gl-b:#E0EAFA;--gl-hi:rgba(255,255,255,1);--gl-rim:rgba(37,99,235,.16);--gl-sh:inset 0 -8px 16px rgba(37,99,235,.10),0 2px 4px rgba(30,58,138,.08),0 18px 32px -14px rgba(30,58,138,.45)}
-@media (prefers-color-scheme:dark){html:not([data-theme="light"])[data-look="tint"]{--text-muted:#BAC6D8;--crimson:#FCA5A5;--link:#BFDBFE;--emerald:#6EE7B7;--amber:#FCD34D;--gl-a:#1D3A70;--gl-b:#0E1C3A;--gl-hi:rgba(255,255,255,.10);--gl-rim:rgba(147,197,253,.30);--gl-sh:inset 0 1px 0 rgba(255,255,255,.26),inset 0 -8px 16px rgba(0,0,0,.30),0 2px 3px rgba(0,0,0,.5),0 18px 32px -12px rgba(0,0,0,.85)}}
-html[data-theme="dark"][data-look="tint"]{--text-muted:#BAC6D8;--crimson:#FCA5A5;--link:#BFDBFE;--emerald:#6EE7B7;--amber:#FCD34D;--gl-a:#1D3A70;--gl-b:#0E1C3A;--gl-hi:rgba(255,255,255,.10);--gl-rim:rgba(147,197,253,.30);--gl-sh:inset 0 1px 0 rgba(255,255,255,.26),inset 0 -8px 16px rgba(0,0,0,.30),0 2px 3px rgba(0,0,0,.5),0 18px 32px -12px rgba(0,0,0,.85)}
-
-html[data-look="gloss2"] .card,html[data-look="gloss2"] .tile:not(.top),html[data-look="gloss2"] .qa,html[data-look="gloss2"] .stepcard,html[data-look="gloss2"] .helpbtn{border-color:var(--gl-rim);background:radial-gradient(20px 9px at 88% 10px,var(--gl-hi) 0%,transparent 100%),radial-gradient(120% 60% at 22% 0%,var(--gl-hi) 0%,transparent 60%),linear-gradient(180deg,var(--gl-a) 0%,var(--gl-b) 100%);box-shadow:inset 0 1.5px 0 var(--gl-hi),var(--gl-sh)}
-html[data-look="tint"] .card,html[data-look="tint"] .tile:not(.top),html[data-look="tint"] .qa,html[data-look="tint"] .stepcard,html[data-look="tint"] .helpbtn{border-color:var(--gl-rim);background:radial-gradient(20px 9px at 88% 10px,var(--gl-hi) 0%,transparent 100%),radial-gradient(120% 60% at 22% 0%,var(--gl-hi) 0%,transparent 60%),linear-gradient(180deg,var(--gl-a) 0%,var(--gl-b) 100%);box-shadow:inset 0 1.5px 0 var(--gl-hi),var(--gl-sh)}
-html[data-look="bluetile"] .card,html[data-look="bluetile"] .tile:not(.top),html[data-look="bluetile"] .qa,html[data-look="bluetile"] .stepcard,html[data-look="bluetile"] .helpbtn{border-color:var(--gl-rim);background:radial-gradient(20px 9px at 88% 10px,var(--gl-hi) 0%,transparent 100%),radial-gradient(120% 60% at 22% 0%,var(--gl-hi) 0%,transparent 60%),linear-gradient(180deg,var(--gl-a) 0%,var(--gl-b) 100%);box-shadow:inset 0 1.5px 0 var(--gl-hi),var(--gl-sh)}
-html[data-look="blue"] .card,html[data-look="blue"] .tile:not(.top),html[data-look="blue"] .qa,html[data-look="blue"] .stepcard,html[data-look="blue"] .helpbtn{--bd-a:#1D4ED8;--bd-b:#1E3A8A;color:#FFFFFF;--text-primary:#FFFFFF;--text-secondary:#F1F5FF;--text-muted:#F1F5FF;--link:#FFFFFF;--crimson:#FFE4E4;--emerald:#D1FAE5;--emerald-soft:rgba(6,78,59,.45);--emerald-border:rgba(167,243,208,.55);--amber:#FEF3C7;--amber-soft:rgba(15,23,42,.28);--amber-border:rgba(253,230,138,.6);--crimson-soft:rgba(15,23,42,.28);--crimson-border:rgba(254,202,202,.6);--bg-card:rgba(255,255,255,.10);--bg-subtle:rgba(15,23,42,.22);--bg-canvas:#1E3A8A;--border-card:rgba(255,255,255,.38);--border-strong:rgba(255,255,255,.6);--hair:rgba(255,255,255,.24);--seg-bg:rgba(15,23,42,.22);border-color:rgba(255,255,255,.22);background:radial-gradient(20px 9px at 88% 10px,rgba(255,255,255,.35) 0%,transparent 100%),linear-gradient(180deg,rgba(255,255,255,.12) 0,rgba(255,255,255,0) 30px),linear-gradient(180deg,var(--bd-a) 0%,var(--bd-b) 100%);box-shadow:inset 0 1.5px 0 rgba(255,255,255,.45),inset 0 -8px 16px rgba(10,20,60,.30),0 2px 4px rgba(30,58,138,.18),0 16px 30px -12px rgba(29,78,216,.55)}
-html[data-look="bluetile"] .tile:not(.top),html[data-look="bluetile"] .qa,html[data-look="bluetile"] .helpbtn{--bd-a:#1D4ED8;--bd-b:#1E3A8A;color:#FFFFFF;--text-primary:#FFFFFF;--text-secondary:#F1F5FF;--text-muted:#F1F5FF;--link:#FFFFFF;--crimson:#FFE4E4;--emerald:#D1FAE5;--emerald-soft:rgba(6,78,59,.45);--emerald-border:rgba(167,243,208,.55);--amber:#FEF3C7;--amber-soft:rgba(15,23,42,.28);--amber-border:rgba(253,230,138,.6);--crimson-soft:rgba(15,23,42,.28);--crimson-border:rgba(254,202,202,.6);--bg-card:rgba(255,255,255,.10);--bg-subtle:rgba(15,23,42,.22);--bg-canvas:#1E3A8A;--border-card:rgba(255,255,255,.38);--border-strong:rgba(255,255,255,.6);--hair:rgba(255,255,255,.24);--seg-bg:rgba(15,23,42,.22);border-color:rgba(255,255,255,.22);background:radial-gradient(20px 9px at 88% 10px,rgba(255,255,255,.35) 0%,transparent 100%),linear-gradient(180deg,rgba(255,255,255,.12) 0,rgba(255,255,255,0) 30px),linear-gradient(180deg,var(--bd-a) 0%,var(--bd-b) 100%);box-shadow:inset 0 1.5px 0 rgba(255,255,255,.45),inset 0 -8px 16px rgba(10,20,60,.30),0 2px 4px rgba(30,58,138,.18),0 16px 30px -12px rgba(29,78,216,.55)}
-@media (prefers-color-scheme:dark){html:not([data-theme="light"])[data-look="blue"] .card,html:not([data-theme="light"])[data-look="blue"] .tile:not(.top),html:not([data-theme="light"])[data-look="blue"] .qa,html:not([data-theme="light"])[data-look="blue"] .stepcard,html:not([data-theme="light"])[data-look="blue"] .helpbtn{--bd-a:#1E40AF;--bd-b:#172554;box-shadow:inset 0 1.5px 0 rgba(255,255,255,.40),inset 0 -8px 16px rgba(0,0,0,.30),0 2px 3px rgba(0,0,0,.5),0 16px 30px -12px rgba(0,0,0,.85)}}
-html[data-theme="dark"][data-look="blue"] .card,html[data-theme="dark"][data-look="blue"] .tile:not(.top),html[data-theme="dark"][data-look="blue"] .qa,html[data-theme="dark"][data-look="blue"] .stepcard,html[data-theme="dark"][data-look="blue"] .helpbtn{--bd-a:#1E40AF;--bd-b:#172554;box-shadow:inset 0 1.5px 0 rgba(255,255,255,.40),inset 0 -8px 16px rgba(0,0,0,.30),0 2px 3px rgba(0,0,0,.5),0 16px 30px -12px rgba(0,0,0,.85)}
-@media (prefers-color-scheme:dark){html:not([data-theme="light"])[data-look="bluetile"] .tile:not(.top),html:not([data-theme="light"])[data-look="bluetile"] .qa,html:not([data-theme="light"])[data-look="bluetile"] .helpbtn{--bd-a:#1E40AF;--bd-b:#172554;box-shadow:inset 0 1.5px 0 rgba(255,255,255,.40),inset 0 -8px 16px rgba(0,0,0,.30),0 2px 3px rgba(0,0,0,.5),0 16px 30px -12px rgba(0,0,0,.85)}}
-html[data-theme="dark"][data-look="bluetile"] .tile:not(.top),html[data-theme="dark"][data-look="bluetile"] .qa,html[data-theme="dark"][data-look="bluetile"] .helpbtn{--bd-a:#1E40AF;--bd-b:#172554;box-shadow:inset 0 1.5px 0 rgba(255,255,255,.40),inset 0 -8px 16px rgba(0,0,0,.30),0 2px 3px rgba(0,0,0,.5),0 16px 30px -12px rgba(0,0,0,.85)}
-html[data-look="blue"] .card a:not(.btn),html[data-look="blue"] .card .link{color:#FFFFFF;text-decoration:underline}
-html[data-look="blue"] .card input,html[data-look="blue"] .card textarea,html[data-look="blue"] .card select{background:#FFFFFF;color:#0F172A;border-color:rgba(255,255,255,.6)}
-html[data-look="blue"] .card.crit:before{background:#FCA5A5}
-html[data-look="blue"] .helpbtn,html[data-look="bluetile"] .helpbtn{border-color:#FCA5A5}
-html[data-look="blue"] .helpbtn .chev,html[data-look="bluetile"] .helpbtn .chev{color:#FFFFFF}
+/* ===================== v0.11.0：外观定稿 F「临床蓝」 =====================
+   规则：白底平面卡片（不做水珠）；品牌蓝 #1D4ED8 用于操作按钮、入口格子、选中状态和链接；
+   红色只用于“呼叫”和“危险”；琥珀 = 未确认，绿色 = 官方来源 / 联系家人（含义不变）。
+   主蓝特意不用 NHS 蓝 #005EB8，避免被误认为 NHS 官方产品。文字对比度均 ≥4.5:1（见更新说明） */
+:root{
+  --brand:#1D4ED8; --brand-press:#1E40AF; --brand-tint:#EFF6FF; --brand-border:#BFDBFE; --brand-text:#1D4ED8;
+  --bg-canvas:#F1F5F9; --border-card:#E2E8F0;
+  --tile-a:#1D4ED8; --tile-b:#1E40AF;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --brand:#1D4ED8; --brand-press:#1E40AF; --brand-tint:rgba(59,130,246,.16); --brand-border:rgba(147,197,253,.45); --brand-text:#93C5FD;
+  --bg-canvas:#0B1120; --bg-card:#111C2E; --bg-subtle:#1B2A42; --border-card:#22324D; --hair:rgba(148,163,184,.18);
+  --glass:rgba(17,28,46,.94); --seg-bg:#1B2A42; --text-muted:#BAC6D8; --link:#93C5FD;
+  --tile-a:#1E40AF; --tile-b:#1E3A8A;
+}}
+:root[data-theme="dark"]{
+  --brand:#1D4ED8; --brand-press:#1E40AF; --brand-tint:rgba(59,130,246,.16); --brand-border:rgba(147,197,253,.45); --brand-text:#93C5FD;
+  --bg-canvas:#0B1120; --bg-card:#111C2E; --bg-subtle:#1B2A42; --border-card:#22324D; --hair:rgba(148,163,184,.18);
+  --glass:rgba(17,28,46,.94); --seg-bg:#1B2A42; --text-muted:#BAC6D8; --link:#93C5FD;
+  --tile-a:#1E40AF; --tile-b:#1E3A8A;
+}
+/* 普通操作按钮：品牌蓝白字（原来是深色/夜间白色） */
+.btn{background:var(--brand);color:#FFFFFF}
+.btn:not(.red):not(.grn):not(.ghost):not(.warn):active{background:var(--brand-press)}
+.btn.ghost{background:var(--bg-card);color:var(--brand-text);border:1.5px solid var(--brand-border)}
+/* 选中状态：蓝色（以前是红色）。高危情况勾选（.rkc）仍是红色 */
+.seg3 button[aria-pressed="true"],.seg2 button[aria-pressed="true"],.seg4 button[aria-pressed="true"]{border-color:var(--brand);background:var(--brand-tint)}
+.bchoice[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:#FFFFFF}
+.cat[aria-pressed="true"]:not([data-cat="life"]),.chip2[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:#FFFFFF}
+.tab[aria-current="page"]{background:var(--brand-tint);color:var(--brand-text)}
+.tab.sos[aria-current="page"]{color:var(--crimson)}
+.snav .nx{background:var(--brand);color:#FFFFFF}
+.prog i.d{background:var(--brand)}
+.stepcard .sn{background:var(--brand)}
+/* 危险卡片：浅红底 + 左侧红条 */
+.card.crit{background:var(--crimson-soft)}
+.card.crit:before{background:var(--crimson-fill)}
+/* 入口格子 + 首页 3 个快捷按钮：实心蓝、白字、平面（心肺复苏大格仍是红色） */
+.tile:not(.top),.qa{background:linear-gradient(180deg,var(--tile-a) 0%,var(--tile-b) 100%);border-color:transparent;color:#FFFFFF;
+  box-shadow:0 1px 2px rgba(15,23,42,.10),0 8px 18px -10px rgba(30,64,175,.55)}
+.tile:not(.top) small{color:#EAF1FF}
+.tile:not(.top) .chev,.qa .chev{color:#FFFFFF}
+/* 蓝格子里的图标底和“待签审”标签固定用日间浅色，日夜都清楚 */
+.tile:not(.top),.qa{
+  --h-rose:#BE123C; --h-rose-bg:#FFE4E6; --h-sky:#0369A1; --h-sky-bg:#E0F2FE; --h-vio:#6D28D9; --h-vio-bg:#EDE9FE;
+  --h-red:#B91C1C; --h-red-bg:#FEE2E2; --h-amb:#B45309; --h-amb-bg:#FEF3C7; --h-org:#C2410C; --h-org-bg:#FFEDD5;
+  --h-teal:#0F766E; --h-teal-bg:#CCFBF1;
+  --amber:#92400E; --amber-soft:#FFFBEB; --amber-border:#FDE68A;
+  --crimson:#FFE4E4; --emerald:#D1FAE5; --text-muted:#EAF1FF; --text-primary:#FFFFFF; --link:#FFFFFF;
+}
+.tile:not(.top):active,.qa:active{border-color:transparent}
+@media print{.tile:not(.top),.qa{background:#FFFFFF;color:#111}}
+/* v0.11.0：打印提示（A 我的卡空状态 / C 首次保存） */
+.idcan{margin:14px 0 0;padding-top:12px;border-top:1px solid var(--border-card)}
+.idcan .kick{margin:0 0 4px}
+.canl{list-style:none;margin:0;padding:0}
+.canl li{display:flex;align-items:flex-start;gap:10px;padding:6px 0;color:var(--text-secondary);line-height:1.4}
+.canl li .ic{flex:none;width:22px;height:22px;margin-top:1px;color:var(--brand-text)}
+.prhint{margin:0 0 12px}
+.prhint .btn{margin-top:10px}
 /* ⑥ 记时间页：节拍器仍在运行 */
 .mrun{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;margin:12px 0 0;padding:12px;border-radius:var(--radius-lg);background:var(--crimson-soft);border:1px solid var(--crimson-border)}
 .mrun .ml{flex:1 1 10em;font-weight:800;line-height:1.3}
@@ -811,7 +826,7 @@ var FEEDBACK_GOOGLE = _CFG.google||"";    // Google 表单链接，例如 https:
 var FEEDBACK_TENCENT = _CFG.tencent||"";  // 腾讯问卷链接，例如 https://wj.qq.com/s2/xxxx/xxxx/
 // 可选：Google 表单里"版本/国家/语言"那道简答题的编号（形如 entry.123456789）。填了以后会自动带入，留空也能用。
 var GOOGLE_PREFILL_ENTRY = _CFG.googleEntry||"";
-var VERSION = "MVP v0.10.3";
+var VERSION = "MVP v0.11.0";
 var VERIFIED_ON = "2026-11-17";   // 全部国家号码的统一核实日期；某国单独复核后，在该国数据里加 v:"YYYY-MM-DD"
 // 固定的正式网址：分享、锁屏图片一律用它，不用当前地址栏（避免分享出 file:// 或预览地址）。分享链接里永远不放任何个人信息。
 var SITE_URL = "https://jackyyhhxjyxn.github.io/emergency-card/";
@@ -1279,7 +1294,6 @@ function srcL(i){return '<a href="'+SRC[i][2]+'" target="_blank" rel="noopener">
 function stag(i){var k=SRCK[i]||"other";return ' <span class="stag '+k+'">'+t("sk_"+k)+'</span>'}
 /* v0.10.2：各处“依据”行里，非官方来源后面直接标“其他（非官方）” */
 function srcA(i){return srcL(i)+(SRCK[i]==="other"?stag(i):"")}
-function curLook(){return document.documentElement.getAttribute("data-look")||"off"}
 /* v0.10.3：各页底部的“依据”默认折叠，只显示“依据（N 条来源）”，点开才看到来源名称（测试反馈：显示太多，用户不会看） */
 function srcFold(ids){return '<details class="srcd"><summary>'+(ids.length===1?t("srcFoldS1"):t("srcFoldS").replace("{n}",ids.length))+'</summary><div class="srcb">'+srcLine(ids)+'</div></details>'}
 function srcLine(ids){return ids.map(srcA).join(" · ")}
@@ -1432,7 +1446,7 @@ function fig(cardId,i){var f=(FIGMAP[cardId]||{})[i];if(!f)return "";
 /* ===================== v0.3.2-oc：新增界面文字（只涉及界面，不新增医学内容） ===================== */
 var T2={
 tabHome:["急救","First aid"],tabSos:["呼救","Call"],tabMe:["我的卡","My card"],tabMore:["更多","More"],navA:["主导航","Main navigation"],
-thT:["显示模式","Display"],lkT:["外观（测试投票，选好后会去掉）","Look (test vote — removed after the vote)"],lk_gloss:["B 水珠（现版）","B Gloss (current)"],lk_gloss2:["B+ 加强水珠","B+ Stronger gloss"],lk_blue:["C 蓝底白字·全部卡片","C Blue, white text — all cards"],lk_bluetile:["D 蓝底白字·只用于入口","D Blue, white text — buttons only"],lk_tint:["E 浅蓝水珠","E Light-blue gloss"],lk_drop:["A 水滴角","A Drop corner"],lk_off:["旧外观","Old look"],lkHint:["换一种外观后，日间、夜间都看一下，再在反馈表里写上你选的字母。","After switching, check both light and dark mode, then put the letter you prefer in the feedback form."],thAuto:["跟随系统","System"],thLight:["日间","Light"],thDark:["夜间","Dark"],
+thT:["显示模式","Display"],thAuto:["跟随系统","System"],thLight:["日间","Light"],thDark:["夜间","Dark"],
 thToL:["切换到日间模式","Switch to light mode"],thToD:["切换到夜间模式","Switch to dark mode"],thDone:["已切换","Switched"],
 callTap:["点击拨打","Tap to call"],callShort:["呼叫救护车","Call ambulance"],
 idK:["急救信息 · MEDICAL ID","MEDICAL ID · 急救信息"],bloodK:["血型","BLOOD"],nameNone:["尚未填写姓名","Name not added"],
@@ -1795,8 +1809,9 @@ function viewMore(c){var h=aboutHtml(c);
        '<button class="btn" id="instBtn"'+(dip?'':' hidden')+'>'+I("dl")+t("instBtn")+'</button>'+
        info((and?'':'<p>'+t("instIOS")+'</p>')+(ios?'':'<p>'+t("instAnd")+'</p>'))+'</section></div>';
   }
-  h+='<h2 class="secH"'+(standalone()?' style="margin-top:6px"':'')+'><b>'+t("wallT")+'</b></h2><section class="card"><div>'+t("wallS1")+'</div>'+
-     '<button class="btn red" id="wallGo">'+I("phone")+t("wallBtn")+'</button>'+info('<p>'+t("wallS")+'</p>')+'</section>';
+  h+='<h2 class="secH"'+(standalone()?' style="margin-top:6px"':'')+'><b>'+t("offT")+'</b></h2><section class="card"><div>'+t("wallS1")+'</div>'+
+     '<button class="btn" id="wallGo">'+I("phone")+t("wallBtn")+'</button>'+info('<p>'+t("wallS")+'</p>')+
+     '<div class="idcan"><div>'+t("offPr")+'</div><button class="btn ghost" id="prGo">'+I("print")+t("prBtn")+'</button></div></section>';
   h+='<h2 class="secH"><b>'+t("shareT")+'</b></h2><section class="card"><div>'+t("shareS")+'</div><figure class="qrw"><img src="qr-wechat.png" width="782" height="978" alt="'+esc(t("qrAlt"))+'"></figure>'+info(t(inWx()?"qrCap":"qrCapOut"))+'<div class="urlbox">'+esc(SITE_URL)+'</div>'+
      (inWx()?'<div class="note" role="note" style="margin:12px 0 0">'+I("info")+'<div>'+t("shareInWx")+'</div></div>':'')+
      (inWx()?'':(qrPrefetch(),'<button class="btn" id="qrSend">'+I("dl")+t("qrSend")+'</button>'))+
@@ -1808,9 +1823,7 @@ function viewMore(c){var h=aboutHtml(c);
      '<div class="kick" style="margin-top:16px">'+t("fsT")+'</div><div class="seg4" role="group" aria-label="'+esc(t("fsT"))+'">'+
      [["sys","fsSys"],["m","fsM"],["l","fsL"],["xl","fsXL"]].map(function(x){return '<button data-fs="'+x[0]+'" aria-pressed="'+(fsMode===x[0])+'">'+t(x[1])+'</button>'}).join("")+'</div>'+
      info('<p>'+t("fsHint")+'</p>')+
-     '<div class="kick" style="margin-top:16px">'+t("lkT")+'</div><div class="seglk" role="group" aria-label="'+esc(t("lkT"))+'">'+
-     LOOKS.map(function(x){return '<button data-lk="'+x+'" aria-pressed="'+(curLook()===x)+'">'+t("lk_"+x)+'</button>'}).join("")+'</div>'+
-     info('<p>'+t("lkHint")+'</p>')+'</section>';
+'</section>';
   h+='<h2 class="secH" id="fb" tabindex="-1"><b>'+t("fbT")+'</b></h2><section class="card"><div>'+t("fbQ")+'</div>'+fbBlock(c)+'</section>';
   h+=srcAllHtml();
   h+='<h2 class="secH"><b>'+t("clrT")+'</b></h2><section class="card"><div>'+t("clrS")+'</div>'+
@@ -2068,7 +2081,7 @@ function openWall(){
     '<div class="seg2" role="group" aria-label="iPhone / Android">'+[["ios","iPhone"],["and","Android"]].map(function(x){return '<button data-wsz="'+x[0]+'" aria-pressed="'+(wallSz===x[0])+'">'+x[1]+'</button>'}).join("")+'</div>'+
     '<div class="seg2" role="group" aria-label="'+esc(t("thT"))+'">'+[["light","wallLight"],["dark","wallDark"]].map(function(x){return '<button data-wth="'+x[0]+'" aria-pressed="'+(wallTh===x[0])+'">'+t(x[1])+'</button>'}).join("")+'</div>'+
     '<img class="wallimg" id="wallImg" alt="'+esc(t("wallAlt").replace("{c}",nm(c)).replace("{n}",C[c].amb))+'">'+
-    '<button class="btn red" id="wallSave">'+I("dl")+t("wallSave")+'</button>'+
+    '<button class="btn" id="wallSave">'+I("dl")+t("wallSave")+'</button>'+
     '<button class="btn ghost" id="wallFull">'+t("wallOpen")+'</button>'+
     (isIOS()?'':'<button class="btn ghost" id="wallDl">'+I("dl")+t("wallDl")+'</button>')+
     '<div class="muted" id="wallMsg" role="status"></div>'+
@@ -2436,6 +2449,8 @@ prEmpty:["还没有填写急救信息。先在“我的卡”填写。","No medi
 prWho:["打印的是当前档案：{p}。要打印家人的，先在“我的卡”切换档案。","Printing the current profile: {p}. To print a family member’s, switch profile in My card first."],
 prOver:["钱包卡放不下全部文字，打印出来会被截掉。请缩短“我的卡”里的文字，或以冰箱单为准。","Not everything fits on the wallet card and the printout will be cut off. Shorten the text in My card, or rely on the fridge sheet."],
 prBtn:["打印钱包卡 / 冰箱单","Print wallet card / fridge sheet"],
+canT:["填好后可以：","Once filled in, you can:"],canMc:["给外国医护看（字段名显示成当地语言）","Show medical staff abroad (labels in the local language)"],canHo:["交给医生（一页交接单）","Hand over to the doctor (one-page summary)"],canPr:["打印钱包卡和冰箱单：手机没电、锁着或丢了，急救人员也能看到","Print a wallet card and fridge sheet: responders can read them even if the phone is flat, locked or lost"],
+offT:["离线备份：锁屏图片 + 纸质卡","Offline backup: lock-screen image + paper card"],offPr:["纸质卡：打印随身钱包卡和放在家里的冰箱单。需要先在“我的卡”填写。","Paper card: print a wallet card to carry and a fridge sheet for home. Fill in My card first."],prFill:["去“我的卡”填写","Fill in My card"],prHint:["已保存。现在可以打印钱包卡和冰箱单：手机没电或锁着时，急救人员也能看到。","Saved. You can now print a wallet card and fridge sheet, so responders can read them even if your phone is flat or locked."],prHintGo:["去打印","Print now"],
 brT:["医疗手环刻字建议","Medical ID bracelet: what to engrave"],
 brS:["急救人员受训会先看手腕。你勾选了急救人员需要马上知道的情况，可以考虑戴医疗手环或项链。","Emergency staff are trained to look at the wrist first. You ticked something responders need to know at once, so consider a medical ID bracelet or necklace."],
 brOrder:["按美国急诊医师学会（ACEP）建议的顺序：严重过敏 → 药物（如抗凝药）→ 疾病 → 体内器械。空间不够时保留前面几行。","In the order suggested by the American College of Emergency Physicians: severe allergies → medicines (e.g. blood thinners) → conditions → implanted devices. If space runs out, keep the top lines."],
@@ -2534,6 +2549,7 @@ function brHtml(d){var rk=riskOf(d);if(!rk.some(function(x){return BR_KEYS[x.k]}
     '<div class="src">'+srcFold([101,102,103])+'</div></section>'}
 
 /* ---------- 我的卡（v0.6.0：多档案 + 高危勾选 + 平时状态 / 药放哪 / 保险） ---------- */
+var prHintOnce=false;
 var IDF=[["name","fName"],["blood","fBlood"],["allergy","fAll"],["cond","fCond"],["med","fMed"],["ice","fIce"],["base","fBase"],["medloc","fMedLoc"],["ins","fIns"],["insTel","fInsTel"],["acp","fAcp"]];
 function idHas(d){return IDF.some(function(f){return d[f[0]]})||riskOf(d).length>0}
 function renderId(editing){
@@ -2555,7 +2571,7 @@ function renderId(editing){
        inp("due","fDue","","date")+
        inp("ins","fIns","fInsP")+inp("insTel","fInsTel","fInsTelP","tel")+
        '<div class="muted" style="margin-top:6px">'+t("insPriv")+'</div>'+
-       '<button class="btn red" id="idSave">'+t("save")+'</button><button class="btn ghost" id="idClear">'+t("clear")+'</button>'+
+       '<button class="btn" id="idSave">'+t("save")+'</button><button class="btn ghost" id="idClear">'+t("clear")+'</button>'+
        (P.cur>0?'<button class="btn warn" id="pfDel">'+t("pfDel")+'</button>':'')+'</section>';
     box.innerHTML=h;return;
   }
@@ -2563,8 +2579,10 @@ function renderId(editing){
   h+='<section class="card"><div class="hrow"><div class="hinfo"><div class="kick red">'+t("idK")+'</div>'+
      '<div class="pname'+(d.name?'':' ph')+'">'+esc(d.name||t("nameNone"))+'</div><div class="mut">'+t("idHint")+'</div></div>'+
      '<div class="rblock'+(bl?'':' empty')+'" role="img" aria-label="'+esc(t("fBlood")+CO()+(bl||t("none")))+'"><span class="rk" aria-hidden="true">'+t("bloodK")+'</span><span class="rv'+(lg?' long':'')+'" aria-hidden="true">'+esc(bl||"?")+'</span></div></div>'+
-     (has?'<div class="idacts in"><button class="btn red" id="mcGo">'+I("globe")+t("mcBtn")+'</button><button class="btn" id="hoGo">'+I("idc")+t("hoBtn")+'</button><button class="btn ghost" id="prGo">'+I("print")+t("prBtn")+'</button></div>':'')+'</section>';
-  if(!has){box.innerHTML=h+'<button class="btn red" id="idEdit" style="margin:0 0 12px">'+t("edit")+'</button>'+pfBar(P);return}
+     (has?'<div class="idacts in"><button class="btn" id="mcGo">'+I("globe")+t("mcBtn")+'</button><button class="btn" id="hoGo">'+I("idc")+t("hoBtn")+'</button><button class="btn ghost" id="prGo">'+I("print")+t("prBtn")+'</button></div>':
+     '<div class="idcan"><div class="kick">'+t("canT")+'</div><ul class="canl"><li>'+I("globe")+'<span>'+t("canMc")+'</span></li><li>'+I("idc")+'<span>'+t("canHo")+'</span></li><li>'+I("print")+'<span>'+t("canPr")+'</span></li></ul></div>')+'</section>';
+  if(!has){box.innerHTML=h+'<button class="btn" id="idEdit" style="margin:0 0 12px">'+t("edit")+'</button>'+pfBar(P);return}
+  if(prHintOnce){prHintOnce=false;h='<div class="note prhint" role="status">'+I("print")+'<div>'+t("prHint")+'<button class="btn" id="prGo">'+I("print")+t("prHintGo")+'</button></div></div>'+h.replace(' id="prGo"',' id="prGo2"')}
   h+=pregNote(d);
   if(rk.length)h+='<section class="card crit"><div class="kick red">'+I("alert","s")+bi("rkK")+'</div><ul class="rkl">'+rk.map(function(x){return rkLi(x,lang==="zh"?"zhs":"",d)}).join("")+'</ul>'+rkNotes(rk)+'</section>';
   h+='<section class="card crit"><div class="kick red">'+I("alert","s")+bi("fAll")+'</div>'+fval(d.allergy)+'</section>';
@@ -2705,14 +2723,14 @@ function openPrint(){
   var c=cc(),P=profs(),d=getId(),has=idHas(d);
   var h='<div class="shead"><button class="back" id="bk">'+I("chevL")+t("back")+'</button></div>'+
     '<h1 id="sheetT" tabindex="-1" class="pickh">'+t("prT")+'</h1>'+info(t("prS"));
-  if(!has){h+='<div class="note" role="note" style="margin-top:12px">'+I("info")+'<div>'+t("prEmpty")+'</div></div>';showSheet(h,callBtn(c));return}
+  if(!has){h+='<div class="note" role="note" style="margin-top:12px">'+I("info")+'<div>'+t("prEmpty")+'</div></div><button class="btn" id="prFill">'+I("idc")+t("prFill")+'</button>';showSheet(h,callBtn(c));return}
   h+='<div class="note" role="note" style="margin-top:12px">'+I("users")+'<div>'+esc(t("prWho").replace("{p}",pfLabel(P,P.cur)))+'</div></div>'+
     (inWx()?'<div class="note" role="note">'+I("alert")+'<div>'+t("prWx")+'</div></div>':'')+
     '<h2 class="secH"><b>'+t("prW")+'</b></h2><div class="prv">'+walletHtml(c,d)+'</div>'+
     '<div class="note red" role="alert" id="prOver" hidden>'+I("alert")+'<div>'+t("prOver")+'</div></div>'+
-    '<button class="btn red" data-print="w">'+I("print")+t("prGo")+'</button>'+
+    '<button class="btn" data-print="w">'+I("print")+t("prGo")+'</button>'+
     '<h2 class="secH"><b>'+t("prF")+'</b></h2><div class="prv">'+fridgeHtml(c,d)+'</div>'+
-    '<button class="btn red" data-print="f">'+I("print")+t("prGo")+'</button>'+
+    '<button class="btn" data-print="f">'+I("print")+t("prGo")+'</button>'+
     '<p class="muted">'+t("prPriv")+'</p>'+info('<p>'+t("prQr")+'</p><p>'+t("prHow")+'</p><div class="src">'+t("srcT")+CO()+srcLine([100,102])+'</div>');
   showSheet(h,callBtn(c));
   try{var over=[].some.call(document.querySelectorAll("#sheetBody .wface"),function(x){return x.scrollHeight>x.clientHeight+2});$("prOver").hidden=!over}catch(e){}
@@ -2822,14 +2840,11 @@ document.addEventListener("click",function(e){
   if(el.id==="qrSend"){qrSendPic();return}
   if(el.id==="qrFullBk"){var qb=$("qrFullBox");if(qb)qb.remove();return}
   if(el.id==="copyUrl"){var sm2=$("shareMsg");copyText(SITE_URL,function(){if(sm2)sm2.textContent=t("shareDone")});return}
-  if(el.dataset.lk){var lk=el.dataset.lk;store("ec_look",lk==="gloss"?null:lk);
-    if(lk==="off")document.documentElement.removeAttribute("data-look");else document.documentElement.setAttribute("data-look",lk);
-    document.querySelectorAll("[data-lk]").forEach(function(x){x.setAttribute("aria-pressed",x.dataset.lk===lk?"true":"false")});return}
   if(el.dataset.fs){fsMode=el.dataset.fs;store("ec_fs",fsMode==="sys"?null:fsMode);applyFs();
     document.querySelectorAll("[data-fs]").forEach(function(x){x.setAttribute("aria-pressed",x.dataset.fs===fsMode?"true":"false")});return}
   if(el.id==="clrBtn"){
     if(el.dataset.armed!=="1"){el.dataset.armed="1";el.textContent=t("clrArm");setTimeout(function(){if(document.contains(el)){el.dataset.armed="";el.textContent=t("clrBtn")}},6000);return}
-    ["ec_id","ec_prof","ec_tm","ec_geo","ec_lang","ec_theme","ec_mode","ec_voice","ec_snd","ec_fs","ec_mlang","ec_look"].forEach(function(k){store(k,null)});
+    ["ec_id","ec_prof","ec_tm","ec_geo","ec_lang","ec_theme","ec_mode","ec_voice","ec_snd","ec_fs","ec_mlang","ec_look","ec_prhint"].forEach(function(k){store(k,null)});
     hush();location.replace(location.pathname);return}
   if(el.id==="pv"){go(-1);return}
   if(el.id==="nx"){go(1);return}
@@ -2849,7 +2864,8 @@ document.addEventListener("click",function(e){
   if(el.id==="nfWxGo"){var tv3=$("nfTxt"),m3=$("nfMsgS");copyText(tv3?tv3.value:nfMsg(),function(){if(m3)m3.textContent=t("nfWxDone");setTimeout(function(){try{location.href="weixin://"}catch(x){}},350)});return}
   if(el.id==="nfShare"){var tv2=$("nfTxt");navigator.share({text:tv2?tv2.value:nfMsg()}).catch(function(){});return}
   if(el.id==="hoGo"){goHash("hand");return}
-  if(el.id==="prGo"){goHash("print");return}
+  if(el.id==="prGo"||el.id==="prGo2"){goHash("print");return}
+  if(el.id==="prFill"){goTab("me");setTimeout(function(){renderId(true);window.scrollTo(0,0)},30);return}
   if(el.dataset.print){doPrint(el.dataset.print);return}
   if(el.dataset.tm){var to=tmLoad();to[el.dataset.tm]=Date.now();tmSave(to);openTimer.keep=true;openTimer();return}
   if(el.id==="tmClr"){if(el.dataset.armed!=="1"){el.dataset.armed="1";el.textContent=t("clrArm");setTimeout(function(){if(document.contains(el)){el.dataset.armed="";el.textContent=t("tmClr")}},6000);return}
@@ -2876,7 +2892,8 @@ document.addEventListener("click",function(e){
     document.querySelectorAll(".bchoice").forEach(function(x){x.setAttribute("aria-pressed",x===el?"true":"false")});return}
   if(el.id==="idSave"){var d={},rs=[];document.querySelectorAll("#idBox [data-f]").forEach(function(i){if(i.value.trim())d[i.dataset.f]=i.value.trim()});
     document.querySelectorAll("#idBox [data-rk]").forEach(function(b){if(b.getAttribute("aria-pressed")==="true")rs.push(b.dataset.rk)});if(rs.length)d.risk=rs;
-    var od=getId();if(rs.indexOf("preg")>=0){d.pregAt=od.pregAt||Date.now();if(d.due&&!dueOk(d.due))delete d.due}else delete d.due;
+    var od=getId();if(!idHas(od)&&idHas(d)&&load("ec_prhint")!=="1"){prHintOnce=true;store("ec_prhint","1")}
+    if(rs.indexOf("preg")>=0){d.pregAt=od.pregAt||Date.now();if(d.due&&!dueOk(d.due))delete d.due}else delete d.due;
     var Ps=profs();Ps.list[Ps.cur].d=d;var pn=$("pfN");if(pn)Ps.list[Ps.cur].n=pn.value.trim().slice(0,30);saveProfs(Ps);renderId(false);window.scrollTo(0,0);return}
   if(el.id==="idClear"){setId({});renderId(true);return}
   if(el.id==="mlGo"){goTab("more");setTimeout(function(){var f=$("fb");if(f)try{f.scrollIntoView({block:"start"});f.focus({preventScroll:true})}catch(x){}},30);return}
