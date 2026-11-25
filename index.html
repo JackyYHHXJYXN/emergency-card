@@ -826,6 +826,102 @@ html.hugetext .swh{display:none}
 .wice{flex:none;border-top:0.3mm solid #000;padding-top:.8mm;margin-top:.6mm;font-size:8pt;line-height:1.2;color:#000;max-height:6.4mm;overflow:hidden;word-break:break-word}
 .wice b{font-weight:900;font-family:var(--font-num)}
 .wface .wqrc,.wface .wdate{color:#000}
+
+/* ===================== v0.11.2：水晶感（只改外观） =====================
+   取代 v0.11.0 的“白底平面卡片（不做水珠）”规则。做法：
+   ① 内容卡片 = “水晶板”：高不透明度的白色渐变（文字下面几乎不透），靠顶部高光线、亮边和柔和投影做出玻璃厚度；
+      不给每张卡片加实时模糊（backdrop-filter），避免低端安卓 / 微信里滚动卡顿；实时模糊只留给顶栏和底栏。
+   ② 蓝色、红色实心按钮颜色不变，只叠一层“水晶高光”（上半部亮、底部内阴影、细亮边）。
+   ③ 底栏四个选项 = 像 iPhone 拨号键：每个选项是一颗独立的半透明圆角键，有高光、亮边、按下变暗；当前页 = 蓝色水晶键。
+   ④ 系统开了“降低透明度 / 增强对比度”时，全部退回实色。打印件不受影响。 */
+:root{
+  --cv-bg:linear-gradient(165deg,#E4ECF8 0%,#F1F5FA 38%,#EAF0F7 70%,#E6EDF6 100%);
+  --gl-fill:linear-gradient(180deg,rgba(255,255,255,.96) 0%,rgba(255,255,255,.86) 100%);
+  --gl-fill2:linear-gradient(180deg,rgba(255,255,255,.80) 0%,rgba(248,251,255,.62) 100%);
+  --gl-edge:rgba(255,255,255,.95);
+  --gl-line:rgba(100,116,139,.22);
+  --gl-shadow:inset 0 1px 0 rgba(255,255,255,1),inset 0 -1px 0 rgba(15,23,42,.05),0 1px 2px rgba(15,23,42,.06),0 10px 26px -14px rgba(30,58,138,.30);
+  --gloss:linear-gradient(180deg,rgba(255,255,255,.30) 0%,rgba(255,255,255,.10) 38%,rgba(255,255,255,0) 72%);
+  --gloss-shadow:inset 0 1px 0 rgba(255,255,255,.55),inset 0 -3px 8px rgba(0,0,0,.20),0 1px 2px rgba(15,23,42,.12),0 10px 22px -12px rgba(30,64,175,.65);
+  --key-fill:linear-gradient(180deg,rgba(255,255,255,.88) 0%,rgba(236,242,250,.70) 100%);
+  --key-shadow:inset 0 1px 0 rgba(255,255,255,1),inset 0 -1px 2px rgba(15,23,42,.08),0 1px 1px rgba(15,23,42,.10),0 4px 10px -6px rgba(15,23,42,.30);
+  --key-press:linear-gradient(180deg,rgba(203,213,225,.95) 0%,rgba(226,232,240,.90) 100%);
+  --bar-glass:rgba(241,245,250,.80); --cv-end:#E6EDF6;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --cv-bg:radial-gradient(120% 60% at 20% 0%,#14244A 0%,#0B1120 55%),#0B1120;
+  --gl-fill:linear-gradient(180deg,rgba(30,44,70,.96) 0%,rgba(20,31,52,.92) 100%);
+  --gl-fill2:linear-gradient(180deg,rgba(255,255,255,.09) 0%,rgba(255,255,255,.04) 100%);
+  --gl-edge:rgba(255,255,255,.14); --gl-line:rgba(148,163,184,.22);
+  --gl-shadow:inset 0 1px 0 rgba(255,255,255,.12),inset 0 -1px 0 rgba(0,0,0,.35),0 12px 28px -14px rgba(0,0,0,.8);
+  --gloss-shadow:inset 0 1px 0 rgba(255,255,255,.40),inset 0 -3px 8px rgba(0,0,0,.30),0 10px 22px -12px rgba(0,0,0,.8);
+  --key-fill:linear-gradient(180deg,rgba(255,255,255,.16) 0%,rgba(255,255,255,.07) 100%);
+  --key-shadow:inset 0 1px 0 rgba(255,255,255,.18),inset 0 -1px 2px rgba(0,0,0,.4),0 4px 10px -6px rgba(0,0,0,.8);
+  --key-press:linear-gradient(180deg,rgba(255,255,255,.30) 0%,rgba(255,255,255,.18) 100%);
+  --bar-glass:rgba(11,17,32,.80); --cv-end:#0B1120;
+}}
+:root[data-theme="dark"]{
+  --cv-bg:radial-gradient(120% 60% at 20% 0%,#14244A 0%,#0B1120 55%),#0B1120;
+  --gl-fill:linear-gradient(180deg,rgba(30,44,70,.96) 0%,rgba(20,31,52,.92) 100%);
+  --gl-fill2:linear-gradient(180deg,rgba(255,255,255,.09) 0%,rgba(255,255,255,.04) 100%);
+  --gl-edge:rgba(255,255,255,.14); --gl-line:rgba(148,163,184,.22);
+  --gl-shadow:inset 0 1px 0 rgba(255,255,255,.12),inset 0 -1px 0 rgba(0,0,0,.35),0 12px 28px -14px rgba(0,0,0,.8);
+  --gloss-shadow:inset 0 1px 0 rgba(255,255,255,.40),inset 0 -3px 8px rgba(0,0,0,.30),0 10px 22px -12px rgba(0,0,0,.8);
+  --key-fill:linear-gradient(180deg,rgba(255,255,255,.16) 0%,rgba(255,255,255,.07) 100%);
+  --key-shadow:inset 0 1px 0 rgba(255,255,255,.18),inset 0 -1px 2px rgba(0,0,0,.4),0 4px 10px -6px rgba(0,0,0,.8);
+  --key-press:linear-gradient(180deg,rgba(255,255,255,.30) 0%,rgba(255,255,255,.18) 100%);
+  --bar-glass:rgba(11,17,32,.80); --cv-end:#0B1120;
+}
+html{background:var(--bg-canvas)}
+body{background:var(--cv-bg);background-attachment:fixed;min-height:100vh}
+.sheet{background:var(--cv-bg)}
+.dock{background:linear-gradient(rgba(230,237,246,0),var(--cv-end) 14px)}
+/* ① 水晶板：所有内容方框 */
+.card,.list,.extra,.metro,details.dd,.steps li,.stepcard,.cf .flag{
+  background:var(--gl-fill);border:1px solid var(--gl-edge);box-shadow:var(--gl-shadow)}
+.card.crit{background:linear-gradient(180deg,rgba(255,241,241,.97) 0%,rgba(254,226,226,.88) 100%)}
+:root[data-theme="dark"] .card.crit{background:linear-gradient(180deg,rgba(80,24,32,.92) 0%,rgba(54,18,26,.92) 100%)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .card.crit{background:linear-gradient(180deg,rgba(80,24,32,.92) 0%,rgba(54,18,26,.92) 100%)}}
+/* 卡片里面的小方框（号码格、地址框、网址框、选项按钮）：更薄的一层水晶 */
+.n,.loc,.urlbox,.brbox,.prv,.seg3 button,.seg2 button,.seg4 button,.rkc,.bchoice,.chip2,.cat,.back,.chip,.ibtn,.big.yes,.snav .pv,.btn.ghost,.btn.warn{
+  background:var(--gl-fill2);border:1px solid var(--gl-line);box-shadow:inset 0 1px 0 var(--gl-edge),0 1px 2px rgba(15,23,42,.06)}
+.btn.ghost{border-color:var(--brand-border)}
+.btn.warn{border-color:var(--crimson-border)}
+/* 选中状态保留原来的颜色，只加高光 */
+.seg3 button[aria-pressed="true"],.seg2 button[aria-pressed="true"],.seg4 button[aria-pressed="true"]{background:var(--brand-tint);border:2px solid var(--brand)}
+.rkc[aria-pressed="true"]{background:var(--crimson-soft);border-color:var(--crimson-fill)}
+.bchoice[aria-pressed="true"],.cat[aria-pressed="true"]:not([data-cat="life"]),.chip2[aria-pressed="true"]{background:var(--gloss),var(--brand);border-color:var(--brand);color:#FFFFFF;box-shadow:var(--gloss-shadow)}
+.cat[data-cat="life"][aria-pressed="true"]{background:var(--gloss),var(--crimson-fill);color:#FFFFFF}
+.btn.warn[data-armed="1"]{background:var(--gloss),var(--crimson-fill);color:#FFFFFF}
+/* ② 实心按钮：颜色不变，加水晶高光 */
+.tile:not(.top),.qa,.helpbtn{background:var(--gloss),linear-gradient(180deg,var(--tile-a) 0%,var(--tile-b) 100%);border:1px solid rgba(255,255,255,.22);box-shadow:var(--gloss-shadow)}
+.btn:not(.ghost):not(.warn):not(.red):not(.grn),.snav .nx{background:var(--gloss),var(--brand);border:1px solid rgba(255,255,255,.22);box-shadow:var(--gloss-shadow)}
+.btn:not(.red):not(.grn):not(.ghost):not(.warn):active{background:var(--gloss),var(--brand-press)}
+.btn.red,.big.no,.tile.top,.rblock:not(.empty),.call{background:var(--gloss),var(--red-grad);border:1px solid rgba(255,255,255,.22);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.5),inset 0 -3px 8px rgba(0,0,0,.20),0 10px 22px -10px rgba(185,28,28,.6)}
+.call:active,.big.no:active,a.rblock:active{background:var(--gloss),var(--crimson-press)}
+.btn.grn{background:var(--gloss),linear-gradient(180deg,#059669 0%,#047857 100%);border:1px solid rgba(255,255,255,.22);box-shadow:var(--gloss-shadow)}
+.tile:not(.top) .sg,.qa .sg,.helpbtn .sg,.tile.top .sg,.call .ico{box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 2px 6px -2px rgba(0,0,0,.35)}
+/* ③ 底栏：像 iPhone 拨号键，每个选项一颗独立水晶键 */
+nav.bnav{background:var(--bar-glass);-webkit-backdrop-filter:saturate(180%) blur(22px);backdrop-filter:saturate(180%) blur(22px);border-top:1px solid var(--gl-edge)}
+.bnav-in{gap:8px;padding:7px 8px 6px}
+.tab{background:var(--key-fill);border:1px solid var(--gl-edge);border-radius:16px;box-shadow:var(--key-shadow);color:var(--text-secondary);
+  transition:transform .08s,background .08s;margin:0}
+.tab:active{background:var(--key-press);transform:scale(.96);box-shadow:inset 0 1px 3px rgba(15,23,42,.25)}
+.tab[aria-current="page"]{background:var(--gloss),linear-gradient(180deg,var(--tile-a) 0%,var(--tile-b) 100%);color:#FFFFFF;border-color:rgba(255,255,255,.3);box-shadow:var(--gloss-shadow)}
+.tab.sos .ic{color:var(--crimson)}
+.tab.sos[aria-current="page"]{color:#FFFFFF}
+.tab.sos[aria-current="page"] .ic{color:#FFFFFF}
+/* 顶栏同样用通透玻璃 */
+header.top,.shead{background:var(--bar-glass);border-bottom:1px solid var(--gl-edge)}
+/* ④ 系统要求降低透明度 / 提高对比度：退回实色 */
+@media (prefers-reduced-transparency:reduce),(prefers-contrast:more){
+  body,.sheet{background:var(--bg-canvas)}
+  header.top,nav.bnav,.shead{background:var(--bg-card);-webkit-backdrop-filter:none;backdrop-filter:none}
+  .card,.list,.extra,.metro,details.dd,.steps li,.stepcard,.tab{background:var(--bg-card);border-color:var(--border-strong)}
+  .n,.loc,.urlbox,.brbox,.prv,.back,.chip,.ibtn{background:var(--bg-subtle);border-color:var(--border-strong)}
+}
+@media print{body,.sheet{background:#fff!important}}
 </style>
 </head>
 <body>
@@ -852,7 +948,7 @@ var FEEDBACK_GOOGLE = _CFG.google||"";    // Google 表单链接，例如 https:
 var FEEDBACK_TENCENT = _CFG.tencent||"";  // 腾讯问卷链接，例如 https://wj.qq.com/s2/xxxx/xxxx/
 // 可选：Google 表单里"版本/国家/语言"那道简答题的编号（形如 entry.123456789）。填了以后会自动带入，留空也能用。
 var GOOGLE_PREFILL_ENTRY = _CFG.googleEntry||"";
-var VERSION = "MVP v0.11.1";
+var VERSION = "MVP v0.11.2";
 var VERIFIED_ON = "2026-11-17";   // 全部国家号码的统一核实日期；某国单独复核后，在该国数据里加 v:"YYYY-MM-DD"
 // 固定的正式网址：分享、锁屏图片一律用它，不用当前地址栏（避免分享出 file:// 或预览地址）。分享链接里永远不放任何个人信息。
 var SITE_URL = "https://jackyyhhxjyxn.github.io/emergency-card/";
@@ -1560,9 +1656,6 @@ backAuto:["恢复自动识别","Use auto-detection"],
 autoNone:["未识别","not detected"],
 pickTz:["手机时区：{z}；自动识别结果：{c}","Device time zone: {z}; auto-detected: {c}"],
 aboutVer:["版本","Version"],
-diagT:["国家识别诊断（号码不对时用）","Country detection details (if the numbers look wrong)"],
-diagTz:["手机时区","Device time zone"],diagDet:["自动识别结果","Auto-detected"],diagUse:["当前使用","Now using"],
-diagMode:["方式","Mode"],diagFs:["实测文字放大","Measured text scale"],diagAuto:["自动","Automatic"],diagMan:["手动","Manual"],
 fsT:["文字大小","Text size"],
 fsSys:["跟随手机","Phone setting"],fsM:["标准","Standard"],fsL:["大","Large"],fsXL:["特大","Extra large"],
 fsHint:["“跟随手机”：iPhone 读取 设置 › 显示与亮度 › 文字大小（或 辅助功能 › 更大字体）。安卓若不跟随，请直接选“大”或“特大”。","“Phone setting” follows iPhone Settings › Display & Brightness › Text Size (or Accessibility › Larger Text). If Android does not follow it, choose Large or Extra large here."],
@@ -1803,17 +1896,7 @@ function viewMe(){
 function aboutHtml(c){
   return '<section class="card about"><div class="kick">'+t("aboutT")+'</div>'+
     '<div class="vrow"><b>'+esc(VERSION)+'</b><span>'+t("contentVer")+CO()+CONTENT_VER+'</span><span>'+t("verOn")+CO()+esc(verOf(c))+'</span></div>'+
-    '<details class="sl"><summary>'+t("diagT")+'</summary><div class="muted diag">'+
-    t("diagTz")+CO()+esc(tzLabel())+'<br>'+t("diagDet")+CO()+esc(DET==="XX"?t("autoNone"):nm(DET))+' ('+DET+')<br>'+
-    t("diagUse")+CO()+esc(nm(c))+' ('+c+')<br>'+t("diagMode")+CO()+(manual?t("diagMan"):t("diagAuto"))+'<br>'+t("diagFs")+CO()+TZOOM+'×<br>'+esc(VERSION)+' · '+esc(navigator.language||"")+'</div>'+
-    '<p class="ht">'+t("dgHow")+'</p><button class="btn ghost" id="dgCopy">'+t("dgCopy")+'</button>'+dgFormBtn(c)+
-    '<div class="muted" id="dgMsg" role="status"></div><p class="ht">'+t("dgPriv")+'</p><p class="ht">'+t("dgFix")+'</p></details></section>'}
-/* v0.11.1：国家识别报告。只含时区、识别结果、当前国家、自动/手动、语言、版本；不含位置、姓名、电话、病情 */
-function dgLine(c){return "COUNTRY-REPORT · "+VERSION+" · tz="+(TZNAME||"-")+" · det="+DET+" · use="+c+" · "+(manual?"manual":"auto")+" · ui="+lang+" · nav="+(navigator.language||"-")}
-function dgFormBtn(c){var g=FEEDBACK_GOOGLE,q=FEEDBACK_TENCENT;
-  if(g&&GOOGLE_PREFILL_ENTRY)g+=(g.indexOf("?")<0?"?":"&")+"usp=pp_url&"+encodeURIComponent(GOOGLE_PREFILL_ENTRY)+"="+encodeURIComponent(dgLine(c));
-  var u=(lang==="zh"||c==="CN")?(q||g):(g||q);
-  return u?'<a class="btn" id="dgForm" href="'+esc(u)+'" target="_blank" rel="noopener">'+t("dgForm")+'</a>':''}
+    '</section>'}
 /* v0.10.2：“信息来源”分两块，避免把国家等级 A/B/C 和每条来源混在一起：
    ① 各国急救号码可信度（A/B/C 只用于这里，逐国列出依据编号）；② 全部来源，每条标类别（官方 / 指南 / 专业机构 / 技术文档 / 其他） */
 function srcAllHtml(){
@@ -1886,7 +1969,8 @@ function render(){
 /* 反馈：Google 表单 + 腾讯问卷；大陆优先腾讯，其余优先 Google；都没填则复制文字（含“多语种个人医疗卡”需求题） */
 var mlAns=null;
 var ML={fbMl1:"need",fbMl2:"maybe",fbMl3:"no",fbMl4:"unsure"};
-function fbCtx(c){return VERSION+" · "+c+" · "+lang}
+/* v0.11.2：反馈第 1 题自动带上国家识别信息（时区 / 自动识别结果 / 自动或手动），用户不用懂“诊断”。不含位置、姓名、电话、病情 */
+function fbCtx(c){return VERSION+" · "+c+" · "+lang+" · tz="+(TZNAME||"-")+" · det="+DET+" · "+(manual?"manual":"auto")}
 function mlHtml(){return '<div class="mlq"><div class="kick red">'+I("globe","s")+t("fbMlK")+'</div><p>'+t("fbMlQ")+'</p><div class="chips" role="group">'+
   Object.keys(ML).map(function(k){return '<button class="chip2" data-ml="'+k+'" aria-pressed="'+(mlAns===k)+'">'+t(k)+'</button>'}).join("")+'</div></div>'}
 function fbBlock(c){
@@ -1900,7 +1984,8 @@ function fbBlock(c){
   var pick=(lang==="zh"||c==="CN")?(bq||bg):(bg||bq);
   var list=[pick];
   var h=list.map(function(x,i){return x.replace("{K}",i?" ghost":"")}).join("");
-  return h+'<div class="muted" style="margin-top:10px">'+t("fbCtx")+'：<b>'+esc(fbCtx(c))+'</b><br>'+t("fbNoPII")+'</div>';
+  var cp=(pick===bq&&bq)?'<button class="btn ghost" id="fbCp">'+t("fbCp")+'</button><div class="muted" id="fbCpMsg" role="status"></div>':'';
+  return h+'<div class="muted" style="margin-top:10px">'+t("fbCtx")+'：<b>'+esc(fbCtx(c))+'</b></div>'+cp+'<div class="muted" style="margin-top:10px">'+t("fbNoPII")+'</div>';
 }
 
 /* ===================== 我的卡（红色血型块式的信息层级） ===================== */
@@ -2438,7 +2523,6 @@ function pregNote(d){var w=pregOld(d);return w?'<div class="note" role="note" id
 function dueOk(s){return /^\d{4}-\d{2}-\d{2}$/.test(s||"")}
 
 /* 二维码：只编码固定首页网址 SITE_URL，不含任何个人信息。版本 4、纠错 M、整数像素（每格 1 个单位，crispEdges），生成后已用 OpenCV 解码核对。 */
-var QR_SVG='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 41 41" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M4 4h7v1h-7zM12 4h1v1h-1zM14 4h2v1h-2zM17 4h2v1h-2zM21 4h2v1h-2zM24 4h2v1h-2zM30 4h7v1h-7zM4 5h1v1h-1zM10 5h1v1h-1zM13 5h2v1h-2zM16 5h1v1h-1zM25 5h1v1h-1zM28 5h1v1h-1zM30 5h1v1h-1zM36 5h1v1h-1zM4 6h1v1h-1zM6 6h3v1h-3zM10 6h1v1h-1zM12 6h6v1h-6zM21 6h1v1h-1zM25 6h4v1h-4zM30 6h1v1h-1zM32 6h3v1h-3zM36 6h1v1h-1zM4 7h1v1h-1zM6 7h3v1h-3zM10 7h1v1h-1zM13 7h1v1h-1zM19 7h1v1h-1zM23 7h1v1h-1zM25 7h4v1h-4zM30 7h1v1h-1zM32 7h3v1h-3zM36 7h1v1h-1zM4 8h1v1h-1zM6 8h3v1h-3zM10 8h1v1h-1zM14 8h2v1h-2zM19 8h1v1h-1zM23 8h1v1h-1zM26 8h1v1h-1zM30 8h1v1h-1zM32 8h3v1h-3zM36 8h1v1h-1zM4 9h1v1h-1zM10 9h1v1h-1zM12 9h1v1h-1zM19 9h1v1h-1zM21 9h3v1h-3zM28 9h1v1h-1zM30 9h1v1h-1zM36 9h1v1h-1zM4 10h7v1h-7zM12 10h1v1h-1zM14 10h1v1h-1zM16 10h1v1h-1zM18 10h1v1h-1zM20 10h1v1h-1zM22 10h1v1h-1zM24 10h1v1h-1zM26 10h1v1h-1zM28 10h1v1h-1zM30 10h7v1h-7zM13 11h3v1h-3zM18 11h3v1h-3zM23 11h2v1h-2zM26 11h1v1h-1zM4 12h1v1h-1zM6 12h1v1h-1zM10 12h2v1h-2zM13 12h2v1h-2zM20 12h1v1h-1zM24 12h1v1h-1zM27 12h1v1h-1zM31 12h1v1h-1zM34 12h1v1h-1zM36 12h1v1h-1zM7 13h1v1h-1zM9 13h1v1h-1zM13 13h1v1h-1zM17 13h1v1h-1zM19 13h1v1h-1zM21 13h1v1h-1zM23 13h2v1h-2zM27 13h2v1h-2zM30 13h1v1h-1zM33 13h1v1h-1zM36 13h1v1h-1zM4 14h1v1h-1zM6 14h1v1h-1zM8 14h1v1h-1zM10 14h1v1h-1zM13 14h1v1h-1zM19 14h2v1h-2zM23 14h3v1h-3zM27 14h1v1h-1zM33 14h2v1h-2zM36 14h1v1h-1zM4 15h1v1h-1zM6 15h3v1h-3zM11 15h2v1h-2zM14 15h2v1h-2zM17 15h1v1h-1zM19 15h1v1h-1zM21 15h1v1h-1zM27 15h1v1h-1zM30 15h4v1h-4zM35 15h1v1h-1zM5 16h2v1h-2zM10 16h2v1h-2zM15 16h3v1h-3zM19 16h1v1h-1zM21 16h1v1h-1zM26 16h1v1h-1zM28 16h1v1h-1zM30 16h2v1h-2zM36 16h1v1h-1zM8 17h2v1h-2zM11 17h1v1h-1zM13 17h2v1h-2zM16 17h2v1h-2zM25 17h1v1h-1zM27 17h2v1h-2zM30 17h2v1h-2zM33 17h4v1h-4zM4 18h1v1h-1zM6 18h1v1h-1zM8 18h1v1h-1zM10 18h3v1h-3zM14 18h2v1h-2zM17 18h3v1h-3zM23 18h1v1h-1zM25 18h3v1h-3zM32 18h1v1h-1zM34 18h1v1h-1zM36 18h1v1h-1zM5 19h3v1h-3zM12 19h2v1h-2zM16 19h3v1h-3zM22 19h1v1h-1zM27 19h1v1h-1zM29 19h3v1h-3zM33 19h1v1h-1zM4 20h4v1h-4zM9 20h2v1h-2zM15 20h2v1h-2zM19 20h2v1h-2zM23 20h1v1h-1zM27 20h2v1h-2zM30 20h2v1h-2zM33 20h1v1h-1zM35 20h1v1h-1zM5 21h1v1h-1zM7 21h1v1h-1zM12 21h2v1h-2zM17 21h1v1h-1zM19 21h2v1h-2zM23 21h3v1h-3zM27 21h2v1h-2zM30 21h1v1h-1zM33 21h1v1h-1zM36 21h1v1h-1zM5 22h1v1h-1zM7 22h5v1h-5zM13 22h3v1h-3zM17 22h3v1h-3zM21 22h3v1h-3zM27 22h1v1h-1zM29 22h3v1h-3zM33 22h2v1h-2zM36 22h1v1h-1zM4 23h1v1h-1zM6 23h1v1h-1zM9 23h1v1h-1zM12 23h1v1h-1zM15 23h4v1h-4zM20 23h1v1h-1zM22 23h1v1h-1zM26 23h2v1h-2zM29 23h2v1h-2zM32 23h2v1h-2zM35 23h2v1h-2zM7 24h5v1h-5zM16 24h7v1h-7zM24 24h5v1h-5zM30 24h2v1h-2zM7 25h2v1h-2zM12 25h1v1h-1zM16 25h3v1h-3zM20 25h3v1h-3zM24 25h2v1h-2zM27 25h5v1h-5zM33 25h1v1h-1zM36 25h1v1h-1zM4 26h3v1h-3zM10 26h4v1h-4zM16 26h2v1h-2zM20 26h3v1h-3zM24 26h4v1h-4zM29 26h1v1h-1zM34 26h1v1h-1zM36 26h1v1h-1zM7 27h1v1h-1zM11 27h2v1h-2zM15 27h2v1h-2zM19 27h2v1h-2zM22 27h3v1h-3zM28 27h1v1h-1zM30 27h2v1h-2zM33 27h1v1h-1zM35 27h2v1h-2zM4 28h2v1h-2zM8 28h4v1h-4zM14 28h1v1h-1zM18 28h1v1h-1zM28 28h5v1h-5zM12 29h15v1h-15zM28 29h1v1h-1zM32 29h1v1h-1zM36 29h1v1h-1zM4 30h7v1h-7zM12 30h1v1h-1zM14 30h1v1h-1zM16 30h2v1h-2zM19 30h2v1h-2zM23 30h2v1h-2zM28 30h1v1h-1zM30 30h1v1h-1zM32 30h5v1h-5zM4 31h1v1h-1zM10 31h1v1h-1zM13 31h4v1h-4zM18 31h1v1h-1zM21 31h1v1h-1zM23 31h1v1h-1zM25 31h1v1h-1zM27 31h2v1h-2zM32 31h2v1h-2zM35 31h2v1h-2zM4 32h1v1h-1zM6 32h3v1h-3zM10 32h1v1h-1zM14 32h2v1h-2zM17 32h2v1h-2zM21 32h1v1h-1zM25 32h1v1h-1zM27 32h6v1h-6zM4 33h1v1h-1zM6 33h3v1h-3zM10 33h1v1h-1zM13 33h2v1h-2zM25 33h1v1h-1zM27 33h1v1h-1zM29 33h1v1h-1zM31 33h2v1h-2zM36 33h1v1h-1zM4 34h1v1h-1zM6 34h3v1h-3zM10 34h1v1h-1zM12 34h1v1h-1zM14 34h3v1h-3zM18 34h2v1h-2zM21 34h1v1h-1zM23 34h1v1h-1zM25 34h5v1h-5zM31 34h3v1h-3zM35 34h2v1h-2zM4 35h1v1h-1zM10 35h1v1h-1zM17 35h2v1h-2zM28 35h1v1h-1zM30 35h4v1h-4zM4 36h7v1h-7zM12 36h1v1h-1zM14 36h1v1h-1zM19 36h2v1h-2zM23 36h2v1h-2zM27 36h2v1h-2zM30 36h4v1h-4zM36 36h1v1h-1z"/></svg>';
 
 var T6={
 helpOT:["帮别人呼救","Call for someone else"],helpOS:["用你的手机为病人呼救：电话里说什么、位置、接应救护车","Call for someone else on your phone: what to say, your location, meeting the ambulance"],
@@ -2474,8 +2558,7 @@ prF:["冰箱单（A4）+ 大门内侧提示贴","Fridge sheet (A4) + front-door 
 prGo:["打印 / 存为 PDF","Print / save as PDF"],
 prWx:["微信里不能打印：点右上角“···”→“在浏览器打开”，再打印。","WeChat can’t print: tap “···” → “Open in browser”, then print."],
 prPriv:["纸上有健康信息，看到的人都能读到。钱包卡随身带，冰箱单只放在家里。信息变了请重新打印。","The paper shows health details to anyone who sees it. Keep the wallet card on you and the fridge sheet at home. Reprint whenever something changes."],
-prQr:["二维码只打开急救卡网站首页，不含任何个人信息。","The QR code only opens the Emergency Card home page — it contains no personal information."],
-prQrS:["扫码：急救卡网站（不含个人信息）","Scan: Emergency Card website (no personal data)"],
+prQr:["打印件不含二维码和网址，只有你填写的信息和打印日期。","The printout has no QR code or web address — only what you entered and the print date."],
 prHow:["Message in a Bottle 的做法：把冰箱单放在冰箱门里（可装进瓶子或袋子），把提示贴贴在大门内侧，急救人员看到会去冰箱找。","The Message in a Bottle approach: keep the fridge sheet in the fridge door (in a bottle or bag) and put the sticker inside your front door so responders know to look in the fridge."],
 prStk:["急救信息在冰箱里","Medical information in the fridge"],
 prDate:["打印日期","Printed"],prMore:["另有 {n} 项，见手机或冰箱单","+{n} more — see phone or fridge sheet"],
@@ -2739,7 +2822,6 @@ function walletHtml(c,d){var rk=riskOf(d),top=rk.slice(0,3),more=rk.length-top.l
   var b='<div class="wface wb"><div class="wtop">'+esc(T.wSide[0])+'</div>'+
     (d.ins?'<div class="wt">'+wbil("Insurance","保险")+'：'+esc(d.ins)+'</div>':'')+
     (d.insTel?'<div class="wt">'+wbil("24h assistance","救援热线")+'：<b>'+esc(d.insTel)+'</b></div>':'')+
-    '<div class="wqr">'+QR_SVG+'</div><div class="wqrc">'+esc(T.prQrS[1])+'<br>'+esc(T.prQrS[0])+'</div>'+
     '<div class="wdate">'+esc(T.prDate[1])+' · '+esc(T.prDate[0])+' '+todayStr()+'</div></div>';
   return '<div class="wcard">'+f+b+'</div>'}
 function fridgeHtml(c,d){var rk=riskOf(d),N=C[c].amb;
@@ -2751,7 +2833,6 @@ function fridgeHtml(c,d){var rk=riskOf(d),N=C[c].amb;
     row("Usual state","平时的状态",d.base)+row("Medicines kept","药放在哪里",d.medloc)+row("Advance care plan / DNACPR form kept","预立医疗计划 / 不复苏文件放在",d.acp)+row("Emergency contact","紧急联系人",d.ice)+
     row("Insurance","保险",d.ins)+row("24h assistance","救援热线",d.insTel)+
     '<div class="famb"><span>Emergency · 急救电话（'+esc(C[c].en)+' · '+esc(C[c].zh)+'）</span><b>'+esc(N)+'</b></div>'+
-    '<div class="fqrw"><div class="fqr">'+QR_SVG+'</div><div>'+esc(T.prQrS[1])+'<br>'+esc(T.prQrS[0])+'</div></div>'+
     '<div class="ffoot">'+esc(T.prHow[1])+'<br>'+esc(T.prHow[0])+'</div></div>'+
     '<div class="fstk"><svg viewBox="0 0 24 24" aria-hidden="true"><rect width="24" height="24" rx="5" fill="#047857"/><path d="M10 5h4v5h5v4h-5v5h-4v-5H5v-4h5z" fill="#fff"/></svg><div><b>'+esc(T.prStk[0])+'</b><b>'+esc(T.prStk[1].toUpperCase())+'</b><small>Emergency Card · 急救卡</small></div></div>'}
 function openPrint(){
@@ -2794,14 +2875,10 @@ swipeH:["‹ 可左右滑动 ›","‹ swipe ›"],
 mrun:["节拍器仍在运行，计时未中断","Metronome still running, timer not reset"],mrBack:["返回心肺复苏","Back to CPR"]
 };
 for(var _k10 in T10)T[_k10]=T10[_k10];
-/* v0.11.1 文字 */
+/* v0.11.1 文字（v0.11.2 新增 fbCp / fbCpDone） */
 var T11={
-dgHow:["显示的国家或急救号码不对？先回到“急救”页，在顶部国家栏点“更换”手动选国家（马上生效）。然后点下面两个按钮，把这几行发给我们，帮我们修好识别规则。","Wrong country or number? First go to the Emergency tab, tap Change in the country bar at the top and pick your country (works straight away). Then use the two buttons below to send us these lines so we can fix the detection."],
-dgCopy:["① 复制诊断信息","① Copy the details"],
-dgForm:["② 打开反馈表，粘贴后提交","② Open the feedback form, paste, submit"],
-dgDone:["已复制。打开反馈表，在第 1 题“版本 · 国家 · 语言”里长按粘贴；“国家对吗”一题选“不对”。","Copied. In the feedback form, paste into question 1 (version · country · language) if it is empty, and answer No to “Was the country right?”."],
-dgPriv:["这几行只有手机时区、识别结果、当前国家、自动或手动、语言和版本号；不含位置、姓名、电话或病情。不需要截图。","These lines contain only the phone time zone, detection result, current country, automatic or manual, language and version — no location, name, phone number or medical details. No screenshot needed."],
-dgFix:["我们不收集联系方式，所以无法单独回复。修好后随新版本发布，下次打开网页自动生效。","We don’t collect contact details, so we can’t reply individually. Fixes ship in the next version and apply automatically the next time you open the page."],
+fbCp:["复制这一行","Copy this line"],
+fbCpDone:["已复制。在问卷第 1 题“版本 · 国家 · 语言”里长按粘贴。","Copied. Paste it into question 1 (version · country · language)."],
 wNone:["not recorded · 未填写","not recorded · 未填写"],
 wSide:["IN CASE OF EMERGENCY · 紧急情况","IN CASE OF EMERGENCY · 紧急情况"]
 };
@@ -2885,9 +2962,9 @@ document.addEventListener("click",function(e){
   if(el.id==="shareBtn"){var sm=$("shareMsg");
     if(navigator.share){navigator.share({title:t("brand"),text:t("shareTxt"),url:SITE_URL}).catch(function(){})}
     else copyText(SITE_URL,function(){if(sm)sm.textContent=t("shareDone")});return}
+  if(el.id==="fbCp"){var fm=$("fbCpMsg");copyText(fbCtx(cc()),function(){if(fm)fm.textContent=t("fbCpDone")});return}
   if(el.id==="qrSend"){qrSendPic();return}
   if(el.id==="qrFullBk"){var qb=$("qrFullBox");if(qb)qb.remove();return}
-  if(el.id==="dgCopy"){var dm=$("dgMsg");copyText(dgLine(cc()),function(){if(dm)dm.textContent=t("dgDone")});return}
   if(el.id==="copyUrl"){var sm2=$("shareMsg");copyText(SITE_URL,function(){if(sm2)sm2.textContent=t("shareDone")});return}
   if(el.dataset.fs){fsMode=el.dataset.fs;store("ec_fs",fsMode==="sys"?null:fsMode);applyFs();
     document.querySelectorAll("[data-fs]").forEach(function(x){x.setAttribute("aria-pressed",x.dataset.fs===fsMode?"true":"false")});return}
