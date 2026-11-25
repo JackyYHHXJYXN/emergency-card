@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#F3F4F6" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0B0F17" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#1D4ED8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1E3A8A" media="(prefers-color-scheme: dark)">
 <link rel="canonical" href="https://jackyyhhxjyxn.github.io/emergency-card/">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
@@ -943,6 +943,112 @@ header.top,.shead{background:var(--bar-glass);border-bottom:1px solid var(--gl-e
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--solid-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 8px 18px -10px rgba(0,0,0,.8);--solid-shadow-r:inset 0 1px 0 rgba(255,255,255,.22),0 8px 18px -10px rgba(0,0,0,.8)}}
 :root[data-theme="dark"]{--solid-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 8px 18px -10px rgba(0,0,0,.8);--solid-shadow-r:inset 0 1px 0 rgba(255,255,255,.22),0 8px 18px -10px rgba(0,0,0,.8)}
 @media print{body,.sheet{background:#fff!important}}
+
+/* ===================== v0.12.0：外观改版 方向 A「平面临床」（取代 v0.11.2 水晶感 / v0.11.3 投影） =====================
+   用户 2026-11-25 选定。规则：
+   ① 平面：去掉所有渐变、玻璃模糊和柔和投影；圆角统一 4px（徽章仍是胶囊形）。
+   ② 实心按钮底部一条 4px 深色“台阶”（按下时下沉 2px），一眼看出能按。
+   ③ 顶栏 = 品牌蓝实色 #1D4ED8 + 白字；底栏 = 白底，当前页 = 蓝字 + 顶部 4px 蓝条。
+   ④ 颜色含义不变：蓝 = 操作，红 = 呼叫 / 危险，绿 = 确认 / 官方来源，琥珀 = 未确认。
+      红、绿用我们自己的色值（#C81E1E / #047857），不用 NHS 的 #D5281B / #007F3B，继续避免被误认为 NHS 官方产品。
+   ⑤ 只作用于屏幕（@media screen）；打印件、钱包卡、冰箱单不受影响。 */
+@media screen{
+:root{
+  --r:4px; --brand:#1D4ED8; --brand-press:#1E40AF; --brand-deep:#1E3A8A;
+  --red-flat:#C81E1E; --red-deep:#7F1D1D; --grn-flat:#047857; --grn-deep:#064E3B;
+  --bg-canvas:#FFFFFF; --bg-card:#FFFFFF; --bg-subtle:#F1F5F9; --border-card:#CBD5E1; --border-strong:#94A3B8;
+  --cv-bg:#FFFFFF; --cv-end:#FFFFFF; --hdr:#1D4ED8; --tabbar:#FFFFFF;
+  --step-b:0 4px 0 var(--brand-deep); --step-r:0 4px 0 var(--red-deep); --step-g:0 4px 0 var(--grn-deep);
+  --radius-lg:4px; --radius-md:4px; --radius-sm:4px;
+}
+:root[data-theme="dark"]{
+  --bg-canvas:#0B1120; --bg-card:#111C2E; --bg-subtle:#1B2A42; --border-card:#334155; --border-strong:#64748B;
+  --cv-bg:#0B1120; --cv-end:#0B1120; --hdr:#1E3A8A; --tabbar:#111C2E;
+  --brand-deep:#0F1E4D; --red-deep:#450A0A; --grn-deep:#022C22;
+}
+}
+@media screen and (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg-canvas:#0B1120; --bg-card:#111C2E; --bg-subtle:#1B2A42; --border-card:#334155; --border-strong:#64748B;
+  --cv-bg:#0B1120; --cv-end:#0B1120; --hdr:#1E3A8A; --tabbar:#111C2E;
+  --brand-deep:#0F1E4D; --red-deep:#450A0A; --grn-deep:#022C22;
+}}
+@media screen{
+html,body,.sheet{background:var(--cv-bg)!important}
+.dock{background:linear-gradient(rgba(255,255,255,0),var(--cv-end) 12px)}
+:root[data-theme="dark"] .dock{background:linear-gradient(rgba(11,17,32,0),var(--cv-end) 12px)}
+/* ① 所有方框：平面、细灰边、4px 圆角、无投影 */
+.card,.list,.extra,.metro,details.dd,.steps li,.stepcard,.cf .flag,.mrun,.note,.when,.dont,.mlq,.ucfrow{
+  box-shadow:none!important;border-radius:var(--r)}
+.card,.list,.extra,.metro,details.dd,.steps li,.stepcard{background:var(--bg-card)!important;border:1px solid var(--border-card)}
+.cf .flag{border-radius:50%;background:var(--bg-card);border:1px solid var(--border-card)}
+.note,.when,.ucfrow{border-radius:0}
+/* 未确认国家：保留琥珀色提示，但改为左侧 6px 琥珀条（平面风格的警示写法），不再整圈橙框 */
+.lcard.unconf{border:1px solid var(--border-card);border-left:6px solid var(--amber-bar)}
+/* 快速判断等危险卡片：白底 + 顶部 6px 红条（取代左侧红条 + 浅红底） */
+.card.crit{background:var(--bg-card)!important;border:1px solid var(--border-card);border-top:6px solid var(--red-flat);overflow:visible}
+.card.crit:before{display:none}
+details.dd{border-left:6px solid var(--red-flat)}
+.dont{border-left:6px solid var(--red-flat)}
+/* 卡片里的小方框、选项、次要按钮：平面 */
+.n,.loc,.urlbox,.brbox,.prv,.seg3 button,.seg2 button,.seg4 button,.rkc,.bchoice,.cat,.back,.chip,.btn.warn,.snav .pv,.seg,.seg span.on,input,textarea{
+  box-shadow:none!important;border-radius:var(--r)}
+.n,.loc,.urlbox,.brbox,.prv{background:var(--bg-subtle);border:1px solid var(--border-card)}
+.seg3 button,.seg2 button,.seg4 button,.rkc,.bchoice,.cat,.snav .pv{background:var(--bg-card);border:2px solid var(--border-strong)}
+.seg3 button[aria-pressed="true"],.seg2 button[aria-pressed="true"],.seg4 button[aria-pressed="true"]{background:var(--brand-tint);border:2px solid var(--brand)}
+.rkc[aria-pressed="true"]{background:var(--crimson-soft);border-color:var(--red-flat)}
+.seg{background:var(--bg-subtle);border:1px solid var(--border-card)}
+.seg span.on{background:var(--bg-card);border:2px solid var(--brand)}
+.chip2{border-radius:99px;box-shadow:none!important;background:var(--bg-card);border:2px solid var(--border-strong)}
+/* ② 实心按钮：纯色 + 底部 4px 深色台阶 */
+.btn:not(.ghost):not(.warn):not(.red):not(.grn),.snav .nx,.tile:not(.top),.qa,.helpbtn,
+.bchoice[aria-pressed="true"],.cat[aria-pressed="true"]:not([data-cat="life"]),.chip2[aria-pressed="true"]{
+  background:var(--brand)!important;color:#FFFFFF;border:0!important;box-shadow:var(--step-b)!important;border-radius:var(--r)}
+.chip2[aria-pressed="true"]{border-radius:99px}
+.btn.red,.big.no,.tile.top,.rblock:not(.empty),.call,.cat[data-cat="life"][aria-pressed="true"],.btn.warn[data-armed="1"],.chip[aria-pressed="true"]{
+  background:var(--red-flat)!important;color:#FFFFFF;border:0!important;box-shadow:var(--step-r)!important;border-radius:var(--r)}
+.btn.grn,#cfYes{background:var(--grn-flat)!important;color:#FFFFFF;border:0!important;box-shadow:var(--step-g)!important;border-radius:var(--r)}
+#cfYes{width:auto;padding:0 22px}
+/* 次要按钮（有反应 / 白底按钮）：白底 + 3px 蓝框 + 蓝字 */
+.big.yes{background:var(--bg-card)!important;border:3px solid var(--brand)!important;color:var(--brand-text);box-shadow:none!important;border-radius:var(--r)}
+.btn.ghost{background:var(--bg-card)!important;border:2px solid var(--brand)!important;color:var(--brand-text);box-shadow:none!important;border-radius:var(--r)}
+.btn.warn{background:var(--bg-card);border:2px solid var(--red-flat);color:var(--crimson)}
+.big{border-radius:var(--r)}
+/* 按下：下沉 2px（代替缩放），台阶变薄 */
+.btn:active,.snav .nx:active,.tile:active,.qa:active,.helpbtn:active,.big:active,.call:active,a.rblock:active{transform:translateY(2px)!important}
+.btn:not(.ghost):not(.warn):not(.red):not(.grn):active,.snav .nx:active,.tile:not(.top):active,.qa:active,.helpbtn:active{background:var(--brand-press)!important;box-shadow:0 2px 0 var(--brand-deep)!important}
+.btn.red:active,.big.no:active,.tile.top:active,.call:active,a.rblock:active{background:var(--crimson-press)!important;box-shadow:0 2px 0 var(--red-deep)!important}
+.big.yes:active,.btn.ghost:active{background:var(--brand-tint)!important}
+/* 蓝格子 / 快捷按钮里的图标底：白色方块 */
+.tile:not(.top) .sg,.qa .sg,.helpbtn .sg,.tile.top .sg{background:#FFFFFF!important;border-radius:var(--r);box-shadow:none!important}
+.tile .sg,.ttl .sg{border-radius:var(--r)}
+.call .ico{border-radius:var(--r);box-shadow:none!important}
+.ucf{border-radius:var(--r);box-shadow:none}
+body:not(.sheet-on) .dock .ucf{background:var(--bg-card)}
+/* ③ 顶栏：品牌蓝实色 + 白字；顶栏按钮 = 白色 2px 描边 */
+header.top,.shead{background:var(--hdr)!important;border-bottom:0!important;box-shadow:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;color:#FFFFFF}
+header.top .brand{color:#FFFFFF}
+header.top .ibtn,.shead .back,.shead .chip:not([aria-pressed="true"]),.shead .ibtn{background:transparent!important;border:2px solid #FFFFFF!important;color:#FFFFFF!important;box-shadow:none!important;border-radius:var(--r)}
+header.top .ibtn:active,.shead .back:active,.shead .chip:active{background:rgba(255,255,255,.18)!important}
+.shead .chip[aria-pressed="true"]{border:2px solid #FFFFFF!important}
+header.top :focus-visible,.shead :focus-visible{outline-color:#FFFFFF}
+/* 底栏：白底平面；当前页 = 蓝字 + 顶部 4px 蓝条 */
+nav.bnav{background:var(--tabbar)!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;border-top:1px solid var(--border-card);box-shadow:none!important}
+.bnav-in{gap:0;padding:0 4px}
+.tab{background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important;color:var(--text-secondary);padding-top:4px}
+.tab:active{background:var(--bg-subtle)!important;transform:none}
+.tab[aria-current="page"]{background:transparent!important;color:var(--brand-text)!important;box-shadow:inset 0 4px 0 var(--brand)!important}
+.tab[aria-current="page"] .ic{color:var(--brand-text)}
+.tab.sos .ic{color:var(--crimson)}
+.tab.sos[aria-current="page"],.tab.sos[aria-current="page"] .ic{color:var(--brand-text)!important}
+.tab.sos[aria-current="page"] .ic{color:var(--crimson)!important}
+/* 进度条、步骤圆点：平面 */
+.prog i{border-radius:0}
+}
+/* 系统“增强对比度”：边框加深 */
+@media screen and (prefers-contrast:more){.card,.list,.extra,.metro,.steps li,.stepcard{border-color:var(--border-strong)}}
+/* v0.12.0 顺手修窄屏问题（只改外观）：320 宽英文“Responds”被拆成 Respond / s → 窄屏缩小内边距和字号，单词不再从中间断开 */
+@media screen{.big{overflow-wrap:break-word;word-break:normal}}
+@media screen and (max-width:359px){.big{padding:10px 4px;font-size:calc(19px * var(--fs))}}
 </style>
 </head>
 <body>
@@ -969,7 +1075,7 @@ var FEEDBACK_GOOGLE = _CFG.google||"";    // Google 表单链接，例如 https:
 var FEEDBACK_TENCENT = _CFG.tencent||"";  // 腾讯问卷链接，例如 https://wj.qq.com/s2/xxxx/xxxx/
 // 可选：Google 表单里"版本/国家/语言"那道简答题的编号（形如 entry.123456789）。填了以后会自动带入，留空也能用。
 var GOOGLE_PREFILL_ENTRY = _CFG.googleEntry||"";
-var VERSION = "MVP v0.11.6";
+var VERSION = "MVP v0.12.0";
 var VERIFIED_ON = "2026-11-17";   // 全部国家号码的统一核实日期；某国单独复核后，在该国数据里加 v:"YYYY-MM-DD"
 // 固定的正式网址：分享、锁屏图片一律用它，不用当前地址栏（避免分享出 file:// 或预览地址）。分享链接里永远不放任何个人信息。
 var SITE_URL = "https://jackyyhhxjyxn.github.io/emergency-card/";
@@ -1773,9 +1879,10 @@ var mq=null;try{mq=window.matchMedia("(prefers-color-scheme: dark)")}catch(e){}
 function isDark(){return theme==="dark"||(theme==="auto"&&!!(mq&&mq.matches))}
 function applyTheme(){
   var r=document.documentElement;if(theme==="auto")r.removeAttribute("data-theme");else r.setAttribute("data-theme",theme);
-  var col=isDark()?"#111827":"#FFFFFF";
+  /* v0.12.0：手机状态栏颜色 = 顶栏蓝色 */
+  var col=isDark()?"#1E3A8A":"#1D4ED8";
   document.querySelectorAll('meta[name="theme-color"]').forEach(function(m){
-    if(theme==="auto")m.setAttribute("content",/dark/.test(m.getAttribute("media")||"")?"#111827":"#FFFFFF");else m.setAttribute("content",col)});
+    if(theme==="auto")m.setAttribute("content",/dark/.test(m.getAttribute("media")||"")?"#1E3A8A":"#1D4ED8");else m.setAttribute("content",col)});
   var b=$("thBtn");if(b){b.innerHTML=I(isDark()?"sun":"moon");b.setAttribute("aria-label",isDark()?t("thToL"):t("thToD"))}
   document.querySelectorAll("[data-th]").forEach(function(x){x.setAttribute("aria-pressed",x.dataset.th===theme?"true":"false")});
 }

@@ -1,5 +1,5 @@
 /* 急救卡 Emergency Card — 离线缓存。每次发布新版本时，把下面的版本号改一下。 */
-var V = "ec-v0.11.6";
+var V = "ec-v0.12.0";
 var FILES = ["./", "index.html", "config.js", "manifest.webmanifest", "icon-192.png", "icon-512.png", "apple-touch-icon.png", "qr-wechat.png"];
 
 self.addEventListener("install", function (e) {
