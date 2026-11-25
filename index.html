@@ -98,7 +98,7 @@ nav.bnav{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--bg-c
 body.sheet-on nav.bnav{display:none}
 
 /* ---------- 呼叫栏（导航上方，任何页面一键拨打） ---------- */
-.dock{position:fixed;left:0;right:0;z-index:45;bottom:var(--nav-real,calc(var(--nav-h) + env(safe-area-inset-bottom)));
+.dock{position:fixed;left:0;right:0;z-index:45;bottom:max(var(--nav-real,0px),calc(var(--navin-real,var(--nav-h)) + 1px + env(safe-area-inset-bottom)));
   padding:10px 14px 8px;background:linear-gradient(color-mix(in srgb,var(--bg-canvas) 0%,transparent),var(--bg-canvas) 10px)}
 body.sheet-on .dock{bottom:0;padding-bottom:calc(10px + env(safe-area-inset-bottom))}
 .dock>*{max-width:572px;margin-left:auto;margin-right:auto}
@@ -420,7 +420,7 @@ html.bigtext .tab{font-size:17px}
 html.bigtext .lrow{flex-wrap:wrap}
 html.bigtext .lrow .tbtn{margin-left:auto}
 html.bigtext .call .num{font-size:32px}
-body{padding-bottom:calc(var(--nav-real,calc(var(--nav-h) + env(safe-area-inset-bottom))) + var(--dock-real,96px) + 16px)}
+body{padding-bottom:calc(max(var(--nav-real,0px),calc(var(--navin-real,var(--nav-h)) + 1px + env(safe-area-inset-bottom))) + var(--dock-real,96px) + 16px)}
 
 /* ---------- v0.4.3：安卓大字不重叠 ----------
    安卓（微信、各品牌自带浏览器、WebView）会按"系统/微信字体大小"直接放大文字，页面脚本读不到。
@@ -492,6 +492,7 @@ html.hugetext .ibtn{padding:0 8px}
 .tmset input{min-height:44px;padding:6px 8px;margin-top:2px;min-width:0;max-width:100%;width:100%;font-size:calc(17px * var(--fs))}
 .note.red{background:var(--crimson-soft);border-color:var(--crimson-border);border-left-color:var(--crimson-fill)}
 .note.red .ic{color:var(--crimson)}
+.note.slim{padding:8px 12px;font-size:calc(15px * var(--fs));line-height:1.35;align-items:center}.note.slim .ic{margin-top:0}
 .hlc{font-size:calc(22px * var(--fs));font-weight:900;line-height:1.3;margin:12px 0 4px;display:flex;align-items:flex-start;gap:8px;color:var(--text-primary)}
 .hlc .ic{color:var(--crimson);margin-top:4px}
 .prv{overflow-x:auto;background:var(--bg-subtle);border:1px solid var(--border-card);border-radius:12px;padding:12px;-webkit-overflow-scrolling:touch}
@@ -968,7 +969,7 @@ var FEEDBACK_GOOGLE = _CFG.google||"";    // Google 表单链接，例如 https:
 var FEEDBACK_TENCENT = _CFG.tencent||"";  // 腾讯问卷链接，例如 https://wj.qq.com/s2/xxxx/xxxx/
 // 可选：Google 表单里"版本/国家/语言"那道简答题的编号（形如 entry.123456789）。填了以后会自动带入，留空也能用。
 var GOOGLE_PREFILL_ENTRY = _CFG.googleEntry||"";
-var VERSION = "MVP v0.11.3";
+var VERSION = "MVP v0.11.4";
 var VERIFIED_ON = "2026-11-17";   // 全部国家号码的统一核实日期；某国单独复核后，在该国数据里加 v:"YYYY-MM-DD"
 // 固定的正式网址：分享、锁屏图片一律用它，不用当前地址栏（避免分享出 file:// 或预览地址）。分享链接里永远不放任何个人信息。
 var SITE_URL = "https://jackyyhhxjyxn.github.io/emergency-card/";
@@ -1339,6 +1340,7 @@ hospPriv:["本页不读取、不上传你的位置；点按钮后，由地图 Ap
 hospPrivCN:["点“高德地图”时，本页会请求一次位置（只用于把搜索中心发给高德，不保存、不上传给我们）；拒绝也能打开，只是可能不在你附近。","Tapping AMap asks for your location once (only to send the search centre to AMap; not saved or sent to us). If you decline it still opens, but may not centre on you."],
 hospLoc:["正在获取位置…","Getting location…"],hospNoLoc:["没拿到位置，已按高德自己的定位打开，请确认结果在你附近。","Couldn't get your location; opened AMap with its own positioning — check the results are near you."],
 brand:["急救卡","Emergency Card"],
+betaS:["测试版，未经医师签审 · 以接线员指示为准","Beta, not yet physician-reviewed · Follow the call handler"],
 beta:["测试版（"+VERSION+"）：内容依据公开的官方指南整理，尚未经执业急诊医师签审。紧急情况请先打电话，接线员的指示优先于本卡。",
       "Test version ("+VERSION+"): compiled from public official guidance; not yet signed off by a practising emergency physician. In an emergency call first — the dispatcher's instructions override this card."],
 youAre:["你所在的位置","You appear to be in"],auto:["按手机时区自动识别","Detected from device time zone"],manual:["手动选择","Chosen manually"],
@@ -1805,11 +1807,11 @@ function fitText(){try{var w=probeEl().getBoundingClientRect().width/100;
   fitChrome()}
 function fitChrome(){try{var r=document.documentElement.style,h=document.querySelector("header.top"),n=$("nav"),d=$("dock");
   if(h)r.setProperty("--top-real",h.offsetHeight+"px");
-  if(n&&n.offsetHeight)r.setProperty("--nav-real",n.offsetHeight+"px");
+  if(n&&n.offsetHeight)r.setProperty("--nav-real",n.offsetHeight+"px");var ni=$("navIn");if(ni&&ni.offsetHeight)r.setProperty("--navin-real",ni.offsetHeight+"px");
   if(d)r.setProperty("--dock-real",d.offsetHeight+"px")}catch(e){}}
 (function(){var q=null;function later(){if(q)return;q=(window.requestAnimationFrame||setTimeout)(function(){q=null;fitText()})}
   try{if(window.ResizeObserver){var ro=new ResizeObserver(later);ro.observe(probeEl());
-    ["nav","dock"].forEach(function(id){var e=$(id);if(e)ro.observe(e)});var h=document.querySelector("header.top");if(h)ro.observe(h)}}catch(e){}
+    ["nav","navIn","dock"].forEach(function(id){var e=$(id);if(e){try{ro.observe(e,{box:"border-box"})}catch(_){ro.observe(e)}}});var h=document.querySelector("header.top");if(h)ro.observe(h)}}catch(e){}
   window.addEventListener("resize",later);window.addEventListener("orientationchange",later);
   try{if(document.fonts&&document.fonts.ready)document.fonts.ready.then(later)}catch(e){}})();
 
@@ -1853,7 +1855,7 @@ function viewHome(c){var h="";
   h+=staleNote(c);
   h+='<section class="card crit tri" id="tri" aria-labelledby="triQ">'+triHtml()+'</section>';
   h+='<div class="qa3">'+qaBtn("helperGo","phone","qaHelp")+qaBtn("nfGo","msg","nfBtn")+qaBtn("hospGo","pin","qaHosp")+'</div>';
-  h+='<div class="note" role="note">'+I("info")+'<div>'+t("beta")+'</div></div>';
+  h+='<div class="note slim" role="note">'+I("info","s")+'<div>'+t("betaS")+'</div></div>';
   h+='<h2 class="secH" id="cardsH" tabindex="-1"><b>'+t("cards")+'</b></h2>'+catHtml()+gridHtml();
   return h}
 function tileHtml(k){return '<button class="tile'+(k.top?" top":"")+'" data-card="'+k.id+'">'+sign(k.id)+'<span><b>'+esc(k[lang])+'</b><small>'+esc(lang==="zh"?k.szh:k.sen)+'</small>'+(k.pend?'<em class="pend">'+t("pendT")+'</em>':'')+'</span>'+(k.top?I("chevR","chev"):"")+'</button>'}
@@ -2257,7 +2259,7 @@ function drawWall(c){
     var ns=fitSize(n[0],"800",Math.round(52*k),tw*.42);x.fillStyle=TX;x.textAlign="right";x.fillText(n[0],bx+bw-ip,y+52*k);var nw=x.measureText(n[0]).width;
     var lb=n[1]+" · "+n[2];fitSize(lb,"600",Math.round(36*k),tw-nw-24);x.fillStyle=MU;x.textAlign="left";x.fillText(lb,bx+ip,y+48*k)}})});
   rows.push({h:24,f:function(){}});
-  var foot=[T.verOn[0]+" · Verified "+verOf(c),T.wallGen[0]+" · Made "+todayStr()+" · "+T.wallRegen[0],SITE_URL.replace(/^https:\/\//,"").replace(/\/$/,"")];
+  var foot=[T.verOn[0]+" · Verified "+verOf(c),T.wallGen[0]+" · Made "+todayStr()+" · "+T.wallRegen[0]];
   foot.forEach(function(s){rows.push({h:44,f:function(y,k){fitSize(s,"600",Math.round(30*k),tw);x.fillStyle=MU;x.textAlign="center";x.fillText(s,W/2,y+32*k)}})});
   var nat=rows.reduce(function(a,r){return a+r.h},0)+ip*2,avail=bot-top,k=Math.min(1,avail/nat),boxH=Math.round(nat*k);
   var by=top+Math.round((avail-boxH)/2);
