@@ -969,7 +969,7 @@ var FEEDBACK_GOOGLE = _CFG.google||"";    // Google 表单链接，例如 https:
 var FEEDBACK_TENCENT = _CFG.tencent||"";  // 腾讯问卷链接，例如 https://wj.qq.com/s2/xxxx/xxxx/
 // 可选：Google 表单里"版本/国家/语言"那道简答题的编号（形如 entry.123456789）。填了以后会自动带入，留空也能用。
 var GOOGLE_PREFILL_ENTRY = _CFG.googleEntry||"";
-var VERSION = "MVP v0.11.5";
+var VERSION = "MVP v0.11.6";
 var VERIFIED_ON = "2026-11-17";   // 全部国家号码的统一核实日期；某国单独复核后，在该国数据里加 v:"YYYY-MM-DD"
 // 固定的正式网址：分享、锁屏图片一律用它，不用当前地址栏（避免分享出 file:// 或预览地址）。分享链接里永远不放任何个人信息。
 var SITE_URL = "https://jackyyhhxjyxn.github.io/emergency-card/";
@@ -1352,7 +1352,7 @@ s2:["发生了什么：例如“胸痛”“没有呼吸”“车祸”","What h
 s3:["几个人，大约年龄","How many people, roughly what age"],
 s4:["是否清醒？是否有呼吸？","Are they awake? Are they breathing?"],
 s5:["你的电话号码。等对方先挂电话","Your phone number. Let them hang up first"],
-locBtn:["显示我的经纬度","Show my coordinates"],locing:["定位中…","Locating…"],locFail:["无法定位。请允许位置权限，或直接描述地址与地标。","Could not get location. Allow location access, or describe the address and landmarks."],
+locBtn:["显示我的经纬度","Show my coordinates"],locRetry:["再试一次","Try again"],locCode:["错误代码","Error code"],locDen:["位置权限被关掉了。iPhone：设置 → 隐私与安全性 → 定位服务（打开）→ Safari 网站 → 使用期间；再在 Safari 地址栏左边点“大小”图标 → 网站设置 → 位置 → 允许。安卓：地址栏左边的图标 → 权限 → 位置 → 允许。改好后点“再试一次”。","Location permission is off. iPhone: Settings → Privacy & Security → Location Services (on) → Safari Websites → While Using the App; then in Safari tap the page-settings icon left of the address → Website Settings → Location → Allow. Android: tap the icon left of the address → Permissions → Location → Allow. Then tap Try again."],locWeak:["手机这次没拿到位置（室内或信号弱时常见）。请走到窗边、打开 Wi-Fi 和定位，再点“再试一次”。打急救电话时，英国等很多国家的手机会自动把位置发给接线员。","The phone couldn't get a position this time (common indoors or with a weak signal). Move near a window, turn on Wi-Fi and Location, then tap Try again. In the UK and many other countries, your phone sends its location automatically when you call the emergency number."],locApp:["你是在其他 App（如 WhatsApp、Gmail、Facebook）里打开的网页，这类内置浏览器经常拿不到位置。请点右上角菜单，选“在 Safari / 浏览器中打开”。","You opened this page inside another app (such as WhatsApp, Gmail or Facebook); built-in browsers there often can't get your location. Use the menu to choose Open in Safari / Open in browser."],locNoApi:["这个浏览器不支持定位。请用 Safari 或 Chrome 打开本页。","This browser doesn't support location. Open this page in Safari or Chrome."],locing:["定位中…","Locating…"],locFail:["无法定位。请允许位置权限，或直接描述地址与地标。","Could not get location. Allow location access, or describe the address and landmarks."],
 acc:["精度约","Accuracy about"],m:["米","m"],copy:["复制","Copy"],copied:["已复制","Copied"],map:["在地图中打开","Open in maps"],
 cards:["急救步骤","What to do"],infoT:["ⓘ 说明","ⓘ Info"],pendT:["待签审","Pending review"],pendN:["待签审：本卡为 v0.9 新增，尚未经医师审核；接线员的指示优先。","Pending review: new in v0.9, not yet checked by a physician. The call handler's instructions come first."],disc1:["本卡为公众急救科普与应急参考，不能替代专业医疗救治或急救培训。","Public first-aid information for reference only; it does not replace professional medical care or first-aid training."],wallS1:["生成一张只含当地急救号码的锁屏图片。","Make a lock-screen image with only the local emergency numbers."],back:["返回","Back"],dontT:["不要做","Do not"],srcT:["依据","Based on"],
 metroOn:["开始按压节拍（110 次/分）","Start compression beat (110/min)"],metroOff:["停止节拍","Stop beat"],
@@ -1678,7 +1678,7 @@ backAuto:["恢复自动识别","Use auto-detection"],
 autoNone:["未识别","not detected"],
 pickTz:["手机时区：{z}；自动识别结果：{c}","Device time zone: {z}; auto-detected: {c}"],
 aboutVer:["版本","Version"],
-fsT:["文字大小","Text size"],
+fsT:["文字大小","Text size"],vgT:["朗读声音","Read-aloud voice"],vgF:["女声","Female"],vgM:["男声","Male"],vgSys:["跟随手机","Phone default"],vgTry:["试听","Test"],vgNow:["当前使用：","Now using: "],vgNoneV:["这台手机没有可用的朗读声音。","No read-aloud voice is available on this phone."],vgMiss:["这台手机没装这种声音，先用现有的声音。","This voice isn't installed on this phone, so the available one is used."],vgUnk:["（无法判断男女）","(gender not reported)"],vgSam:["好的，我会这样朗读。","OK, this is how I will read aloud."],vgHint:["朗读用的是手机自带的声音，网页本身不带声音，所以每台手机听到的可能不一样：以前英文默认是英式男声（iPhone 上叫 Daniel），中文默认是女声（婷婷），这不是故意设定的，也没有国际标准规定急救提示要用男声还是女声。现在默认改为女声，听不清可以换。iPhone 可在 设置 → 辅助功能 → 朗读内容 → 声音 里下载更多声音；安卓在 设置 → 文字转语音 里换。","Read-aloud uses the voices built into your phone, so it can sound different on each phone. Before, English defaulted to a British male voice (Daniel on iPhone) and Chinese to a female voice (Tingting) — not a deliberate choice, and no international standard says emergency prompts must use a male or female voice. The default is now female; switch if it is hard to hear. iPhone: Settings → Accessibility → Spoken Content → Voices to download more; Android: Settings → Text-to-speech."],
 fsSys:["跟随手机","Phone setting"],fsM:["标准","Standard"],fsL:["大","Large"],fsXL:["特大","Extra large"],
 fsHint:["“跟随手机”：iPhone 读取 设置 › 显示与亮度 › 文字大小（或 辅助功能 › 更大字体）。安卓若不跟随，请直接选“大”或“特大”。","“Phone setting” follows iPhone Settings › Display & Brightness › Text Size (or Accessibility › Larger Text). If Android does not follow it, choose Large or Extra large here."],
 wallSave:["保存到相册","Save to Photos"],
@@ -1962,6 +1962,10 @@ function viewMore(c){var h=aboutHtml(c);
      '<div class="kick" style="margin-top:16px">'+t("fsT")+'</div><div class="seg4" role="group" aria-label="'+esc(t("fsT"))+'">'+
      [["sys","fsSys"],["m","fsM"],["l","fsL"],["xl","fsXL"]].map(function(x){return '<button data-fs="'+x[0]+'" aria-pressed="'+(fsMode===x[0])+'">'+t(x[1])+'</button>'}).join("")+'</div>'+
      info('<p>'+t("fsHint")+'</p>')+
+     '<div class="kick" style="margin-top:16px">'+t("vgT")+'</div><div class="seg3" role="group" aria-label="'+esc(t("vgT"))+'">'+
+     [["f","vgF"],["m","vgM"],["sys","vgSys"]].map(function(x){return '<button data-vg="'+x[0]+'" aria-pressed="'+(vgMode===x[0])+'">'+t(x[1])+'</button>'}).join("")+'</div>'+
+     '<div class="muted" id="vgNow" role="status" style="margin-top:8px"></div><button class="btn ghost" id="vgTry">'+I("vol","s")+t("vgTry")+'</button>'+
+     info('<p>'+t("vgHint")+'</p>')+
 '</section>';
   h+='<h2 class="secH" id="fb" tabindex="-1"><b>'+t("fbT")+'</b></h2><section class="card"><div>'+t("fbQ")+'</div>'+fbBlock(c)+'</section>';
   h+=srcAllHtml();
@@ -1975,6 +1979,7 @@ function renderMain(){
   $("app").innerHTML=h;
   $("navIn").innerHTML=navHtml();
   if(tab==="me")renderId(false);
+  if(tab==="more")vgInfo();
 }
 function render(){
   document.documentElement.lang=lang==="zh"?"zh-CN":"en";
@@ -2303,11 +2308,24 @@ function beat(){
 function metroStart(){if(mt)return;if(snd)audio();beat();mt=setInterval(beat,60000/110)}
 function metroStop(){if(mt){clearInterval(mt);mt=null}cardKeep=null}
 
-function voiceFor(l){l=l||lang;try{var want,alt;
+/* v0.11.6：朗读声音可选 女声 / 男声 / 跟随手机（默认女声）。网页语音接口不提供男女字段，只能按声音名字判断；判断不了的按“未知”处理 */
+var vgMode=(function(){var m=load("ec_vg");return m==="m"||m==="sys"?m:"f"})();
+var VG_F=/female|woman|samantha|serena|martha|kate|stephanie|karen|moira|tessa|catherine|tingting|ting-ting|婷婷|lili|莉莉|lilian|yu-shu|yushu|meijia|美佳|sinji|善怡|libby|sonia|maisie|hazel|susan|ava|allison|zoe|fiona|amelie|anna|paulina|monica|kyoko|yuna|sara|alice|joana|luciana|ellen|milena|xiaoxiao|xiaoyi|xiaohan|yaoyao|huihui|zira|hedda|amy|emma|nicky|flo|sandy|shelley|grandma|女/i;
+var VG_M=/\bmale\b|daniel|arthur|oliver|alex\b|fred|aaron|gordon|rishi|reed|rocko|eddy|grandpa|ralph|li-mu|limu|李牧|yunxi|yunyang|yunjian|kangkang|george|ryan|thomas|diego|jorge|juan|luca|otoya|男/i;
+function vgOf(v){var n=(v&&(v.name+" "+v.voiceURI))||"";if(VG_F.test(n))return "f";if(VG_M.test(n))return "m";return "?"}
+function voicesFor(l){l=l||lang;try{var want,alt;
   if(l==="zh"){want=/^zh[-_](CN|Hans)/i;alt=/^zh/i}else if(l==="en"){want=/^en[-_]GB/i;alt=/^en/i}
   else{var b=l.split("-")[0];want=new RegExp("^"+l.replace("-","[-_]"),"i");alt=new RegExp("^"+b+"([-_]|$)","i")}
-  var vs=speechSynthesis.getVoices()||[],v=null;
-  for(var i=0;i<vs.length&&!v;i++)if(want.test(vs[i].lang))v=vs[i];for(i=0;i<vs.length&&!v;i++)if(alt.test(vs[i].lang))v=vs[i];return v}catch(e){return null}}
+  var vs=speechSynthesis.getVoices()||[],a=[],c=[];
+  vs.forEach(function(v){if(want.test(v.lang))a.push(v);else if(alt.test(v.lang))c.push(v)});return a.concat(c)}catch(e){return []}}
+function voiceFor(l){var L=voicesFor(l);if(!L.length)return null;
+  if(vgMode==="sys"){for(var i=0;i<L.length;i++)if(L[i].default)return L[i];return L[0]}
+  for(var j=0;j<L.length;j++)if(vgOf(L[j])===vgMode)return L[j];
+  return L[0]}
+function vgInfo(){var el=$("vgNow");if(!el)return;var v=null;try{v=("speechSynthesis" in window)?voiceFor():null}catch(e){}
+  if(!v){el.textContent=t("vgNoneV");return}
+  var g=vgOf(v);el.textContent=t("vgNow")+v.name+(g==="f"?" · "+t("vgF"):g==="m"?" · "+t("vgM"):" "+t("vgUnk"))+(vgMode!=="sys"&&g!==vgMode?" — "+t("vgMiss"):"")}
+try{if("speechSynthesis" in window)speechSynthesis.addEventListener("voiceschanged",vgInfo)}catch(e){}
 function say(s){try{if(!("speechSynthesis" in window))return;speechSynthesis.cancel();
   var u=new SpeechSynthesisUtterance(s);u.lang=lang==="zh"?"zh-CN":"en-GB";var v=voiceFor();if(v)u.voice=v;u.rate=.95;speechSynthesis.speak(u)}catch(e){}}
 function hush(){try{if("speechSynthesis" in window)speechSynthesis.cancel()}catch(e){}}
@@ -2503,13 +2521,24 @@ function nfApplyLoc(){var ta=$("nfTxt");if(!ta)return;
   if(!NF.edited)ta.value=nfMsg();
   else if(NF.pos){ta.value=ta.value.replace(/\n?.*(暂时拿不到|not available yet).*$/m,"")+"\n"+t("nfMLoc").replace("{ll}",NF.pos.lat.toFixed(5)+", "+NF.pos.lng.toFixed(5)).replace("{m}",NF.pos.acc)+"\n"+t("nfMMap").replace("{u}",nfMapUrl(NF.pos.lat,NF.pos.lng))}
   nfLocUi();nfRefresh()}
+/* v0.11.6：定位改为两步——先要精确定位（GPS），拿不到再退回网络定位（Wi-Fi / 基站，室内更容易成功）；
+   失败时按原因给出具体做法（权限关了 / 信号弱 / 在其他 App 里打开），并显示错误代码，方便测试人员回报 */
+function inApp(){return /FBAN|FBAV|Instagram|WhatsApp|GSA\/|LinkedInApp|Twitter|Line\/|MicroMessenger|; wv\)/i.test(navigator.userAgent||"")}
+function getPos(ok,fail){
+  if(!navigator.geolocation||!window.isSecureContext){fail(0);return}
+  var done=false;function F(c){if(!done){done=true;fail(c)}}function O(p){if(!done){done=true;ok(p)}}
+  var guard=setTimeout(function(){F(3)},22000);
+  navigator.geolocation.getCurrentPosition(function(p){clearTimeout(guard);O(p)},function(e){
+    if(e&&e.code===1){clearTimeout(guard);F(1);return}
+    navigator.geolocation.getCurrentPosition(function(p){clearTimeout(guard);O(p)},function(e2){clearTimeout(guard);F(e2&&e2.code||2)},
+      {enableHighAccuracy:false,timeout:10000,maximumAge:300000})},
+    {enableHighAccuracy:true,timeout:9000,maximumAge:60000})}
+function locErr(c){var m=c===0?t("locNoApi"):c===1?t("locDen"):t("locWeak");
+  return (inApp()&&!inWx()?'<div class="note" role="note">'+I("info")+'<div>'+t("locApp")+'</div></div>':'')+
+    '<div class="muted">'+m+' ('+t("locCode")+' '+c+')</div>'}
 function nfLocate(){NF.st="wait";nfLocUi();
-  if(!navigator.geolocation){NF.st="no";nfApplyLoc();return}
-  var done=false,fin=function(){if(done)return false;done=true;return true};
-  setTimeout(function(){if(fin()){NF.st="no";nfApplyLoc()}},12000);
-  navigator.geolocation.getCurrentPosition(function(p){if(!fin())return;
-      NF.pos={lat:p.coords.latitude,lng:p.coords.longitude,acc:Math.round(p.coords.accuracy)};NF.st="ok";nfApplyLoc()},
-    function(){if(fin()){NF.st="no";nfApplyLoc()}},{enableHighAccuracy:true,timeout:10000,maximumAge:60000})}
+  getPos(function(p){NF.pos={lat:p.coords.latitude,lng:p.coords.longitude,acc:Math.round(p.coords.accuracy)};NF.st="ok";nfApplyLoc()},
+    function(){NF.st="no";nfApplyLoc()})}
 function openNotify(){
   metroStop();hush();cur=null;
   var c=cc(),N=C[c].amb,P=profs(),d=P.list[P.cur].d||{},ps=phonesIn(d.ice),anyLocal=false;
@@ -2995,11 +3024,14 @@ document.addEventListener("click",function(e){
   if(el.id==="qrSend"){qrSendPic();return}
   if(el.id==="qrFullBk"){var qb=$("qrFullBox");if(qb)qb.remove();return}
   if(el.id==="copyUrl"){var sm2=$("shareMsg");copyText(SITE_URL,function(){if(sm2)sm2.textContent=t("shareDone")});return}
+  if(el.dataset.vg){vgMode=el.dataset.vg;store("ec_vg",vgMode==="f"?null:vgMode);
+    document.querySelectorAll("[data-vg]").forEach(function(x){x.setAttribute("aria-pressed",x.dataset.vg===vgMode?"true":"false")});vgInfo();say(t("vgSam"));return}
+  if(el.id==="vgTry"){vgInfo();say(t("vgSam"));return}
   if(el.dataset.fs){fsMode=el.dataset.fs;store("ec_fs",fsMode==="sys"?null:fsMode);applyFs();
     document.querySelectorAll("[data-fs]").forEach(function(x){x.setAttribute("aria-pressed",x.dataset.fs===fsMode?"true":"false")});return}
   if(el.id==="clrBtn"){
     if(el.dataset.armed!=="1"){el.dataset.armed="1";el.textContent=t("clrArm");setTimeout(function(){if(document.contains(el)){el.dataset.armed="";el.textContent=t("clrBtn")}},6000);return}
-    ["ec_id","ec_prof","ec_tm","ec_geo","ec_lang","ec_theme","ec_mode","ec_voice","ec_snd","ec_fs","ec_mlang","ec_look","ec_prhint"].forEach(function(k){store(k,null)});
+    ["ec_id","ec_prof","ec_tm","ec_geo","ec_lang","ec_theme","ec_mode","ec_voice","ec_snd","ec_fs","ec_mlang","ec_look","ec_prhint","ec_vg"].forEach(function(k){store(k,null)});
     hush();location.replace(location.pathname);return}
   if(el.id==="pv"){go(-1);return}
   if(el.id==="nx"){go(1);return}
@@ -3064,14 +3096,13 @@ document.addEventListener("click",function(e){
     return}
   if(el.id==="locBtn"||el.id==="hlocBtn"){
     var out=$(el.id==="locBtn"?"locOut":"hlocOut");
-    if(!navigator.geolocation){out.innerHTML='<div class="muted">'+t("locFail")+'</div>';return}
-    out.innerHTML='<div class="muted">'+t("locing")+'</div>';
-    navigator.geolocation.getCurrentPosition(function(p){
+    out.innerHTML='<div class="muted">'+t("locing")+'</div>';el.disabled=true;
+    getPos(function(p){el.disabled=false;el.lastChild.textContent=t("locBtn");
       var s=p.coords.latitude.toFixed(5)+", "+p.coords.longitude.toFixed(5);
       out.innerHTML='<div class="loc">'+s+'</div><div class="muted">'+t("acc")+' '+Math.round(p.coords.accuracy)+' '+t("m")+'</div>'+
         '<button class="btn" id="locCopy" data-v="'+s+'">'+t("copy")+'</button>'+
         '<a class="btn ghost" target="_blank" rel="noopener" href="https://www.google.com/maps?q='+encodeURIComponent(s)+'">'+t("map")+'</a>';
-    },function(){out.innerHTML='<div class="muted">'+t("locFail")+'</div>'},{enableHighAccuracy:true,timeout:15000,maximumAge:30000});
+    },function(code){el.disabled=false;el.lastChild.textContent=t("locRetry");out.innerHTML=locErr(code)});
     return}
   if(el.id==="locCopy"){copyText(el.dataset.v,function(){el.textContent=t("copied")});return}
   if(el.id==="fbBtn"){
