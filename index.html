@@ -800,6 +800,32 @@ html.hugetext .swh{display:none}
 .mrun{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;margin:12px 0 0;padding:12px;border-radius:var(--radius-lg);background:var(--crimson-soft);border:1px solid var(--crimson-border)}
 .mrun .ml{flex:1 1 10em;font-weight:800;line-height:1.3}
 .mrun .chip{flex:none}
+
+/* ===================== v0.11.1 ===================== */
+/* 呼救页“帮别人呼救 / 通知家人 / 大字求助卡”：和首页 3 个快捷按钮一样，实心蓝底白字（v0.11.0 漏改） */
+.helpbtn{background:linear-gradient(180deg,var(--tile-a) 0%,var(--tile-b) 100%);border-color:transparent;color:#FFFFFF;
+  box-shadow:0 1px 2px rgba(15,23,42,.10),0 8px 18px -10px rgba(30,64,175,.55);
+  --h-red:#B91C1C; --h-red-bg:#FEE2E2; --text-muted:#EAF1FF; --text-primary:#FFFFFF}
+.helpbtn small,.helpbtn .chev{color:#EAF1FF}
+.helpbtn:active{border-color:transparent}
+@media print{.helpbtn{background:#FFFFFF;color:#111}}
+/* 钱包卡 v0.11.1：小字纯黑 #000000（打印机“纯黑/黑色文字”处理时只用黑墨，见更新说明）；红色只用于过敏条 */
+.wface{color:#000;border:0.25mm dashed #000;display:flex;flex-direction:column;padding:2.2mm 3mm}
+.wface .wtop{font-size:6pt;font-weight:800;letter-spacing:.3px;color:#000;border-bottom:0.25mm solid #000;padding-bottom:.6mm;margin-bottom:1mm;flex:none}
+.wnr{display:flex;align-items:center;justify-content:space-between;gap:2mm;flex:none}
+.wface .wname{font-size:12pt;font-weight:900;line-height:1.15;color:#000;min-width:0;overflow-wrap:anywhere}
+.wface .wbt{flex:none;border:0.5mm solid #000;border-radius:1mm;padding:.3mm 1.5mm;color:#000;background:#fff;font-size:12pt;font-weight:900;line-height:1;text-align:center;font-family:var(--font-num)}
+.wface .wbt small{display:block;font-size:4.5pt;font-weight:800;letter-spacing:.2px;font-family:var(--font-sans);margin-bottom:.3mm}
+.wal{flex:none;margin:1.2mm -3mm .8mm;padding:1mm 3mm;background:#B91C1C;color:#fff;font-size:7.5pt;font-weight:800;line-height:1.25;max-height:12mm;overflow:hidden;word-break:break-word}
+.wal b{font-weight:900;letter-spacing:.3px;margin-right:1mm}
+.wal.none{background:#fff;color:#000;border-top:0.25mm solid #000;border-bottom:0.25mm solid #000;font-weight:700}
+.wbody{flex:1 1 auto;min-height:0;overflow:hidden}
+.wface .wrk{color:#000;font-weight:800;margin-top:.4mm}
+.wface .wl{color:#000;font-weight:800}
+.wface .wt{color:#000;margin-top:.5mm}
+.wice{flex:none;border-top:0.3mm solid #000;padding-top:.8mm;margin-top:.6mm;font-size:8pt;line-height:1.2;color:#000;max-height:6.4mm;overflow:hidden;word-break:break-word}
+.wice b{font-weight:900;font-family:var(--font-num)}
+.wface .wqrc,.wface .wdate{color:#000}
 </style>
 </head>
 <body>
@@ -826,7 +852,7 @@ var FEEDBACK_GOOGLE = _CFG.google||"";    // Google 表单链接，例如 https:
 var FEEDBACK_TENCENT = _CFG.tencent||"";  // 腾讯问卷链接，例如 https://wj.qq.com/s2/xxxx/xxxx/
 // 可选：Google 表单里"版本/国家/语言"那道简答题的编号（形如 entry.123456789）。填了以后会自动带入，留空也能用。
 var GOOGLE_PREFILL_ENTRY = _CFG.googleEntry||"";
-var VERSION = "MVP v0.11.0";
+var VERSION = "MVP v0.11.1";
 var VERIFIED_ON = "2026-11-17";   // 全部国家号码的统一核实日期；某国单独复核后，在该国数据里加 v:"YYYY-MM-DD"
 // 固定的正式网址：分享、锁屏图片一律用它，不用当前地址栏（避免分享出 file:// 或预览地址）。分享链接里永远不放任何个人信息。
 var SITE_URL = "https://jackyyhhxjyxn.github.io/emergency-card/";
@@ -1534,7 +1560,7 @@ backAuto:["恢复自动识别","Use auto-detection"],
 autoNone:["未识别","not detected"],
 pickTz:["手机时区：{z}；自动识别结果：{c}","Device time zone: {z}; auto-detected: {c}"],
 aboutVer:["版本","Version"],
-diagT:["国家识别诊断（截图发给我们可帮助排查）","Country detection details (screenshot this if something looks wrong)"],
+diagT:["国家识别诊断（号码不对时用）","Country detection details (if the numbers look wrong)"],
 diagTz:["手机时区","Device time zone"],diagDet:["自动识别结果","Auto-detected"],diagUse:["当前使用","Now using"],
 diagMode:["方式","Mode"],diagFs:["实测文字放大","Measured text scale"],diagAuto:["自动","Automatic"],diagMan:["手动","Manual"],
 fsT:["文字大小","Text size"],
@@ -1752,8 +1778,8 @@ function hospHtml(c){var N=C[c].amb,cn=c==="CN",b=[];
 
 function viewSos(c){var d=C[c],h="";
   h+='<button class="helpbtn" id="helperGo"><span class="sg" aria-hidden="true">'+I("phone")+'</span><span><b>'+t("helpOT")+'</b><small>'+t("helpOS")+'</small></span>'+I("chevR","chev")+'</button>';
-  h+='<button class="helpbtn" id="helpGo"><span class="sg" aria-hidden="true">'+I("sos")+'</span><span><b>'+t("helpT")+'</b><small>'+t("helpS")+'</small></span>'+I("chevR","chev")+'</button>';
   h+='<button class="helpbtn" id="nfGo"><span class="sg" aria-hidden="true">'+I("msg")+'</span><span><b>'+t("nfBtn")+'</b><small>'+t("nfBtnS")+'</small></span>'+I("chevR","chev")+'</button>';
+  h+='<button class="helpbtn" id="helpGo"><span class="sg" aria-hidden="true">'+I("sos")+'</span><span><b>'+t("helpT")+'</b><small>'+t("helpS")+'</small></span>'+I("chevR","chev")+'</button>';
   if(c==="XX")h+='<div class="note" role="note">'+I("alert")+'<div>'+esc(t("xxNote").replace("{z}",tzLabel()))+'</div></div>';
   h+=staleNote(c);
   h+='<h2 class="secH" style="margin-top:6px"><b>'+t("local")+'</b>'+esc(nm(c))+'</h2><section class="card">';
@@ -1779,7 +1805,15 @@ function aboutHtml(c){
     '<div class="vrow"><b>'+esc(VERSION)+'</b><span>'+t("contentVer")+CO()+CONTENT_VER+'</span><span>'+t("verOn")+CO()+esc(verOf(c))+'</span></div>'+
     '<details class="sl"><summary>'+t("diagT")+'</summary><div class="muted diag">'+
     t("diagTz")+CO()+esc(tzLabel())+'<br>'+t("diagDet")+CO()+esc(DET==="XX"?t("autoNone"):nm(DET))+' ('+DET+')<br>'+
-    t("diagUse")+CO()+esc(nm(c))+' ('+c+')<br>'+t("diagMode")+CO()+(manual?t("diagMan"):t("diagAuto"))+'<br>'+t("diagFs")+CO()+TZOOM+'×<br>'+esc(VERSION)+' · '+esc(navigator.language||"")+'</div></details></section>'}
+    t("diagUse")+CO()+esc(nm(c))+' ('+c+')<br>'+t("diagMode")+CO()+(manual?t("diagMan"):t("diagAuto"))+'<br>'+t("diagFs")+CO()+TZOOM+'×<br>'+esc(VERSION)+' · '+esc(navigator.language||"")+'</div>'+
+    '<p class="ht">'+t("dgHow")+'</p><button class="btn ghost" id="dgCopy">'+t("dgCopy")+'</button>'+dgFormBtn(c)+
+    '<div class="muted" id="dgMsg" role="status"></div><p class="ht">'+t("dgPriv")+'</p><p class="ht">'+t("dgFix")+'</p></details></section>'}
+/* v0.11.1：国家识别报告。只含时区、识别结果、当前国家、自动/手动、语言、版本；不含位置、姓名、电话、病情 */
+function dgLine(c){return "COUNTRY-REPORT · "+VERSION+" · tz="+(TZNAME||"-")+" · det="+DET+" · use="+c+" · "+(manual?"manual":"auto")+" · ui="+lang+" · nav="+(navigator.language||"-")}
+function dgFormBtn(c){var g=FEEDBACK_GOOGLE,q=FEEDBACK_TENCENT;
+  if(g&&GOOGLE_PREFILL_ENTRY)g+=(g.indexOf("?")<0?"?":"&")+"usp=pp_url&"+encodeURIComponent(GOOGLE_PREFILL_ENTRY)+"="+encodeURIComponent(dgLine(c));
+  var u=(lang==="zh"||c==="CN")?(q||g):(g||q);
+  return u?'<a class="btn" id="dgForm" href="'+esc(u)+'" target="_blank" rel="noopener">'+t("dgForm")+'</a>':''}
 /* v0.10.2：“信息来源”分两块，避免把国家等级 A/B/C 和每条来源混在一起：
    ① 各国急救号码可信度（A/B/C 只用于这里，逐国列出依据编号）；② 全部来源，每条标类别（官方 / 指南 / 专业机构 / 技术文档 / 其他） */
 function srcAllHtml(){
@@ -2407,7 +2441,7 @@ function dueOk(s){return /^\d{4}-\d{2}-\d{2}$/.test(s||"")}
 var QR_SVG='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 41 41" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M4 4h7v1h-7zM12 4h1v1h-1zM14 4h2v1h-2zM17 4h2v1h-2zM21 4h2v1h-2zM24 4h2v1h-2zM30 4h7v1h-7zM4 5h1v1h-1zM10 5h1v1h-1zM13 5h2v1h-2zM16 5h1v1h-1zM25 5h1v1h-1zM28 5h1v1h-1zM30 5h1v1h-1zM36 5h1v1h-1zM4 6h1v1h-1zM6 6h3v1h-3zM10 6h1v1h-1zM12 6h6v1h-6zM21 6h1v1h-1zM25 6h4v1h-4zM30 6h1v1h-1zM32 6h3v1h-3zM36 6h1v1h-1zM4 7h1v1h-1zM6 7h3v1h-3zM10 7h1v1h-1zM13 7h1v1h-1zM19 7h1v1h-1zM23 7h1v1h-1zM25 7h4v1h-4zM30 7h1v1h-1zM32 7h3v1h-3zM36 7h1v1h-1zM4 8h1v1h-1zM6 8h3v1h-3zM10 8h1v1h-1zM14 8h2v1h-2zM19 8h1v1h-1zM23 8h1v1h-1zM26 8h1v1h-1zM30 8h1v1h-1zM32 8h3v1h-3zM36 8h1v1h-1zM4 9h1v1h-1zM10 9h1v1h-1zM12 9h1v1h-1zM19 9h1v1h-1zM21 9h3v1h-3zM28 9h1v1h-1zM30 9h1v1h-1zM36 9h1v1h-1zM4 10h7v1h-7zM12 10h1v1h-1zM14 10h1v1h-1zM16 10h1v1h-1zM18 10h1v1h-1zM20 10h1v1h-1zM22 10h1v1h-1zM24 10h1v1h-1zM26 10h1v1h-1zM28 10h1v1h-1zM30 10h7v1h-7zM13 11h3v1h-3zM18 11h3v1h-3zM23 11h2v1h-2zM26 11h1v1h-1zM4 12h1v1h-1zM6 12h1v1h-1zM10 12h2v1h-2zM13 12h2v1h-2zM20 12h1v1h-1zM24 12h1v1h-1zM27 12h1v1h-1zM31 12h1v1h-1zM34 12h1v1h-1zM36 12h1v1h-1zM7 13h1v1h-1zM9 13h1v1h-1zM13 13h1v1h-1zM17 13h1v1h-1zM19 13h1v1h-1zM21 13h1v1h-1zM23 13h2v1h-2zM27 13h2v1h-2zM30 13h1v1h-1zM33 13h1v1h-1zM36 13h1v1h-1zM4 14h1v1h-1zM6 14h1v1h-1zM8 14h1v1h-1zM10 14h1v1h-1zM13 14h1v1h-1zM19 14h2v1h-2zM23 14h3v1h-3zM27 14h1v1h-1zM33 14h2v1h-2zM36 14h1v1h-1zM4 15h1v1h-1zM6 15h3v1h-3zM11 15h2v1h-2zM14 15h2v1h-2zM17 15h1v1h-1zM19 15h1v1h-1zM21 15h1v1h-1zM27 15h1v1h-1zM30 15h4v1h-4zM35 15h1v1h-1zM5 16h2v1h-2zM10 16h2v1h-2zM15 16h3v1h-3zM19 16h1v1h-1zM21 16h1v1h-1zM26 16h1v1h-1zM28 16h1v1h-1zM30 16h2v1h-2zM36 16h1v1h-1zM8 17h2v1h-2zM11 17h1v1h-1zM13 17h2v1h-2zM16 17h2v1h-2zM25 17h1v1h-1zM27 17h2v1h-2zM30 17h2v1h-2zM33 17h4v1h-4zM4 18h1v1h-1zM6 18h1v1h-1zM8 18h1v1h-1zM10 18h3v1h-3zM14 18h2v1h-2zM17 18h3v1h-3zM23 18h1v1h-1zM25 18h3v1h-3zM32 18h1v1h-1zM34 18h1v1h-1zM36 18h1v1h-1zM5 19h3v1h-3zM12 19h2v1h-2zM16 19h3v1h-3zM22 19h1v1h-1zM27 19h1v1h-1zM29 19h3v1h-3zM33 19h1v1h-1zM4 20h4v1h-4zM9 20h2v1h-2zM15 20h2v1h-2zM19 20h2v1h-2zM23 20h1v1h-1zM27 20h2v1h-2zM30 20h2v1h-2zM33 20h1v1h-1zM35 20h1v1h-1zM5 21h1v1h-1zM7 21h1v1h-1zM12 21h2v1h-2zM17 21h1v1h-1zM19 21h2v1h-2zM23 21h3v1h-3zM27 21h2v1h-2zM30 21h1v1h-1zM33 21h1v1h-1zM36 21h1v1h-1zM5 22h1v1h-1zM7 22h5v1h-5zM13 22h3v1h-3zM17 22h3v1h-3zM21 22h3v1h-3zM27 22h1v1h-1zM29 22h3v1h-3zM33 22h2v1h-2zM36 22h1v1h-1zM4 23h1v1h-1zM6 23h1v1h-1zM9 23h1v1h-1zM12 23h1v1h-1zM15 23h4v1h-4zM20 23h1v1h-1zM22 23h1v1h-1zM26 23h2v1h-2zM29 23h2v1h-2zM32 23h2v1h-2zM35 23h2v1h-2zM7 24h5v1h-5zM16 24h7v1h-7zM24 24h5v1h-5zM30 24h2v1h-2zM7 25h2v1h-2zM12 25h1v1h-1zM16 25h3v1h-3zM20 25h3v1h-3zM24 25h2v1h-2zM27 25h5v1h-5zM33 25h1v1h-1zM36 25h1v1h-1zM4 26h3v1h-3zM10 26h4v1h-4zM16 26h2v1h-2zM20 26h3v1h-3zM24 26h4v1h-4zM29 26h1v1h-1zM34 26h1v1h-1zM36 26h1v1h-1zM7 27h1v1h-1zM11 27h2v1h-2zM15 27h2v1h-2zM19 27h2v1h-2zM22 27h3v1h-3zM28 27h1v1h-1zM30 27h2v1h-2zM33 27h1v1h-1zM35 27h2v1h-2zM4 28h2v1h-2zM8 28h4v1h-4zM14 28h1v1h-1zM18 28h1v1h-1zM28 28h5v1h-5zM12 29h15v1h-15zM28 29h1v1h-1zM32 29h1v1h-1zM36 29h1v1h-1zM4 30h7v1h-7zM12 30h1v1h-1zM14 30h1v1h-1zM16 30h2v1h-2zM19 30h2v1h-2zM23 30h2v1h-2zM28 30h1v1h-1zM30 30h1v1h-1zM32 30h5v1h-5zM4 31h1v1h-1zM10 31h1v1h-1zM13 31h4v1h-4zM18 31h1v1h-1zM21 31h1v1h-1zM23 31h1v1h-1zM25 31h1v1h-1zM27 31h2v1h-2zM32 31h2v1h-2zM35 31h2v1h-2zM4 32h1v1h-1zM6 32h3v1h-3zM10 32h1v1h-1zM14 32h2v1h-2zM17 32h2v1h-2zM21 32h1v1h-1zM25 32h1v1h-1zM27 32h6v1h-6zM4 33h1v1h-1zM6 33h3v1h-3zM10 33h1v1h-1zM13 33h2v1h-2zM25 33h1v1h-1zM27 33h1v1h-1zM29 33h1v1h-1zM31 33h2v1h-2zM36 33h1v1h-1zM4 34h1v1h-1zM6 34h3v1h-3zM10 34h1v1h-1zM12 34h1v1h-1zM14 34h3v1h-3zM18 34h2v1h-2zM21 34h1v1h-1zM23 34h1v1h-1zM25 34h5v1h-5zM31 34h3v1h-3zM35 34h2v1h-2zM4 35h1v1h-1zM10 35h1v1h-1zM17 35h2v1h-2zM28 35h1v1h-1zM30 35h4v1h-4zM4 36h7v1h-7zM12 36h1v1h-1zM14 36h1v1h-1zM19 36h2v1h-2zM23 36h2v1h-2zM27 36h2v1h-2zM30 36h4v1h-4zM36 36h1v1h-1z"/></svg>';
 
 var T6={
-helpOT:["我在帮别人","I'm helping someone"],helpOS:["用你的手机为病人呼救：电话里说什么、位置、接应救护车","Call for someone else on your phone: what to say, your location, meeting the ambulance"],
+helpOT:["帮别人呼救","Call for someone else"],helpOS:["用你的手机为病人呼救：电话里说什么、位置、接应救护车","Call for someone else on your phone: what to say, your location, meeting the ambulance"],
 hlT:["帮别人呼救","Calling for someone else"],
 hlCall:["先拨打 {N}，开免提，边说边照顾病人。","Call {N} first, on speaker, so you can keep helping."],
 hlSayT:["接线员通常会问这几件事","The call handler will usually ask"],
@@ -2692,15 +2726,17 @@ function openHelper(){
 /* ---------- 打印：钱包卡 + 冰箱单 + 大门提示贴（固定白底黑字，与日夜模式无关） ---------- */
 function wbil(en,zh){return '<span class="wl">'+esc(en)+' · '+esc(zh)+'</span>'}
 function walletHtml(c,d){var rk=riskOf(d),top=rk.slice(0,3),more=rk.length-top.length;
-  var f='<div class="wface"><div class="wh"><span>MEDICAL ID · 急救信息</span>'+(d.blood?'<span class="wbt">'+esc(d.blood)+'</span>':'')+'</div>'+
-    '<div class="wname">'+esc(d.name||"")+'</div>'+
+  /* v0.11.1：正面 = 姓名 + 血型 → 红色过敏条 → 高危 / 用药 / 疾病 → 底部紧急联系电话。红色只用在过敏条（白字反白）；其他文字一律纯黑 #000000 */
+  var f='<div class="wface wf"><div class="wtop">MEDICAL ID · 急救信息</div>'+
+    '<div class="wnr"><span class="wname">'+esc(d.name||"")+'</span>'+(d.blood?'<span class="wbt"><small>BLOOD · 血型</small>'+esc(d.blood)+'</span>':'')+'</div>'+
+    (d.allergy?'<div class="wal"><b>ALLERGIES · 过敏</b> '+esc(d.allergy)+'</div>':'<div class="wal none"><b>ALLERGIES · 过敏</b> '+esc(T.wNone[0])+'</div>')+
+    '<div class="wbody">'+
     top.map(function(x){return '<div class="wrk">■ '+esc(x.en)+' · '+esc(x.zh)+(x.k==="preg"&&dueOk(d.due)?' · Due '+esc(d.due):'')+'</div>'}).join("")+
-    (more>0?'<div class="wl">'+esc(T.prMore[1].replace("{n}",more))+' · '+esc(T.prMore[0].replace("{n}",more))+'</div>':'')+
-    (d.allergy?'<div class="wt">'+wbil("Allergies","过敏")+'：'+esc(d.allergy)+'</div>':'')+
+    (more>0?'<div class="wt">'+esc(T.prMore[1].replace("{n}",more))+' · '+esc(T.prMore[0].replace("{n}",more))+'</div>':'')+
     (d.med?'<div class="wt">'+wbil("Medication","用药")+'：'+esc(d.med)+'</div>':'')+
-    (d.cond?'<div class="wt">'+wbil("Conditions","疾病")+'：'+esc(d.cond)+'</div>':'')+'</div>';
-  var b='<div class="wface"><div class="wh">IN CASE OF EMERGENCY · 紧急联系</div>'+
-    (d.ice?'<div class="wt"><b>ICE</b> '+esc(d.ice)+'</div>':'')+
+    (d.cond?'<div class="wt">'+wbil("Conditions","疾病")+'：'+esc(d.cond)+'</div>':'')+'</div>'+
+    '<div class="wice"><span class="wl">ICE · 紧急联系人</span> <b>'+(d.ice?esc(d.ice):esc(T.wNone[0]))+'</b></div></div>';
+  var b='<div class="wface wb"><div class="wtop">'+esc(T.wSide[0])+'</div>'+
     (d.ins?'<div class="wt">'+wbil("Insurance","保险")+'：'+esc(d.ins)+'</div>':'')+
     (d.insTel?'<div class="wt">'+wbil("24h assistance","救援热线")+'：<b>'+esc(d.insTel)+'</b></div>':'')+
     '<div class="wqr">'+QR_SVG+'</div><div class="wqrc">'+esc(T.prQrS[1])+'<br>'+esc(T.prQrS[0])+'</div>'+
@@ -2733,7 +2769,7 @@ function openPrint(){
     '<button class="btn" data-print="f">'+I("print")+t("prGo")+'</button>'+
     '<p class="muted">'+t("prPriv")+'</p>'+info('<p>'+t("prQr")+'</p><p>'+t("prHow")+'</p><div class="src">'+t("srcT")+CO()+srcLine([100,102])+'</div>');
   showSheet(h,callBtn(c));
-  try{var over=[].some.call(document.querySelectorAll("#sheetBody .wface"),function(x){return x.scrollHeight>x.clientHeight+2});$("prOver").hidden=!over}catch(e){}
+  try{var over=[].some.call(document.querySelectorAll("#sheetBody .wface,#sheetBody .wbody,#sheetBody .wal,#sheetBody .wice"),function(x){return x.scrollHeight>x.clientHeight+2});$("prOver").hidden=!over}catch(e){}
 }
 function doPrint(k){
   var c=cc(),d=getId(),a=$("printArea");
@@ -2751,13 +2787,25 @@ ucf:["未确认","Unconfirmed"],ucfA:["所在国家未确认，点此确认","Co
 ucfHero:["未确认：号码按手机时区推测，请核对国家","Not confirmed: the number is a guess from the phone's time zone. Check the country."],
 ucfHeroX:["未识别所在国家，请点“更换”选择","Country not detected. Tap Change to choose."],
 ucfYes:["是，就在这里","Yes, I am here"],
-qaHelp:["帮别人呼救","Help someone"],qaHosp:["附近急诊","Nearby A&E / ER"],
+qaHelp:["帮别人呼救","Call for someone"],qaHosp:["附近急诊","Nearby A&E / ER"],
 catAll:["全部","All"],catLife:["危及生命","Life-threatening"],catHb:["心脑","Heart & brain"],catEnv:["外伤环境","Injury & environment"],catA:["按类别筛选","Filter by type"],
 ctL:["已按压","Elapsed"],ctA:["开始按压后经过的时间","Time since compressions started"],
 swipeH:["‹ 可左右滑动 ›","‹ swipe ›"],
 mrun:["节拍器仍在运行，计时未中断","Metronome still running, timer not reset"],mrBack:["返回心肺复苏","Back to CPR"]
 };
 for(var _k10 in T10)T[_k10]=T10[_k10];
+/* v0.11.1 文字 */
+var T11={
+dgHow:["显示的国家或急救号码不对？先回到“急救”页，在顶部国家栏点“更换”手动选国家（马上生效）。然后点下面两个按钮，把这几行发给我们，帮我们修好识别规则。","Wrong country or number? First go to the Emergency tab, tap Change in the country bar at the top and pick your country (works straight away). Then use the two buttons below to send us these lines so we can fix the detection."],
+dgCopy:["① 复制诊断信息","① Copy the details"],
+dgForm:["② 打开反馈表，粘贴后提交","② Open the feedback form, paste, submit"],
+dgDone:["已复制。打开反馈表，在第 1 题“版本 · 国家 · 语言”里长按粘贴；“国家对吗”一题选“不对”。","Copied. In the feedback form, paste into question 1 (version · country · language) if it is empty, and answer No to “Was the country right?”."],
+dgPriv:["这几行只有手机时区、识别结果、当前国家、自动或手动、语言和版本号；不含位置、姓名、电话或病情。不需要截图。","These lines contain only the phone time zone, detection result, current country, automatic or manual, language and version — no location, name, phone number or medical details. No screenshot needed."],
+dgFix:["我们不收集联系方式，所以无法单独回复。修好后随新版本发布，下次打开网页自动生效。","We don’t collect contact details, so we can’t reply individually. Fixes ship in the next version and apply automatically the next time you open the page."],
+wNone:["not recorded · 未填写","not recorded · 未填写"],
+wSide:["IN CASE OF EMERGENCY · 紧急情况","IN CASE OF EMERGENCY · 紧急情况"]
+};
+for(var _k11 in T11)T[_k11]=T11[_k11];
 /* 首页三按钮横排 */
 function qaBtn(id,ic,k){return '<button class="qa" id="'+id+'"><span class="sg" aria-hidden="true">'+I(ic)+'</span><b>'+t(k)+'</b></button>'}
 /* 分类标签：严重出血归“危及生命”。心肺复苏大卡始终显示，不受筛选影响；没有归类的新卡在每个类别里都显示 */
@@ -2839,6 +2887,7 @@ document.addEventListener("click",function(e){
     else copyText(SITE_URL,function(){if(sm)sm.textContent=t("shareDone")});return}
   if(el.id==="qrSend"){qrSendPic();return}
   if(el.id==="qrFullBk"){var qb=$("qrFullBox");if(qb)qb.remove();return}
+  if(el.id==="dgCopy"){var dm=$("dgMsg");copyText(dgLine(cc()),function(){if(dm)dm.textContent=t("dgDone")});return}
   if(el.id==="copyUrl"){var sm2=$("shareMsg");copyText(SITE_URL,function(){if(sm2)sm2.textContent=t("shareDone")});return}
   if(el.dataset.fs){fsMode=el.dataset.fs;store("ec_fs",fsMode==="sys"?null:fsMode);applyFs();
     document.querySelectorAll("[data-fs]").forEach(function(x){x.setAttribute("aria-pressed",x.dataset.fs===fsMode?"true":"false")});return}
