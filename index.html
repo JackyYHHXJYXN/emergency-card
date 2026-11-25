@@ -921,6 +921,26 @@ header.top,.shead{background:var(--bar-glass);border-bottom:1px solid var(--gl-e
   .card,.list,.extra,.metro,details.dd,.steps li,.stepcard,.tab{background:var(--bg-card);border-color:var(--border-strong)}
   .n,.loc,.urlbox,.brbox,.prv,.back,.chip,.ibtn{background:var(--bg-subtle);border-color:var(--border-strong)}
 }
+
+/* ===================== v0.11.3：蓝色改回实色（取代 v0.11.2 的渐变高光） =====================
+   用户实测：v0.11.2 的“上亮下暗”渐变让蓝色发灰、不好看。改为：
+   蓝色 = 纯色 #1D4ED8（不再做 #1D4ED8→#1E40AF 渐变，也不叠白色高光），水晶感只靠“顶部 1px 亮线 + 细亮边 + 柔和投影”；
+   底栏当前页水晶键、入口格子、快捷按钮、所有蓝按钮用同一套；红色按同样规则（保持原有红色，去掉白色高光）。 */
+:root{--solid-shadow:inset 0 1px 0 rgba(255,255,255,.38),0 1px 2px rgba(15,23,42,.14),0 8px 18px -10px rgba(29,78,216,.55);
+  --solid-shadow-r:inset 0 1px 0 rgba(255,255,255,.38),0 1px 2px rgba(15,23,42,.14),0 8px 18px -10px rgba(185,28,28,.55);
+  --solid-edge:rgba(255,255,255,.16)}
+.tile:not(.top),.qa,.helpbtn,.tab[aria-current="page"],
+.btn:not(.ghost):not(.warn):not(.red):not(.grn),.snav .nx,
+.bchoice[aria-pressed="true"],.cat[aria-pressed="true"]:not([data-cat="life"]),.chip2[aria-pressed="true"]{
+  background:var(--brand);border:1px solid var(--solid-edge);box-shadow:var(--solid-shadow)}
+.tab[aria-current="page"]{color:#FFFFFF}
+.btn:not(.red):not(.grn):not(.ghost):not(.warn):active,.tile:not(.top):active,.qa:active,.helpbtn:active{background:var(--brand-press)}
+.btn.red,.big.no,.tile.top,.rblock:not(.empty),.call,.cat[data-cat="life"][aria-pressed="true"],.btn.warn[data-armed="1"]{
+  background:var(--red-grad);border:1px solid var(--solid-edge);box-shadow:var(--solid-shadow-r)}
+.call:active,.big.no:active,a.rblock:active{background:var(--crimson-press)}
+.btn.grn{background:#047857;border:1px solid var(--solid-edge);box-shadow:var(--solid-shadow)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--solid-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 8px 18px -10px rgba(0,0,0,.8);--solid-shadow-r:inset 0 1px 0 rgba(255,255,255,.22),0 8px 18px -10px rgba(0,0,0,.8)}}
+:root[data-theme="dark"]{--solid-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 8px 18px -10px rgba(0,0,0,.8);--solid-shadow-r:inset 0 1px 0 rgba(255,255,255,.22),0 8px 18px -10px rgba(0,0,0,.8)}
 @media print{body,.sheet{background:#fff!important}}
 </style>
 </head>
@@ -948,7 +968,7 @@ var FEEDBACK_GOOGLE = _CFG.google||"";    // Google 表单链接，例如 https:
 var FEEDBACK_TENCENT = _CFG.tencent||"";  // 腾讯问卷链接，例如 https://wj.qq.com/s2/xxxx/xxxx/
 // 可选：Google 表单里"版本/国家/语言"那道简答题的编号（形如 entry.123456789）。填了以后会自动带入，留空也能用。
 var GOOGLE_PREFILL_ENTRY = _CFG.googleEntry||"";
-var VERSION = "MVP v0.11.2";
+var VERSION = "MVP v0.11.3";
 var VERIFIED_ON = "2026-11-17";   // 全部国家号码的统一核实日期；某国单独复核后，在该国数据里加 v:"YYYY-MM-DD"
 // 固定的正式网址：分享、锁屏图片一律用它，不用当前地址栏（避免分享出 file:// 或预览地址）。分享链接里永远不放任何个人信息。
 var SITE_URL = "https://jackyyhhxjyxn.github.io/emergency-card/";
@@ -1929,7 +1949,7 @@ function viewMore(c){var h=aboutHtml(c);
   h+='<h2 class="secH"'+(standalone()?' style="margin-top:6px"':'')+'><b>'+t("offT")+'</b></h2><section class="card"><div>'+t("wallS1")+'</div>'+
      '<button class="btn" id="wallGo">'+I("phone")+t("wallBtn")+'</button>'+info('<p>'+t("wallS")+'</p>')+
      '<div class="idcan"><div>'+t("offPr")+'</div><button class="btn ghost" id="prGo">'+I("print")+t("prBtn")+'</button></div></section>';
-  h+='<h2 class="secH"><b>'+t("shareT")+'</b></h2><section class="card"><div>'+t("shareS")+'</div><figure class="qrw"><img src="qr-wechat.png" width="782" height="978" alt="'+esc(t("qrAlt"))+'"></figure>'+info(t(inWx()?"qrCap":"qrCapOut"))+'<div class="urlbox">'+esc(SITE_URL)+'</div>'+
+  h+='<h2 class="secH"><b>'+t("shareT")+'</b></h2><section class="card"><div>'+t("shareS")+'</div><figure class="qrw"><img src="qr-wechat.png" width="782" height="935" alt="'+esc(t("qrAlt"))+'"></figure>'+info(t(inWx()?"qrCap":"qrCapOut"))+
      (inWx()?'<div class="note" role="note" style="margin:12px 0 0">'+I("info")+'<div>'+t("shareInWx")+'</div></div>':'')+
      (inWx()?'':(qrPrefetch(),'<button class="btn" id="qrSend">'+I("dl")+t("qrSend")+'</button>'))+
      '<button class="btn'+(inWx()?'':' ghost')+'" id="copyUrl">'+t("shareCopy")+'</button><div class="muted" id="shareMsg" role="status"></div>'+
@@ -1980,11 +2000,12 @@ function fbBlock(c){
   if(g&&GOOGLE_PREFILL_ENTRY)g+=(g.indexOf("?")<0?"?":"&")+"usp=pp_url&"+encodeURIComponent(GOOGLE_PREFILL_ENTRY)+"="+encodeURIComponent(fbCtx(c));
   var bg=g?'<a class="btn{K}" href="'+esc(g)+'" target="_blank" rel="noopener">'+t("fbG")+'</a>':"";
   var bq=q?'<a class="btn{K}" href="'+esc(q)+'" target="_blank" rel="noopener">'+t("fbT2")+'</a>':"";
-  /* v0.4.2 按界面语言分流：中文只给腾讯问卷，英文只给 Google 表单；英文界面在中国大陆（Google 打不开）也给腾讯；缺哪个就用另一个 */
-  var pick=(lang==="zh"||c==="CN")?(bq||bg):(bg||bq);
-  var list=[pick];
+  /* v0.11.3 按国家分流（取代 v0.4.2 按语言）：中国大陆 = 只给腾讯问卷（Google 打不开）；其他所有国家 = Google 表单为主按钮，
+     中文界面另加腾讯问卷作第二按钮。缺哪个就用另一个 */
+  var list=c==="CN"?[bq||bg]:(lang==="zh"?[bg,bq]:[bg||bq]).filter(Boolean);
+  var pick=list[0];
   var h=list.map(function(x,i){return x.replace("{K}",i?" ghost":"")}).join("");
-  var cp=(pick===bq&&bq)?'<button class="btn ghost" id="fbCp">'+t("fbCp")+'</button><div class="muted" id="fbCpMsg" role="status"></div>':'';
+  var cp=(bq&&list.indexOf(bq)>=0)?'<button class="btn ghost" id="fbCp">'+t("fbCp")+'</button><div class="muted" id="fbCpMsg" role="status"></div>':'';
   return h+'<div class="muted" style="margin-top:10px">'+t("fbCtx")+'：<b>'+esc(fbCtx(c))+'</b></div>'+cp+'<div class="muted" style="margin-top:10px">'+t("fbNoPII")+'</div>';
 }
 
@@ -2523,6 +2544,7 @@ function pregNote(d){var w=pregOld(d);return w?'<div class="note" role="note" id
 function dueOk(s){return /^\d{4}-\d{2}-\d{2}$/.test(s||"")}
 
 /* 二维码：只编码固定首页网址 SITE_URL，不含任何个人信息。版本 4、纠错 M、整数像素（每格 1 个单位，crispEdges），生成后已用 OpenCV 解码核对。 */
+var QR_SVG='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 41 41" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M4 4h7v1h-7zM12 4h1v1h-1zM14 4h2v1h-2zM17 4h2v1h-2zM21 4h2v1h-2zM24 4h2v1h-2zM30 4h7v1h-7zM4 5h1v1h-1zM10 5h1v1h-1zM13 5h2v1h-2zM16 5h1v1h-1zM25 5h1v1h-1zM28 5h1v1h-1zM30 5h1v1h-1zM36 5h1v1h-1zM4 6h1v1h-1zM6 6h3v1h-3zM10 6h1v1h-1zM12 6h6v1h-6zM21 6h1v1h-1zM25 6h4v1h-4zM30 6h1v1h-1zM32 6h3v1h-3zM36 6h1v1h-1zM4 7h1v1h-1zM6 7h3v1h-3zM10 7h1v1h-1zM13 7h1v1h-1zM19 7h1v1h-1zM23 7h1v1h-1zM25 7h4v1h-4zM30 7h1v1h-1zM32 7h3v1h-3zM36 7h1v1h-1zM4 8h1v1h-1zM6 8h3v1h-3zM10 8h1v1h-1zM14 8h2v1h-2zM19 8h1v1h-1zM23 8h1v1h-1zM26 8h1v1h-1zM30 8h1v1h-1zM32 8h3v1h-3zM36 8h1v1h-1zM4 9h1v1h-1zM10 9h1v1h-1zM12 9h1v1h-1zM19 9h1v1h-1zM21 9h3v1h-3zM28 9h1v1h-1zM30 9h1v1h-1zM36 9h1v1h-1zM4 10h7v1h-7zM12 10h1v1h-1zM14 10h1v1h-1zM16 10h1v1h-1zM18 10h1v1h-1zM20 10h1v1h-1zM22 10h1v1h-1zM24 10h1v1h-1zM26 10h1v1h-1zM28 10h1v1h-1zM30 10h7v1h-7zM13 11h3v1h-3zM18 11h3v1h-3zM23 11h2v1h-2zM26 11h1v1h-1zM4 12h1v1h-1zM6 12h1v1h-1zM10 12h2v1h-2zM13 12h2v1h-2zM20 12h1v1h-1zM24 12h1v1h-1zM27 12h1v1h-1zM31 12h1v1h-1zM34 12h1v1h-1zM36 12h1v1h-1zM7 13h1v1h-1zM9 13h1v1h-1zM13 13h1v1h-1zM17 13h1v1h-1zM19 13h1v1h-1zM21 13h1v1h-1zM23 13h2v1h-2zM27 13h2v1h-2zM30 13h1v1h-1zM33 13h1v1h-1zM36 13h1v1h-1zM4 14h1v1h-1zM6 14h1v1h-1zM8 14h1v1h-1zM10 14h1v1h-1zM13 14h1v1h-1zM19 14h2v1h-2zM23 14h3v1h-3zM27 14h1v1h-1zM33 14h2v1h-2zM36 14h1v1h-1zM4 15h1v1h-1zM6 15h3v1h-3zM11 15h2v1h-2zM14 15h2v1h-2zM17 15h1v1h-1zM19 15h1v1h-1zM21 15h1v1h-1zM27 15h1v1h-1zM30 15h4v1h-4zM35 15h1v1h-1zM5 16h2v1h-2zM10 16h2v1h-2zM15 16h3v1h-3zM19 16h1v1h-1zM21 16h1v1h-1zM26 16h1v1h-1zM28 16h1v1h-1zM30 16h2v1h-2zM36 16h1v1h-1zM8 17h2v1h-2zM11 17h1v1h-1zM13 17h2v1h-2zM16 17h2v1h-2zM25 17h1v1h-1zM27 17h2v1h-2zM30 17h2v1h-2zM33 17h4v1h-4zM4 18h1v1h-1zM6 18h1v1h-1zM8 18h1v1h-1zM10 18h3v1h-3zM14 18h2v1h-2zM17 18h3v1h-3zM23 18h1v1h-1zM25 18h3v1h-3zM32 18h1v1h-1zM34 18h1v1h-1zM36 18h1v1h-1zM5 19h3v1h-3zM12 19h2v1h-2zM16 19h3v1h-3zM22 19h1v1h-1zM27 19h1v1h-1zM29 19h3v1h-3zM33 19h1v1h-1zM4 20h4v1h-4zM9 20h2v1h-2zM15 20h2v1h-2zM19 20h2v1h-2zM23 20h1v1h-1zM27 20h2v1h-2zM30 20h2v1h-2zM33 20h1v1h-1zM35 20h1v1h-1zM5 21h1v1h-1zM7 21h1v1h-1zM12 21h2v1h-2zM17 21h1v1h-1zM19 21h2v1h-2zM23 21h3v1h-3zM27 21h2v1h-2zM30 21h1v1h-1zM33 21h1v1h-1zM36 21h1v1h-1zM5 22h1v1h-1zM7 22h5v1h-5zM13 22h3v1h-3zM17 22h3v1h-3zM21 22h3v1h-3zM27 22h1v1h-1zM29 22h3v1h-3zM33 22h2v1h-2zM36 22h1v1h-1zM4 23h1v1h-1zM6 23h1v1h-1zM9 23h1v1h-1zM12 23h1v1h-1zM15 23h4v1h-4zM20 23h1v1h-1zM22 23h1v1h-1zM26 23h2v1h-2zM29 23h2v1h-2zM32 23h2v1h-2zM35 23h2v1h-2zM7 24h5v1h-5zM16 24h7v1h-7zM24 24h5v1h-5zM30 24h2v1h-2zM7 25h2v1h-2zM12 25h1v1h-1zM16 25h3v1h-3zM20 25h3v1h-3zM24 25h2v1h-2zM27 25h5v1h-5zM33 25h1v1h-1zM36 25h1v1h-1zM4 26h3v1h-3zM10 26h4v1h-4zM16 26h2v1h-2zM20 26h3v1h-3zM24 26h4v1h-4zM29 26h1v1h-1zM34 26h1v1h-1zM36 26h1v1h-1zM7 27h1v1h-1zM11 27h2v1h-2zM15 27h2v1h-2zM19 27h2v1h-2zM22 27h3v1h-3zM28 27h1v1h-1zM30 27h2v1h-2zM33 27h1v1h-1zM35 27h2v1h-2zM4 28h2v1h-2zM8 28h4v1h-4zM14 28h1v1h-1zM18 28h1v1h-1zM28 28h5v1h-5zM12 29h15v1h-15zM28 29h1v1h-1zM32 29h1v1h-1zM36 29h1v1h-1zM4 30h7v1h-7zM12 30h1v1h-1zM14 30h1v1h-1zM16 30h2v1h-2zM19 30h2v1h-2zM23 30h2v1h-2zM28 30h1v1h-1zM30 30h1v1h-1zM32 30h5v1h-5zM4 31h1v1h-1zM10 31h1v1h-1zM13 31h4v1h-4zM18 31h1v1h-1zM21 31h1v1h-1zM23 31h1v1h-1zM25 31h1v1h-1zM27 31h2v1h-2zM32 31h2v1h-2zM35 31h2v1h-2zM4 32h1v1h-1zM6 32h3v1h-3zM10 32h1v1h-1zM14 32h2v1h-2zM17 32h2v1h-2zM21 32h1v1h-1zM25 32h1v1h-1zM27 32h6v1h-6zM4 33h1v1h-1zM6 33h3v1h-3zM10 33h1v1h-1zM13 33h2v1h-2zM25 33h1v1h-1zM27 33h1v1h-1zM29 33h1v1h-1zM31 33h2v1h-2zM36 33h1v1h-1zM4 34h1v1h-1zM6 34h3v1h-3zM10 34h1v1h-1zM12 34h1v1h-1zM14 34h3v1h-3zM18 34h2v1h-2zM21 34h1v1h-1zM23 34h1v1h-1zM25 34h5v1h-5zM31 34h3v1h-3zM35 34h2v1h-2zM4 35h1v1h-1zM10 35h1v1h-1zM17 35h2v1h-2zM28 35h1v1h-1zM30 35h4v1h-4zM4 36h7v1h-7zM12 36h1v1h-1zM14 36h1v1h-1zM19 36h2v1h-2zM23 36h2v1h-2zM27 36h2v1h-2zM30 36h4v1h-4zM36 36h1v1h-1z"/></svg>';
 
 var T6={
 helpOT:["帮别人呼救","Call for someone else"],helpOS:["用你的手机为病人呼救：电话里说什么、位置、接应救护车","Call for someone else on your phone: what to say, your location, meeting the ambulance"],
@@ -2558,7 +2580,8 @@ prF:["冰箱单（A4）+ 大门内侧提示贴","Fridge sheet (A4) + front-door 
 prGo:["打印 / 存为 PDF","Print / save as PDF"],
 prWx:["微信里不能打印：点右上角“···”→“在浏览器打开”，再打印。","WeChat can’t print: tap “···” → “Open in browser”, then print."],
 prPriv:["纸上有健康信息，看到的人都能读到。钱包卡随身带，冰箱单只放在家里。信息变了请重新打印。","The paper shows health details to anyone who sees it. Keep the wallet card on you and the fridge sheet at home. Reprint whenever something changes."],
-prQr:["打印件不含二维码和网址，只有你填写的信息和打印日期。","The printout has no QR code or web address — only what you entered and the print date."],
+prQr:["二维码只打开急救卡网站首页，不含任何个人信息；纸上不印网址文字。","The QR code only opens the Emergency Card home page and contains no personal information; no web address is printed."],
+prQrS:["扫码：急救卡网站（不含个人信息）","Scan: Emergency Card website (no personal data)"],
 prHow:["Message in a Bottle 的做法：把冰箱单放在冰箱门里（可装进瓶子或袋子），把提示贴贴在大门内侧，急救人员看到会去冰箱找。","The Message in a Bottle approach: keep the fridge sheet in the fridge door (in a bottle or bag) and put the sticker inside your front door so responders know to look in the fridge."],
 prStk:["急救信息在冰箱里","Medical information in the fridge"],
 prDate:["打印日期","Printed"],prMore:["另有 {n} 项，见手机或冰箱单","+{n} more — see phone or fridge sheet"],
@@ -2822,6 +2845,7 @@ function walletHtml(c,d){var rk=riskOf(d),top=rk.slice(0,3),more=rk.length-top.l
   var b='<div class="wface wb"><div class="wtop">'+esc(T.wSide[0])+'</div>'+
     (d.ins?'<div class="wt">'+wbil("Insurance","保险")+'：'+esc(d.ins)+'</div>':'')+
     (d.insTel?'<div class="wt">'+wbil("24h assistance","救援热线")+'：<b>'+esc(d.insTel)+'</b></div>':'')+
+    '<div class="wqr">'+QR_SVG+'</div><div class="wqrc">'+esc(T.prQrS[1])+'<br>'+esc(T.prQrS[0])+'</div>'+
     '<div class="wdate">'+esc(T.prDate[1])+' · '+esc(T.prDate[0])+' '+todayStr()+'</div></div>';
   return '<div class="wcard">'+f+b+'</div>'}
 function fridgeHtml(c,d){var rk=riskOf(d),N=C[c].amb;
@@ -2833,6 +2857,7 @@ function fridgeHtml(c,d){var rk=riskOf(d),N=C[c].amb;
     row("Usual state","平时的状态",d.base)+row("Medicines kept","药放在哪里",d.medloc)+row("Advance care plan / DNACPR form kept","预立医疗计划 / 不复苏文件放在",d.acp)+row("Emergency contact","紧急联系人",d.ice)+
     row("Insurance","保险",d.ins)+row("24h assistance","救援热线",d.insTel)+
     '<div class="famb"><span>Emergency · 急救电话（'+esc(C[c].en)+' · '+esc(C[c].zh)+'）</span><b>'+esc(N)+'</b></div>'+
+    '<div class="fqrw"><div class="fqr">'+QR_SVG+'</div><div>'+esc(T.prQrS[1])+'<br>'+esc(T.prQrS[0])+'</div></div>'+
     '<div class="ffoot">'+esc(T.prHow[1])+'<br>'+esc(T.prHow[0])+'</div></div>'+
     '<div class="fstk"><svg viewBox="0 0 24 24" aria-hidden="true"><rect width="24" height="24" rx="5" fill="#047857"/><path d="M10 5h4v5h5v4h-5v5h-4v-5H5v-4h5z" fill="#fff"/></svg><div><b>'+esc(T.prStk[0])+'</b><b>'+esc(T.prStk[1].toUpperCase())+'</b><small>Emergency Card · 急救卡</small></div></div>'}
 function openPrint(){
