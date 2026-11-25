@@ -476,7 +476,7 @@ html.hugetext .ibtn{padding:0 8px}
 .idacts{display:grid;gap:8px;margin:0 0 12px}.idacts .btn{margin-top:0}
 .pfbar .chips{margin-top:8px}
 .brbox{font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:800;font-size:calc(18px * var(--fs));background:var(--bg-subtle);border:1px solid var(--border-card);border-radius:8px;padding:10px 12px;margin-top:10px;white-space:pre-wrap;word-break:break-word;line-height:1.45}
-.ho .kick{gap:8px}
+.ho .kick{gap:8px;flex-wrap:nowrap;align-items:flex-start}
 .hon{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:99px;background:var(--text-primary);color:var(--bg-canvas);font-family:var(--font-num);font-weight:800;font-size:calc(17px * var(--fs));flex:none}
 .ho.crit .hon{background:var(--crimson-fill);color:#FFFFFF}
 .tmr{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:12px 0;border-bottom:1px solid var(--border-card)}
@@ -969,7 +969,7 @@ var FEEDBACK_GOOGLE = _CFG.google||"";    // Google 表单链接，例如 https:
 var FEEDBACK_TENCENT = _CFG.tencent||"";  // 腾讯问卷链接，例如 https://wj.qq.com/s2/xxxx/xxxx/
 // 可选：Google 表单里"版本/国家/语言"那道简答题的编号（形如 entry.123456789）。填了以后会自动带入，留空也能用。
 var GOOGLE_PREFILL_ENTRY = _CFG.googleEntry||"";
-var VERSION = "MVP v0.11.4";
+var VERSION = "MVP v0.11.5";
 var VERIFIED_ON = "2026-11-17";   // 全部国家号码的统一核实日期；某国单独复核后，在该国数据里加 v:"YYYY-MM-DD"
 // 固定的正式网址：分享、锁屏图片一律用它，不用当前地址栏（避免分享出 file:// 或预览地址）。分享链接里永远不放任何个人信息。
 var SITE_URL = "https://jackyyhhxjyxn.github.io/emergency-card/";
@@ -2763,19 +2763,21 @@ function openHand(){
   var byP=function(p){return rk.filter(function(x){return x.p===p}).map(function(x){return rkLi(x,lk,d)})};
   var n=0,s="";
   s+=sec(bi("fAll"),byP(1),d.allergy,1,"",1);
-  s+=sec(bi("fMed"),byP(2),d.med,0,rkHas(rk,"steroid")?'<div class="mcs">'+t("rkSt")+' '+srcLine([112])+'</div>':'',1);
+  s+=sec(bi("fMed"),byP(2),d.med,0,rkHas(rk,"steroid")?'<div class="mcs">'+t("rkSt")+'</div>':'',1);
   s+=sec(bi("fCond"),byP(3),d.cond);
-  s+=sec(bi("hoDev"),byP(4),"",0,rkHas(rk,"pm")?'<div class="mcs">'+t("rkPm")+' '+srcLine([111])+'</div>':'');
+  s+=sec(bi("hoDev"),byP(4),"",0,rkHas(rk,"pm")?'<div class="mcs">'+t("rkPm")+'</div>':'');
   s+=sec(bi("fBase"),[],d.base);
-  s+='<section class="card ho"><div class="kick"><span class="hon">'+(++n)+'</span>'+bi("fMedLoc")+'</div><p style="margin:6px 0 0;font-weight:700">'+esc(d.medloc?t("hoBring").replace("{x}",d.medloc):t("hoBringN"))+'</p><div class="src">'+t("srcT")+CO()+srcLine([110])+'</div></section>';
-  if(d.acp)s+='<section class="card ho"><div class="kick"><span class="hon">'+(++n)+'</span>'+bi("fAcp")+'</div><p style="margin:6px 0 0;font-weight:700">'+esc(t("acpHo").replace("{x}",d.acp))+'</p><div class="src">'+t("srcT")+CO()+srcLine([115,116])+'</div></section>';
+  s+='<section class="card ho"><div class="kick"><span class="hon">'+(++n)+'</span>'+bi("fMedLoc")+'</div><p style="margin:6px 0 0;font-weight:700">'+esc(d.medloc?t("hoBring").replace("{x}",d.medloc):t("hoBringN"))+'</p></section>';
+  if(d.acp)s+='<section class="card ho"><div class="kick"><span class="hon">'+(++n)+'</span>'+bi("fAcp")+'</div><p style="margin:6px 0 0;font-weight:700">'+esc(t("acpHo").replace("{x}",d.acp))+'</p></section>';
   var tk=TM.filter(function(x){return o[x[0]]});
   if(tk.length)s+='<section class="card ho"><div class="kick"><span class="hon">'+(++n)+'</span>'+bi("hoTimes")+'</div><ul class="rkl">'+tk.map(function(x){return '<li><b>'+hmOf(o[x[0]])+'</b><span>'+esc(t(x[1]))+' · '+esc(t("tmAgo").replace("{t}",dur(Date.now()-o[x[0]])))+'</span></li>'}).join("")+'</ul></section>';
   if(d.ins||d.insTel){var ip=phoneIn(d.insTel);s+='<section class="card ho"><div class="kick"><span class="hon">'+(++n)+'</span>'+bi("fIns")+'</div>'+fval(d.ins)+(d.insTel?fval(d.insTel):'')+
      (ip?'<a class="btn grn" href="'+tel(ip)+'">'+phoneIco()+t("insCall")+'</a>':'')+'</section>'}
   var ph=phoneIn(d.ice);
   if(d.ice)s+='<section class="card ho"><div class="kick"><span class="hon">'+(++n)+'</span>'+bi("fIce")+'</div>'+fval(d.ice)+(ph?'<a class="btn grn" href="'+tel(ph)+'">'+phoneIco()+t("iceCall")+'</a>':'')+'</section>';
-  h+=s+'<div class="mcs">'+t("mcAsIs")+' '+t("mcPriv")+'</div>'+awkHtml();
+  /* v0.11.5：交接页给救护人员看，各卡片里的“依据”去掉，统一折叠到页底一处（测试反馈） */
+  var hs=[110].concat(rkHas(rk,"steroid")?[112]:[],rkHas(rk,"pm")?[111]:[],d.acp?[115,116]:[]);
+  h+=s+'<div class="mcs">'+t("mcAsIs")+' '+t("mcPriv")+'</div><div class="src">'+srcFold(hs)+'</div>'+awkHtml();
   showSheet(h,callBtn(c));awake(true);
 }
 
