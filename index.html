@@ -1049,6 +1049,61 @@ nav.bnav{background:var(--tabbar)!important;-webkit-backdrop-filter:none!importa
 /* v0.12.0 顺手修窄屏问题（只改外观）：320 宽英文“Responds”被拆成 Respond / s → 窄屏缩小内边距和字号，单词不再从中间断开 */
 @media screen{.big{overflow-wrap:break-word;word-break:normal}}
 @media screen and (max-width:359px){.big{padding:10px 4px;font-size:calc(19px * var(--fs))}}
+/* ===================== v0.13.0 外观小改（只改屏幕显示，打印不受影响） =====================
+   R150：测试者说“接近 NHS 官方”——4px 小圆角 + 按钮底部 4px 深色台阶正是 NHS 设计系统按钮的写法。
+   改为 10px 圆角、2px 台阶，保留“平面 + 按下下沉”的手感。想改回：把下面 --r 改回 4px、三个 step 改回 4px。
+   R145：夜间模式下底栏当前页的文字是浅蓝、上方蓝条是深蓝 → 改成同一个蓝。 */
+@media screen{
+:root{--r:10px;--radius-lg:12px;--radius-md:10px;--radius-sm:6px;
+  --step-b:0 2px 0 var(--brand-deep);--step-r:0 2px 0 var(--red-deep);--step-g:0 2px 0 var(--grn-deep)}
+.note,.when,.ucfrow{border-radius:var(--r)}
+.btn:not(.ghost):not(.warn):not(.red):not(.grn):active,.snav .nx:active,.tile:not(.top):active,.qa:active,.helpbtn:active,
+.btn.red:active,.big.no:active,.tile.top:active,.call:active,a.rblock:active,.btn.grn:active{box-shadow:0 0 0 transparent!important}
+.tab[aria-current="page"]{box-shadow:inset 0 4px 0 var(--brand-text)!important;font-weight:800}
+/* T4：呼叫栏放不下文字时（脚本加 .stk），号码在上、文字在下，最多两行，不再出现“Call a…” */
+.call.stk>span:first-child{flex-direction:column;align-items:flex-start!important;gap:3px}
+.call.stk .lbl{font-size:calc(15px * var(--fs));white-space:normal;line-height:1.15;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-overflow:clip}
+.call.stk .num{font-size:calc(28px * var(--fs))}
+.ucf{font-size:calc(15px * var(--fs));overflow-wrap:anywhere}
+/* 独立项目说明 */
+.indep{margin-top:8px;color:var(--text-muted);font-size:calc(15px * var(--fs));line-height:1.4}
+/* T1 离线求救 */
+.bcw p{margin:0;font-weight:700;line-height:1.45}
+.bcmode button{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;text-align:left;padding:8px 12px;min-height:72px;gap:2px}
+.bcmode button small{font-weight:600;font-size:calc(14px * var(--fs));color:var(--text-muted);line-height:1.25}
+.bcmode button[aria-pressed="true"]{border-color:var(--red-flat)!important;background:var(--crimson-soft)!important}
+.bcopts{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.bchold{position:relative;overflow:hidden;min-height:68px;font-size:calc(20px * var(--fs));font-weight:900;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;touch-action:manipulation;margin-top:14px}
+.bchold>span{position:relative;z-index:1;display:inline-flex;align-items:center;gap:8px}
+.bchold::after{content:"";position:absolute;left:0;top:0;bottom:0;width:0;background:rgba(255,255,255,.38);transition:width .15s ease-out}
+.bchold.hold::after{width:100%;transition:width 1s linear}
+.bcrun{position:fixed;inset:0;z-index:300;display:flex;align-items:center;justify-content:center;text-align:center;
+  padding:calc(20px + env(safe-area-inset-top)) 18px calc(20px + env(safe-area-inset-bottom));-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.bcrun.r{background:#C81E1E;color:#FFFFFF}.bcrun.w{background:#FFFFFF;color:#B91C1C}.bcrun.k{background:#000000;color:#FFFFFF}.bcrun.s{background:#7F1D1D;color:#FFFFFF}
+.bcin{max-width:520px;width:100%}
+.bck{font-size:64px;font-weight:900;letter-spacing:3px;line-height:1.05}
+.bcm{font-size:22px;font-weight:800;margin-top:10px}
+.bct{font-family:var(--font-num);font-size:44px;font-weight:800;margin-top:12px;font-variant-numeric:tabular-nums}
+.bcph{min-height:28px;font-size:20px;font-weight:700;margin-top:8px}
+.bcstop{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:76px;min-width:240px;margin-top:22px;padding:0 28px;
+  font-size:28px;font-weight:900;background:#FFFFFF;color:#111111;border:4px solid #111111;border-radius:14px}
+.bcstop .ic{width:28px;height:28px}
+.bcn{margin-top:18px;font-size:17px;font-weight:700;line-height:1.4}
+body.bc-on{overflow:hidden}
+details.pp{margin-top:12px;border-left:6px solid var(--brand)!important}
+details.pp summary{display:flex;align-items:center;gap:8px;font-weight:800;min-height:52px;cursor:pointer}
+.pps{margin-top:4px}
+/* T2 备份 */
+.bk .seg2{margin-top:14px}
+.bk input[type=password]{width:100%;min-height:48px;font-size:calc(18px * var(--fs));padding:0 12px;border:2px solid var(--border-strong);background:var(--bg-card);color:var(--text-primary)}
+.bkprev{margin-top:12px}
+.bkprev dl{margin:8px 0 0;display:grid;grid-template-columns:auto 1fr;gap:6px 12px}
+.bkprev dt{font-weight:700;color:var(--text-muted)}.bkprev dd{margin:0}
+.bkprev ul{margin:0;padding-left:18px}
+.bkwarn{font-weight:700;color:var(--crimson);margin:12px 0 0}
+#bkUMsg{margin-top:6px}
+}
+@media print{.bcrun{display:none!important}}
 </style>
 </head>
 <body>
@@ -1075,7 +1130,7 @@ var FEEDBACK_GOOGLE = _CFG.google||"";    // Google 表单链接，例如 https:
 var FEEDBACK_TENCENT = _CFG.tencent||"";  // 腾讯问卷链接，例如 https://wj.qq.com/s2/xxxx/xxxx/
 // 可选：Google 表单里"版本/国家/语言"那道简答题的编号（形如 entry.123456789）。填了以后会自动带入，留空也能用。
 var GOOGLE_PREFILL_ENTRY = _CFG.googleEntry||"";
-var VERSION = "MVP v0.12.0";
+var VERSION = "MVP v0.13.0";
 var VERIFIED_ON = "2026-11-17";   // 全部国家号码的统一核实日期；某国单独复核后，在该国数据里加 v:"YYYY-MM-DD"
 // 固定的正式网址：分享、锁屏图片一律用它，不用当前地址栏（避免分享出 file:// 或预览地址）。分享链接里永远不放任何个人信息。
 var SITE_URL = "https://jackyyhhxjyxn.github.io/emergency-card/";
@@ -1962,7 +2017,7 @@ function viewHome(c){var h="";
   h+=staleNote(c);
   h+='<section class="card crit tri" id="tri" aria-labelledby="triQ">'+triHtml()+'</section>';
   h+='<div class="qa3">'+qaBtn("helperGo","phone","qaHelp")+qaBtn("nfGo","msg","nfBtn")+qaBtn("hospGo","pin","qaHosp")+'</div>';
-  h+='<div class="note slim" role="note">'+I("info","s")+'<div>'+t("betaS")+'</div></div>';
+  h+='<div class="note slim" role="note">'+I("info","s")+'<div>'+t("betaS")+(c==="GB"?'<br>'+t("indep"):'')+'</div></div>';
   h+='<h2 class="secH" id="cardsH" tabindex="-1"><b>'+t("cards")+'</b></h2>'+catHtml()+gridHtml();
   return h}
 function tileHtml(k){return '<button class="tile'+(k.top?" top":"")+'" data-card="'+k.id+'">'+sign(k.id)+'<span><b>'+esc(k[lang])+'</b><small>'+esc(lang==="zh"?k.szh:k.sen)+'</small>'+(k.pend?'<em class="pend">'+t("pendT")+'</em>':'')+'</span>'+(k.top?I("chevR","chev"):"")+'</button>'}
@@ -2002,6 +2057,8 @@ function viewSos(c){var d=C[c],h="";
   h+='<button class="helpbtn" id="helperGo"><span class="sg" aria-hidden="true">'+I("phone")+'</span><span><b>'+t("helpOT")+'</b><small>'+t("helpOS")+'</small></span>'+I("chevR","chev")+'</button>';
   h+='<button class="helpbtn" id="nfGo"><span class="sg" aria-hidden="true">'+I("msg")+'</span><span><b>'+t("nfBtn")+'</b><small>'+t("nfBtnS")+'</small></span>'+I("chevR","chev")+'</button>';
   h+='<button class="helpbtn" id="helpGo"><span class="sg" aria-hidden="true">'+I("sos")+'</span><span><b>'+t("helpT")+'</b><small>'+t("helpS")+'</small></span>'+I("chevR","chev")+'</button>';
+  h+='<button class="helpbtn" id="bcGo"><span class="sg" aria-hidden="true">'+I("siren")+'</span><span><b>'+t("bcGoT")+'</b><small>'+t("bcGoS")+'</small></span>'+I("chevR","chev")+'</button>';
+  h+='<button class="link" id="ppGo" style="margin-top:0">'+I("gear","s")+t("bcPrepGo")+'</button>';
   if(c==="XX")h+='<div class="note" role="note">'+I("alert")+'<div>'+esc(t("xxNote").replace("{z}",tzLabel()))+'</div></div>';
   h+=staleNote(c);
   h+='<h2 class="secH" style="margin-top:6px"><b>'+t("local")+'</b>'+esc(nm(c))+'</h2><section class="card">';
@@ -2025,7 +2082,7 @@ function viewMe(){
 function aboutHtml(c){
   return '<section class="card about"><div class="kick">'+t("aboutT")+'</div>'+
     '<div class="vrow"><b>'+esc(VERSION)+'</b><span>'+t("contentVer")+CO()+CONTENT_VER+'</span><span>'+t("verOn")+CO()+esc(verOf(c))+'</span></div>'+
-    '</section>'}
+    '<div class="indep">'+t("indep")+'</div></section>'}
 /* v0.10.2：“信息来源”分两块，避免把国家等级 A/B/C 和每条来源混在一起：
    ① 各国急救号码可信度（A/B/C 只用于这里，逐国列出依据编号）；② 全部来源，每条标类别（官方 / 指南 / 专业机构 / 技术文档 / 其他） */
 function srcAllHtml(){
@@ -2076,6 +2133,7 @@ function viewMore(c){var h=aboutHtml(c);
 '</section>';
   h+='<h2 class="secH" id="fb" tabindex="-1"><b>'+t("fbT")+'</b></h2><section class="card"><div>'+t("fbQ")+'</div>'+fbBlock(c)+'</section>';
   h+=srcAllHtml();
+  h+=bkHtml();
   h+='<h2 class="secH"><b>'+t("clrT")+'</b></h2><section class="card"><div>'+t("clrS")+'</div>'+
      '<button class="btn warn" id="clrBtn">'+t("clrBtn")+'</button></section>';
   h+='<footer>'+t("disc1")+info('<p>'+t("disc")+' '+srcLine([51])+'</p><p>'+t("offline")+'</p>')+'<b>'+t("ver")+CO()+VERSION+' · '+t("contentVer")+CO()+CONTENT_VER+'</b></footer>';
@@ -2386,6 +2444,8 @@ function route(){var h=location.hash.slice(1);
   if(h==="pick"){openPicker();return}
   if(h==="cf"){openConfirm();return}
   if(h==="help"){openHelp();return}
+  if(h==="beacon"){openBeacon();return}
+  if(h==="prep"){openPrep();return}
   if(h==="wall"){openWall();return}
   if(h==="med"){openMed();return}
   if(h==="helper"){openHelper();return}
@@ -3138,7 +3198,7 @@ document.addEventListener("click",function(e){
     document.querySelectorAll("[data-fs]").forEach(function(x){x.setAttribute("aria-pressed",x.dataset.fs===fsMode?"true":"false")});return}
   if(el.id==="clrBtn"){
     if(el.dataset.armed!=="1"){el.dataset.armed="1";el.textContent=t("clrArm");setTimeout(function(){if(document.contains(el)){el.dataset.armed="";el.textContent=t("clrBtn")}},6000);return}
-    ["ec_id","ec_prof","ec_tm","ec_geo","ec_lang","ec_theme","ec_mode","ec_voice","ec_snd","ec_fs","ec_mlang","ec_look","ec_prhint","ec_vg"].forEach(function(k){store(k,null)});
+    ["ec_id","ec_prof","ec_tm","ec_geo","ec_lang","ec_theme","ec_mode","ec_voice","ec_snd","ec_fs","ec_mlang","ec_look","ec_prhint","ec_vg","ec_bm"].forEach(function(k){store(k,null)});
     hush();location.replace(location.pathname);return}
   if(el.id==="pv"){go(-1);return}
   if(el.id==="nx"){go(1);return}
@@ -3231,6 +3291,325 @@ document.addEventListener("keydown",function(e){
   if(e.key==="Escape"){var b=$("bk");if(b)b.click()}
   else if(cur&&cur.mode==="step"){if(e.key==="ArrowRight")go(1);else if(e.key==="ArrowLeft")go(-1)}
 });
+
+/* ===================== v0.13.0：英国测试反馈修正 + 任务集 T1 / T2 / T2b =====================
+   规则不变：医学内容、各国号码一个字不改（内容版本仍 C2）；健康数据只存在本机，不进网址、二维码或反馈。
+   新来源 151–163（编号只追加不删改）。 */
+SRC[151]=["苹果支持：在 iPhone 上拨打紧急电话或发紧急短信（急救通话结束后会用短信通知紧急联系人，除非你取消；“按五次呼叫”）","Apple Support: Make an emergency call or text on iPhone (after an emergency call ends, iPhone alerts your emergency contacts by text unless you cancel; Call with 5 Presses)","https://support.apple.com/102262"];
+SRC[152]=["苹果支持：用 iPhone 连接卫星（iPhone 14 及之后；中国大陆购买的不提供；香港、澳门购买的仅 iPhone 16e 及之后）","Apple Support: Connect to a satellite with your iPhone (iPhone 14 or later; not offered on iPhones bought in China mainland; Hong Kong and Macao only iPhone 16e and later)","https://support.apple.com/105097"];
+SRC[153]=["Google Pixel 帮助：用 Pixel 手机在紧急情况下求助（快速按电源键 5 次或以上；可分享位置给紧急联系人）","Google Pixel Help: Get help in an emergency using your Pixel phone (press the power button 5 times or more; can share your location with emergency contacts)","https://support.google.com/pixelphone/answer/7055029"];
+SRC[154]=["Android 官网：个人安全 App（Emergency SOS 需 Android 12 及以上；省电模式或飞行模式下不能用）","Android: Personal Safety app (Emergency SOS needs Android 12 or later; doesn't work with Battery Saver or airplane mode on)","https://www.android.com/articles/personal-safety-app/"];
+SRC[155]=["Android 帮助：紧急情况下分享实时位置需要 Wi‑Fi 或手机网络","Android Help: sharing your real-time location with emergency contacts needs a Wi‑Fi or mobile network connection","https://support.google.com/android/answer/9319337"];
+SRC[156]=["Google Pixel 帮助：通过卫星获取紧急帮助（Satellite SOS；只在部分国家；只在没有其他办法时使用）","Google Pixel Help: Get emergency help through satellite (Satellite SOS; some countries only; use only when no other means is available)","https://support.google.com/pixelphone/answer/15254448"];
+SRC[157]=["华为消费者支持：北斗卫星消息仅支持向中国大陆手机号码（11 位）发送","Huawei support: Beidou satellite messages can only be sent to mainland China 11-digit mobile numbers","https://consumer.huawei.com/cn/support/content/zh-cn15986536/"];
+SRC[158]=["华为消费者支持：运营商北斗卫星短信、畅连北斗卫星消息与天通卫星通信规格对比（地区、机型、使用条件）","Huawei support: comparison of Beidou satellite SMS, MeeTime Beidou satellite messages and Tiantong (regions, models, conditions)","https://consumer.huawei.com/cn/support/content/zh-cn16074976/"];
+SRC[159]=["荣耀支持：使用紧急求助和呼叫（设置 > 安全 > SOS 紧急求助；连按 5 次电源键）","Honor support: Emergency SOS (Settings > Security > Emergency SOS; press the power button 5 times)","https://www.honor.com/cn/support/content/zh-cn15854456/"];
+SRC[160]=["英国地形测量局 Ordnance Survey：户外安全（哨子 / 手电：一分钟 6 声长鸣，停一分钟，重复；听到回应也不要停）","Ordnance Survey (UK): Stay safe in the outdoors (whistle or torch: six long blasts in a minute, stop for a minute, repeat; don't stop because you hear a reply)","https://getoutside.ordnancesurvey.co.uk/guides/mountain-safety"];
+SRC[161]=["W3C 无障碍标准 WCAG 2.2：成功准则 2.3.1（任何一秒内闪烁不超过 3 次）","W3C WCAG 2.2: Success Criterion 2.3.1 Three Flashes or Below Threshold","https://www.w3.org/WAI/WCAG22/Understanding/three-flashes-or-below-threshold.html"];
+SRC[162]=["WebKit 问题 237322：把 navigator.audioSession.type 设为 \"playback\"，网页声音不受 iPhone 静音键影响（默认会被静音）","WebKit bug 237322: setting navigator.audioSession.type = \"playback\" keeps web audio playing when the iPhone ringer is muted (default is muted)","https://bugs.webkit.org/show_bug.cgi?id=237322"];
+SRC[163]=["OWASP 密码存储速查表：PBKDF2-HMAC-SHA256 建议 600,000 次迭代","OWASP Password Storage Cheat Sheet: PBKDF2-HMAC-SHA256 with 600,000 iterations","https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html"];
+["151","152","153","154","155","156","162","163","161"].forEach(function(k){SRCK[k]="tech"});SRCK["157"]="tech";SRCK["158"]="tech";SRCK["159"]="tech";SRCK["160"]="gov";
+
+ICO.siren='<path d="M7 18v-6a5 5 0 0 1 10 0v6"/><path d="M4.5 18h15v2.5h-15z"/><path d="M12 2.5v2M4.6 5.6l1.4 1.4M19.4 5.6 18 7M2.5 12.5h2M19.5 12.5h2"/>';
+ICO.ul='<path d="M12 15.5V4"/><path d="m7.5 8.5 4.5-4.5 4.5 4.5"/><path d="M4.5 19.5h15"/>';
+ICO.lock='<rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/>';
+ICO.gear='<circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v2.6M12 18.6v2.6M2.8 12h2.6M18.6 12h2.6M5.5 5.5l1.8 1.8M16.7 16.7l1.8 1.8M5.5 18.5l1.8-1.8M16.7 7.3l1.8-1.8"/>';
+
+Object.assign(T,{
+/* R140：没有所选的男声 / 女声时，用现有声音并调音调区分 */
+vgMiss:["这台手机没装这种声音：先用现有的声音，并调低（男声）或调高（女声）音调来区分。想要真正的男声 / 女声，看下面“ⓘ 说明”里的下载方法。","This voice isn't installed on this phone, so the available voice is used with a lower (male) or higher (female) pitch. To get a real male or female voice, see “ⓘ Info” below for how to download one."],
+noVoiceCard:["没有听到朗读？请检查音量和静音键，或到 更多 → 显示 → 朗读声音 点“试听”。","No read-aloud? Check the volume and silent switch, or go to More → Display → Read-aloud voice and tap Test."],
+/* R150：独立项目说明（不是 NHS / 政府 / 医院官方服务） */
+indep:["独立测试项目，不是 NHS，也不是任何政府或医院的官方服务。","Independent test project — not an NHS, government or hospital service."],
+/* T1 离线求救 */
+bcGoT:["没信号？用声音和灯光引人注意","No signal? Sound and light to get attention"],bcGoS:["警报声 / 山地求救信号 + 全屏闪光，飞行模式下也能用","Siren or mountain distress signal + full-screen light; works in airplane mode"],
+bcT:["离线求救：声音 + 灯光","Offline SOS: sound and light"],
+bcNo:["这<b>不会</b>通知急救中心，也不会发出任何消息。有信号时请先打 {N}。","This does <b>not</b> alert emergency services or send any message. If you have signal, call {N} first."],
+bcThreat:["有人身威胁（被跟踪、有人闯入）时，声音和灯光会暴露你的位置。","If someone is threatening you (being followed, an intruder), sound and light will give away where you are."],
+bcModeT:["用在哪里","Where are you"],bcCity:["城市：连续警报","Town: continuous siren"],bcCityS:["吸引附近的人","Get people nearby to look"],
+bcMtn:["野外：山地求救信号","Outdoors: mountain distress signal"],bcMtnS:["一分钟 6 声长鸣，停一分钟，重复","6 long blasts in a minute, 1 minute pause, repeat"],
+bcSnd:["声音","Sound"],bcLt:["灯光","Light"],
+bcHold:["按住 1 秒 开始","Press and hold 1 s to start"],bcHoldS:["按住才会开始，防止误触","Hold to start, so it doesn't go off by accident"],bcHoldMiss:["要按住 1 秒（看到按钮填满）才会开始。","Keep holding for 1 second (until the button fills) to start."],
+bcTest:["先试听 2 秒（小音量）","Test for 2 seconds (quiet)"],bcNeedOne:["声音和灯光至少选一个。","Choose sound, light or both."],
+bcTips:["<p>音量调到最大。开始后屏幕会保持常亮；锁屏或切到别的 App 后，声音可能会停。</p><p>iPhone 静音键打开时，本页已请求“播放”模式发声，但个别 iOS 版本可能仍被静音——请先试听一次。</p><p>野外：一分钟 6 声长鸣、停一分钟、再重复；听到回应（通常是 3 声）也不要停，救援人员靠声音找方向。能打电话时，英国打 999 或 112，先要警察，再要山地救援。</p><p>灯光每秒最多变化 1 次，低于无障碍标准每秒 3 次的上限；对光敏感的人请只用声音。</p>","<p>Turn the volume all the way up. The screen stays on while it runs; if you lock the phone or switch apps, the sound may stop.</p><p>On iPhone with the silent switch on, this page asks for “playback” audio, but some iOS versions may still mute it — test it once first.</p><p>Outdoors: six long blasts in a minute, stop for a minute, repeat; don't stop because you hear a reply (often 3 blasts) — rescuers use the sound to find you. If you can call: in the UK dial 999 or 112, ask for the police, then for Mountain Rescue.</p><p>The light changes at most once per second, below the accessibility limit of 3 flashes per second. If you are sensitive to flashing light, use sound only.</p>"],
+bcPbGo:["给路人看：大字求助卡","Show a passer-by: big-text help card"],bcPrepGo:["出事之前先设置好手机（iPhone / 安卓 / 华为）","Set up your phone before anything happens (iPhone / Android / Huawei)"],
+bcRunK:["求救中","SOS"],bcStop:["停止","STOP"],bcRunNo:["不会通知急救中心 · 有信号请打 {N}","Does not alert emergency services · If you have signal, call {N}"],
+bcPhB:["长鸣 {i}/6","Blast {i}/6"],bcPhP:["停顿，{s} 秒后再响","Pause — sound again in {s} s"],bcTapSnd:["点一下屏幕开启声音","Tap the screen to turn on sound"],bcNoSnd:["这台手机的浏览器不能发声，只有灯光。","This browser can't play sound here — light only."],
+bcRunA:["正在发出求救声音和灯光。点“停止”结束。","Sending SOS sound and light. Tap STOP to end."],
+/* T1 ④ 出事之前先设置好 */
+ppT:["出事之前先设置好","Set up before anything happens"],
+ppFirst:["先做这三件事：① 打开手机自带的紧急求助功能并加上紧急联系人（见下面你的手机）；② 在本卡“我的卡”填好资料，并在“更多 → 备份与恢复”导出备份；③ 把本网页加到主屏幕，开飞行模式打开一次，试听离线求救声音。","Do these three things: ① turn on your phone's built-in emergency SOS and add emergency contacts (see your phone below); ② fill in “My card” here and export a backup in More → Backup and restore; ③ add this page to your home screen, open it once in airplane mode and test the offline SOS sound."],
+ppNote:["手机自带功能由苹果、Google、华为、荣耀提供，本卡只是转述它们的官方说明；菜单名称以你手机上的为准。","These built-in features come from Apple, Google, Huawei and Honor; this card only summarises their official help pages. Menu names on your phone may differ."],
+ppIos:["iPhone","iPhone"],ppAnd:["安卓（Google Pixel 等）","Android (Google Pixel and others)"],ppHw:["华为 / 荣耀","Huawei / Honor"],
+/* T2 / T2b 备份与恢复 */
+bkT:["备份与恢复","Backup and restore"],
+bkS:["把你在“我的卡”填的资料和设置存成一个文件，换手机或清理浏览器后可以恢复。文件只保存在你的手机上，本网站收不到。","Save what you filled in on “My card” and your settings as a file, so you can restore them on a new phone or after clearing the browser. The file stays on your phone; this website never receives it."],
+bkWarn:["文件里有你填写的健康信息。不加密时，任何人打开文件都能看到——请勿随意转发。","The file contains the health information you entered. Without a password, anyone who opens it can read it — don't forward it casually."],
+bkPlain:["不加密","No password"],bkEncO:["设密码加密","Encrypt with a password"],
+bkP1:["密码（至少 8 位）","Password (at least 8 characters)"],bkP2:["再输一次密码","Enter the password again"],bkPwWarn:["忘记密码就无法恢复，我们也找不回。","If you forget the password, the backup cannot be opened — nobody can recover it."],
+bkExp:["导出备份文件","Export backup file"],bkImp:["从备份文件恢复","Restore from a backup file"],
+bkPwShort:["密码至少 8 位。","The password must be at least 8 characters."],bkPwDiff:["两次输入的密码不一样。","The two passwords don't match."],
+bkEncing:["正在加密……","Encrypting…"],bkNoCrypto:["这个浏览器不支持加密，请用最新的 Safari 或 Chrome，或选“不加密”。","This browser can't encrypt. Use the latest Safari or Chrome, or choose “No password”."],
+bkDone:["已生成：{f}。iPhone 在“文件”App → 下载项；安卓在“下载”文件夹。","Created: {f}. iPhone: Files app → Downloads; Android: the Downloads folder."],
+bkShare:["没看到文件？用“分享”保存","Can't find it? Save with Share"],
+bkWx:["微信里不能下载文件：请点右上角 ··· → 在浏览器打开，再导出。","WeChat can't download files: tap ··· at the top right → Open in browser, then export."],
+bkEmpty:["这台手机上还没有资料可以备份（“我的卡”是空的）。仍可导出设置。","There is no data to back up yet (“My card” is empty). Settings can still be exported."],
+bkBad:["这不是急救卡的备份文件，或者文件已损坏。","This isn't an Emergency Card backup file, or the file is damaged."],bkBig:["文件太大，不像是急救卡备份。","The file is too large to be an Emergency Card backup."],
+bkLocked:["这个备份设了密码，请输入：","This backup has a password. Enter it:"],bkUnlock:["解锁","Unlock"],bkWrongPw:["密码不对，或者文件已损坏。","Wrong password, or the file is damaged."],bkDecing:["正在解密……","Decrypting…"],
+bkPrevT:["先看看备份里有什么（还没有覆盖）","Check what's in the backup (nothing replaced yet)"],
+bkPrevAt:["导出时间","Exported"],bkPrevVer:["导出时的版本","Exported from"],bkPrevPf:["档案","Profiles"],bkPrevF:["{n} 项资料","{n} items filled"],bkPrevTm:["发病时间记录","Symptom time records"],bkPrevSet:["显示与声音设置","Display and sound settings"],bkYes:["有","Yes"],bkNo:["无","No"],bkNoName:["（未命名）","(no name)"],
+bkPrevNow:["这台手机现在有 {n} 个档案。确认后，会被备份里的内容<b>全部替换</b>。","This phone now has {n} profile(s). If you confirm, they will be <b>completely replaced</b> by the backup."],
+bkApply:["确认用备份替换","Replace with this backup"],bkApplyArm:["再点一次确认替换","Tap again to confirm"],bkCancel:["取消","Cancel"],bkCanceled:["已取消，本机资料没有改动。","Cancelled. Nothing on this phone was changed."],
+bkRestored:["已从备份恢复。","Restored from the backup."],
+bkInfo:["<p>导出的是一个 .json 文本文件。恢复时先显示文件里有什么，你确认后才会替换本机资料。</p><p>设密码时，用浏览器自带的 AES‑GCM 加密；密钥由密码经 PBKDF2‑SHA256 计算 60 万次得出（OWASP 建议值）。全部在手机上完成，不上传。</p><p>备份不含“所在国家”的确认记录：换到新手机后会重新识别国家。</p>","<p>The export is a .json text file. When restoring, you first see what's in it; your data is only replaced after you confirm.</p><p>With a password, the browser's built-in AES‑GCM encryption is used, with a key derived from the password by PBKDF2‑SHA256 with 600,000 iterations (the OWASP recommendation). Everything happens on the phone; nothing is uploaded.</p><p>The backup does not include the confirmed country: a new phone detects the country again.</p>"]
+});
+
+/* ---------- R141 / R140：朗读修正 ----------
+   原因：WebKit 问题 191745——cancel() 之后紧接着排队的那一段朗读会被丢掉。旧版点“朗读”时先播一段静音“预热”，
+   再 cancel + 朗读，正好让步骤朗读被丢掉（R141“没有声音”）。现在：①不再播静音预热；②每次 cancel 后先放一段空白“垫片”，
+   真正的朗读排在它后面；③1.5 秒内没开始就不指定声音再试一次，仍不行就在页面上提示。 */
+function prime(){audio()}
+function vgPitch(v){if(!v||vgMode==="sys")return 1;var g=vgOf(v);if(vgMode==="m"&&g!=="m")return .72;if(vgMode==="f"&&g==="m")return 1.3;return 1}
+function spkLang(l){return l==="zh"?"zh-CN":l==="en"?"en-GB":l}
+function spkMake(s,l,v){var u=new SpeechSynthesisUtterance(s);u.lang=spkLang(l);if(v)u.voice=v;var p=vgPitch(v);if(p!==1)u.pitch=p;return u}
+function spkGo(list){try{speechSynthesis.cancel()}catch(e){}
+  try{var pad=new SpeechSynthesisUtterance(" ");pad.volume=0;pad.rate=2;speechSynthesis.speak(pad)}catch(e){}
+  list.forEach(function(u){speechSynthesis.speak(u)});try{speechSynthesis.resume()}catch(e){}}
+var spkTok=0;
+function spkWatch(tok,retry,fail){var seen=false,n=0;var iv=setInterval(function(){n++;
+  if(tok!==spkTok){clearInterval(iv);return}
+  var sp=false;try{sp=speechSynthesis.speaking}catch(e){}if(sp)seen=true;
+  if(seen){clearInterval(iv);return}
+  if(n>=6){clearInterval(iv);if(retry)retry();else if(fail)fail()}},250)}
+function spkFail(){var b=$("sheetBody");if(!b||!$("sheet").classList.contains("on"))return;var m=$("vFail");
+  if(!m){m=document.createElement("div");m.id="vFail";m.className="note slim";m.setAttribute("role","status");b.insertBefore(m,b.children[1]||null)}
+  m.innerHTML=I("info","s")+'<div>'+t("noVoiceCard")+'</div>'}
+function say(s){try{if(!("speechSynthesis" in window))return;var tok=++spkTok,v=voiceFor();
+  spkGo([spkMake(s,lang,v)]);
+  spkWatch(tok,function(){if(tok!==spkTok)return;spkGo([spkMake(s,lang,null)]);spkWatch(tok,null,spkFail)},null)}catch(e){}}
+function hush(){spkTok++;try{if("speechSynthesis" in window)speechSynthesis.cancel()}catch(e){}}
+function speakSeq(list,onEnd){
+  if(!("speechSynthesis" in window))return null;
+  try{var tok=++spkTok,vs=speechSynthesis.getVoices()||[],skipped=[],us=[];
+    list.forEach(function(x){var v=voiceFor(x[1]);if(vs.length&&!v){skipped.push(x[1]);return}us.push(spkMake(x[0],x[1],v))});
+    if(!us.length){if(onEnd)onEnd();return skipped}
+    var done=false;function fin(){if(done)return;done=true;if(onEnd)onEnd()}
+    us[us.length-1].onend=us[us.length-1].onerror=fin;spkGo(us);
+    /* 有的浏览器在 cancel 之后不触发 onend：改为轮询“是否还在朗读” */
+    var seen=false,n=0,iv=setInterval(function(){n++;if(tok!==spkTok){clearInterval(iv);return}var sp=false,pd=false;try{sp=speechSynthesis.speaking;pd=speechSynthesis.pending}catch(e){}
+      if(sp)seen=true;if((seen&&!sp&&!pd)||(!seen&&n>12)){clearInterval(iv);fin()}},400);
+    return skipped}catch(e){return null}}
+
+/* ---------- T4：底部呼叫栏放不下“呼叫救护车 / Call ambulance”时，改成两行（号码在上，文字在下），不再显示“Call a…” ---------- */
+function fitCall(){document.querySelectorAll("#dock .call").forEach(function(a){a.classList.remove("stk");var l=a.querySelector(".lbl");if(l&&(l.scrollWidth>l.clientWidth+1||l.scrollHeight>l.clientHeight+2))a.classList.add("stk")})}
+try{new MutationObserver(fitCall).observe($("dock"),{childList:true})}catch(e){}
+window.addEventListener("resize",fitCall);try{if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitCall)}catch(e){}
+
+/* ---------- T1：离线求救（声音 + 灯光）。不联网、不发消息、不通知急救中心 ---------- */
+var BC={on:false,mode:load("ec_bm")==="mtn"?"mtn":"city",snd:true,lt:true,t0:0,iv:null,sv:null,src:[],out:null,hold:null,sndOn:false,needTap:false,k:0,a0:0,next:0,wk:0};
+function bcNodesStop(){clearInterval(BC.sv);BC.sv=null;BC.src.forEach(function(n){try{if(n.stop)n.stop()}catch(e){}try{n.disconnect()}catch(e){}});BC.src=[];BC.out=null;BC.sndOn=false}
+function bcChain(vol){var g=ac.createGain();g.gain.value=vol;var c=null;try{c=ac.createDynamicsCompressor()}catch(e){}
+  if(c){g.connect(c);c.connect(ac.destination);BC.src.push(c)}else g.connect(ac.destination);BC.src.push(g);return g}
+function bcCityNodes(out){var o=ac.createOscillator();o.type="square";o.frequency.value=1050;
+  var lfo=ac.createOscillator();lfo.type="triangle";lfo.frequency.value=.55;var lg=ac.createGain();lg.gain.value=450;
+  lfo.connect(lg);lg.connect(o.frequency);o.connect(out);o.start();lfo.start();BC.src.push(o,lfo,lg)}
+function bcBlast(out,t,len){var o=ac.createOscillator();o.type="square";o.frequency.value=2900;var g=ac.createGain();
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(1,t+.03);g.gain.setValueAtTime(1,t+len-.05);g.gain.linearRampToValueAtTime(0,t+len);
+  o.connect(g);g.connect(out);o.start(t);o.stop(t+len+.02);o.onended=function(){try{o.disconnect();g.disconnect()}catch(e){}}}
+/* 山地求救：每 10 秒一声 2.5 秒长鸣，共 6 声（一分钟内），然后停一分钟，120 秒一个循环（来源 160） */
+function bcMtnSched(){if(!BC.out)return;var now=ac.currentTime;
+  while(BC.next<now+4){if(BC.next>=now-.05)bcBlast(BC.out,BC.next,2.5);BC.k++;BC.next=BC.a0+Math.floor(BC.k/6)*120+(BC.k%6)*10}}
+function bcSound(){if(!BC.on||!BC.snd||BC.sndOn)return;
+  if(!ac){BC.needTap=false;bcPh();return}
+  if(ac.state!=="running"){BC.needTap=true;bcPh();return}
+  BC.needTap=false;BC.sndOn=true;var out=bcChain(.9);
+  if(BC.mode==="city")bcCityNodes(out);
+  else{BC.out=out;var el=(performance.now()-BC.t0)/1000;BC.a0=ac.currentTime-el;BC.k=0;BC.next=BC.a0;
+    while(BC.next<ac.currentTime-2.4){BC.k++;BC.next=BC.a0+Math.floor(BC.k/6)*120+(BC.k%6)*10}
+    bcMtnSched();BC.sv=setInterval(bcMtnSched,500)}
+  bcPh()}
+function bcPhase(){var el=(performance.now()-BC.t0)/1000;if(BC.mode==="city")return {el:el,on:Math.floor(el*2)%2===0};
+  var c=el%120;if(c<60){var i=Math.floor(c/10);return {el:el,on:(c%10)<2.5,i:i+1}}return {el:el,on:false,wait:Math.ceil(120-c)}}
+function bcPh(){var p=$("bcPh");if(!p)return;var s="";
+  if(BC.needTap)s=t("bcTapSnd");else if(BC.snd&&!ac)s=t("bcNoSnd");
+  else if(BC.mode==="mtn"){var f=bcPhase();s=f.wait?t("bcPhP").replace("{s}",f.wait):t("bcPhB").replace("{i}",f.i)}
+  if(p.textContent!==s)p.textContent=s}
+function bcTick(){var r=$("bcRun");if(!r){bcStop();return}var f=bcPhase(),cls;
+  if(!BC.lt)cls="s";else if(BC.mode==="city")cls=f.on?"r":"w";else cls=f.on?"w":"k";
+  if(r.dataset.c!==cls){r.dataset.c=cls;r.className="bcrun "+cls}
+  var m=Math.floor(f.el/60),s=Math.floor(f.el%60),tx=(m<10?"0":"")+m+":"+(s<10?"0":"")+s,te=$("bcTime");if(te&&te.textContent!==tx)te.textContent=tx;
+  bcPh();if(++BC.wk%50===0&&!wl)awake(true)}
+function bcStart(){if(BC.on)return;if(!BC.snd&&!BC.lt){var m=$("bcMsg");if(m)m.textContent=t("bcNeedOne");return}
+  BC.on=true;BC.t0=performance.now();BC.wk=0;audio();hush();
+  var N=C[cc()].amb,d=document.createElement("div");d.id="bcRun";d.className="bcrun "+(BC.lt?(BC.mode==="city"?"r":"w"):"s");
+  d.setAttribute("role","dialog");d.setAttribute("aria-modal","true");d.setAttribute("aria-label",t("bcRunA"));
+  d.innerHTML='<div class="bcin"><div class="bck">'+t("bcRunK")+'</div><div class="bcm">'+esc(BC.mode==="city"?t("bcCity"):t("bcMtn"))+'</div>'+
+    '<div class="bct" id="bcTime" role="timer">00:00</div><div class="bcph" id="bcPh" aria-live="polite"></div>'+
+    '<button class="bcstop" id="bcStop">'+I("x")+t("bcStop")+'</button><div class="bcn">'+esc(t("bcRunNo").replace("{N}",N))+'</div></div>';
+  document.body.appendChild(d);document.body.classList.add("bc-on");
+  try{$("bcStop").focus({preventScroll:true})}catch(e){}
+  awake(true);if(BC.snd)bcSound();bcTick();BC.iv=setInterval(bcTick,100)}
+function bcStop(){if(!BC.on)return;BC.on=false;clearInterval(BC.iv);BC.iv=null;bcNodesStop();BC.needTap=false;
+  var r=$("bcRun");if(r)r.remove();document.body.classList.remove("bc-on");awake(false);
+  var h=$("bcHold");if(h)try{h.focus({preventScroll:true})}catch(e){}}
+function bcTest(){audio();if(!ac)return;var go=function(){if(ac.state!=="running")return;var g=ac.createGain();g.gain.value=.12;g.connect(ac.destination);var t0=ac.currentTime;
+  if(BC.mode==="city"){var o=ac.createOscillator();o.type="square";o.frequency.value=1050;var lfo=ac.createOscillator();lfo.frequency.value=.55;lfo.type="triangle";var lg=ac.createGain();lg.gain.value=450;
+    lfo.connect(lg);lg.connect(o.frequency);o.connect(g);o.start(t0);lfo.start(t0);o.stop(t0+2);lfo.stop(t0+2)}
+  else bcBlast(g,t0+.02,2);
+  setTimeout(function(){try{g.disconnect()}catch(e){}},2600)};
+  if(ac.state==="running")go();else{try{ac.resume().then(go,function(){})}catch(e){}}}
+function bcOpt(k){return '<button class="chip2" data-bopt="'+k+'" aria-pressed="'+(BC[k]?"true":"false")+'">'+I(k==="snd"?"vol":"sun","s")+t(k==="snd"?"bcSnd":"bcLt")+'</button>'}
+function openBeacon(){
+  metroStop();hush();cur=null;
+  var c=cc(),N=C[c].amb;
+  var h='<div class="shead"><button class="back" id="bk">'+I("chevL")+t("back")+'</button></div>'+
+    '<div class="ttl">'+'<span class="sg red" aria-hidden="true">'+I("siren")+'</span><h1 id="sheetT" tabindex="-1">'+t("bcT")+'</h1></div>'+
+    '<section class="card crit bcw" role="note"><p>'+I("alert","s")+' '+t("bcNo").replace("{N}",esc(N))+'</p></section>'+
+    '<div class="kick" style="margin-top:16px">'+t("bcModeT")+'</div><div class="seg2 bcmode" role="group" aria-label="'+esc(t("bcModeT"))+'">'+
+    '<button data-bm="city" aria-pressed="'+(BC.mode==="city")+'"><b>'+t("bcCity")+'</b><small>'+t("bcCityS")+'</small></button>'+
+    '<button data-bm="mtn" aria-pressed="'+(BC.mode==="mtn")+'"><b>'+t("bcMtn")+'</b><small>'+t("bcMtnS")+'</small></button></div>'+
+    '<div class="bcopts" role="group">'+bcOpt("snd")+bcOpt("lt")+'</div>'+
+    '<button class="btn red bchold" id="bcHold"><span>'+I("siren")+t("bcHold")+'</span></button><div class="muted" style="margin-top:6px">'+t("bcHoldS")+'</div>'+
+    '<div class="note" role="note" style="margin-top:12px">'+I("alert","s")+'<div>'+t("bcThreat")+'</div></div>'+
+    '<div class="muted" id="bcMsg" role="status" style="margin-top:6px"></div>'+
+    '<button class="btn ghost" id="bcTest">'+I("vol","s")+t("bcTest")+'</button>'+
+    '<button class="btn ghost" id="bcPb">'+I("sos","s")+t("bcPbGo")+'</button>'+
+    '<button class="btn ghost" id="bcPrep">'+I("gear","s")+t("bcPrepGo")+'</button>'+
+    info(t("bcTips"))+'<div class="src">'+srcFold([160,161,162])+'</div>';
+  showSheet(h,callBtn(c));
+}
+/* T1 ④：出事之前先设置好（各平台官方说明转述，来源 151–159） */
+var PREP=[
+ ["ppIos",[["在「健康」App 里点「设置紧急联系人」（或「编辑紧急联系人」），加上你信任的人。","In the Health app, tap Set Up Emergency Contacts (or Edit Emergency Contacts) and add people you trust."],
+   ["打完急救电话后，iPhone 会用短信通知你的紧急联系人，并发送你当前的位置，除非你选择取消。","After an emergency call ends, iPhone alerts your emergency contacts with a text message and sends your current location, unless you choose to cancel."],
+   ["想更快：设置 → SOS 紧急联络（Emergency SOS）→ 打开“按五次呼叫”（Call with 5 Presses）。","Faster: Settings › Emergency SOS › turn on Call with 5 Presses."],
+   ["没有手机信号也没有 Wi‑Fi 时：iPhone 14 及之后的机型可以通过卫星联系急救——只在部分国家和地区提供，要在室外、能看到天空。","No mobile signal and no Wi‑Fi: iPhone 14 and later can reach emergency services by satellite — only in some countries and regions, and you need to be outside with a clear view of the sky."],
+   ["在中国大陆买的 iPhone 没有卫星功能；在香港、澳门买的，只有 iPhone 16e 及之后的机型才有。可在 设置 → SOS 紧急联络 里试“卫星连接演示”（不会真的呼叫急救）。","iPhones bought in mainland China have no satellite features; ones bought in Hong Kong or Macao have them only on iPhone 16e and later. You can try the satellite demo in Settings › Emergency SOS (it does not call emergency services)."]],[151,152]],
+ ["ppAnd",[["Pixel：设置 → 安全与紧急情况 → SOS 紧急求助 → 开始设置（英文菜单：Settings › Safety & emergency › Emergency SOS › Start setup）。其他品牌菜单名可能不同。","Pixel: Settings › Safety & emergency › Emergency SOS › Start setup. Other brands may use different menu names."],
+   ["设置好后，快速按电源键 5 次或以上即可启动：可以呼叫急救、把你的位置分享给紧急联系人、录像。","Once set up, quickly press the power button 5 times or more: it can call for help, share your location with your emergency contacts and record video."],
+   ["注意：省电模式或飞行模式打开时，Emergency SOS 不能用；把实时位置分享给联系人需要 Wi‑Fi 或手机网络。","Note: Emergency SOS doesn't work when Battery Saver or airplane mode is on, and sharing your real-time location with contacts needs Wi‑Fi or mobile data."],
+   ["部分较新的 Pixel 机型有卫星求救（Satellite SOS），只在部分国家提供；Google 说明只应在没有其他办法联系急救时使用。","Some newer Pixel models have Satellite SOS, only in some countries; Google says to use it only when there is no other way to reach emergency services."]],[153,154,155,156]],
+ ["ppHw",[["华为“畅连”App 的北斗卫星消息只能发给中国大陆 11 位手机号码，非 11 位的联系人会被过滤掉。","Huawei MeeTime Beidou satellite messages can only go to mainland China 11-digit mobile numbers; other contacts are filtered out."],
+   ["只限中国大陆发售的支持机型，在中国大陆、香港、澳门使用；要在没有手机信号和 Wi‑Fi、空旷无遮挡的地方。","Only on supported models sold in mainland China, for use in mainland China, Hong Kong and Macao, somewhere open with no mobile signal or Wi‑Fi."],
+   ["荣耀手机：设置 → 安全 → SOS 紧急求助，添加紧急联系人并打开“自动发送求助信息”；出事时连按 5 次电源键，会给紧急联系人发送带当前位置的求助信息。","Honor phones: Settings › Security › Emergency SOS — add emergency contacts and turn on automatic help messages; in an emergency, press the power button 5 times to send them a help message with your location."],
+   ["华为手机的 SOS 菜单因型号而异：在“设置”里搜索“SOS”。","On Huawei phones the SOS menu differs by model: search for “SOS” in Settings."]],[157,158,159]]];
+function openPrep(){
+  metroStop();hush();cur=null;var c=cc(),ios=isIOS(),and=/Android/.test(navigator.userAgent||"");
+  var h='<div class="shead"><button class="back" id="bk">'+I("chevL")+t("back")+'</button></div><h1 id="sheetT" class="pickh" tabindex="-1">'+t("ppT")+'</h1>'+
+    '<section class="card"><p style="margin:0">'+t("ppFirst")+'</p></section>';
+  PREP.forEach(function(p,i){var open=(i===0&&ios)||(i===1&&and&&!/HUAWEI|HONOR/i.test(navigator.userAgent||""))||(i===2&&/HUAWEI|HONOR/i.test(navigator.userAgent||""));
+    h+='<details class="dd pp"'+(open?' open':'')+'><summary>'+I("phone")+t(p[0])+I("chevR","s chev")+'</summary><ol class="steps pps">'+p[1].map(function(x){return '<li><span>'+esc(L(x))+'</span></li>'}).join("")+'</ol><div class="src">'+srcFold(p[2])+'</div></details>'});
+  h+='<p class="muted" style="margin-top:12px">'+t("ppNote")+'</p>';
+  showSheet(h,callBtn(c));
+}
+document.addEventListener("pointerdown",function(e){var b=e.target.closest&&e.target.closest("#bcHold");if(!b||BC.on)return;
+  audio();b.classList.add("hold");var m=$("bcMsg");if(m)m.textContent="";
+  clearTimeout(BC.hold);BC.hold=setTimeout(function(){BC.hold=null;b.classList.remove("hold");bcStart()},1000)});
+function bcRel(e){var b=$("bcHold");if(BC.hold){clearTimeout(BC.hold);BC.hold=null;if(b)b.classList.remove("hold");
+    if(e&&e.type==="pointerup"){var m=$("bcMsg");if(m)m.textContent=t("bcHoldMiss")}}
+  if(BC.on&&BC.snd&&!BC.sndOn&&e&&e.type==="pointerup"){audio();try{ac.resume().then(bcSound,function(){})}catch(x){}}}
+document.addEventListener("pointerup",bcRel);document.addEventListener("pointercancel",bcRel);
+document.addEventListener("contextmenu",function(e){if(e.target.closest&&e.target.closest("#bcHold,#bcRun"))e.preventDefault()});
+document.addEventListener("click",function(e){var el=e.target.closest&&e.target.closest("button,#bcRun");if(!el)return;
+  if(el.id==="bcStop"){bcStop();return}
+  if(el.id==="bcRun"){if(BC.needTap||(BC.snd&&!BC.sndOn)){audio();try{ac.resume().then(bcSound,function(){})}catch(x){}}return}
+  if(el.id==="bcHold"){if(e.detail===0)bcStart();return}
+  if(el.id==="bcGo"){prime();goHash("beacon");return}
+  if(el.id==="bcPrep"||el.id==="ppGo"){goHash("prep");return}
+  if(el.id==="bcPb"){prime();goHash("help");return}
+  if(el.id==="bcTest"){bcTest();return}
+  if(el.dataset&&el.dataset.bm){BC.mode=el.dataset.bm;store("ec_bm",BC.mode==="mtn"?"mtn":null);document.querySelectorAll("[data-bm]").forEach(function(x){x.setAttribute("aria-pressed",x.dataset.bm===BC.mode?"true":"false")});return}
+  if(el.dataset&&el.dataset.bopt){var k=el.dataset.bopt;BC[k]=!BC[k];el.setAttribute("aria-pressed",BC[k]?"true":"false");var m=$("bcMsg");if(m)m.textContent=(!BC.snd&&!BC.lt)?t("bcNeedOne"):"";return}
+});
+document.addEventListener("keydown",function(e){if(BC.on&&e.key==="Escape"){e.stopImmediatePropagation();e.preventDefault();bcStop()}},true);
+document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible"&&BC.on){audio();if(!wl)awake(true)}});
+
+/* ---------- T2 / T2b：备份导出与恢复（可选密码加密）。只在本机完成，不上传；健康数据不进网址或二维码 ---------- */
+var BK_KEYS=["ec_prof","ec_id","ec_tm","ec_lang","ec_theme","ec_mode","ec_voice","ec_snd","ec_fs","ec_mlang","ec_vg","ec_bm"],BK_SET=["ec_lang","ec_theme","ec_mode","ec_voice","ec_snd","ec_fs","ec_mlang","ec_vg","ec_bm"],BK_IT=600000,BK_MAX=2000000;
+var BK={enc:false,file:null,pend:null};
+function bkHtml(){var w=inWx();
+  return '<h2 class="secH" id="bkH" tabindex="-1"><b>'+t("bkT")+'</b></h2><section class="card bk"><div>'+t("bkS")+'</div>'+
+    '<div class="note" role="note" style="margin:12px 0 0">'+I("alert","s")+'<div>'+t("bkWarn")+'</div></div>'+
+    (w?'<div class="note" role="note" style="margin:12px 0 0">'+I("info","s")+'<div>'+t("bkWx")+'</div></div>':'')+
+    '<div class="seg2" role="group" aria-label="'+esc(t("bkT"))+'"><button data-bkenc="0" aria-pressed="'+(!BK.enc)+'">'+t("bkPlain")+'</button><button data-bkenc="1" aria-pressed="'+BK.enc+'">'+I("lock","s")+t("bkEncO")+'</button></div>'+
+    '<div id="bkPw"'+(BK.enc?'':' hidden')+'><label for="bkP1">'+t("bkP1")+'</label><input id="bkP1" type="password" autocomplete="new-password" minlength="8">'+
+    '<label for="bkP2">'+t("bkP2")+'</label><input id="bkP2" type="password" autocomplete="new-password" minlength="8"><p class="muted">'+t("bkPwWarn")+'</p></div>'+
+    '<button class="btn" id="bkExp"'+(w?' disabled':'')+'>'+I("dl")+t("bkExp")+'</button>'+
+    '<button class="btn ghost" id="bkImp">'+I("ul")+t("bkImp")+'</button><input type="file" id="bkFile" accept=".json,application/json,text/plain" hidden>'+
+    '<div id="bkOut" role="status" aria-live="polite"></div>'+info(t("bkInfo"))+'<div class="src">'+srcFold([163])+'</div></section>'}
+function bkCollect(){var d={};BK_KEYS.forEach(function(k){var v=load(k);if(v!==null)d[k]=v});
+  return {app:"emergency-card",type:"backup",fmt:1,version:VERSION,content:CONTENT_VER,exported:new Date().toISOString(),data:d,
+    note:"Emergency Card backup. Contains personal health information - do not forward. Restore: open the Emergency Card page, More > Backup and restore."}}
+function b64e(buf){var b=new Uint8Array(buf),s="";for(var i=0;i<b.length;i+=0x8000)s+=String.fromCharCode.apply(null,b.subarray(i,i+0x8000));return btoa(s)}
+function b64d(s){var r=atob(s),b=new Uint8Array(r.length);for(var i=0;i<r.length;i++)b[i]=r.charCodeAt(i);return b}
+function bkCan(){return !!(window.crypto&&crypto.subtle&&window.TextEncoder)}
+function bkKey(pw,salt,it){return crypto.subtle.importKey("raw",new TextEncoder().encode(pw),"PBKDF2",false,["deriveKey"]).then(function(k){
+  return crypto.subtle.deriveKey({name:"PBKDF2",salt:salt,iterations:it,hash:"SHA-256"},k,{name:"AES-GCM",length:256},false,["encrypt","decrypt"])})}
+function bkEnc(obj,pw){var salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12));
+  return bkKey(pw,salt,BK_IT).then(function(k){return crypto.subtle.encrypt({name:"AES-GCM",iv:iv},k,new TextEncoder().encode(JSON.stringify(obj)))}).then(function(ct){
+    return {app:"emergency-card",type:"backup-encrypted",fmt:1,kdf:{name:"PBKDF2",hash:"SHA-256",iterations:BK_IT,salt:b64e(salt)},cipher:{name:"AES-GCM",iv:b64e(iv)},data:b64e(ct),
+      note:"Encrypted Emergency Card backup. Restore: open the Emergency Card page, More > Backup and restore, then enter the password."}})}
+function bkDec(f,pw){var it=+(f.kdf&&f.kdf.iterations);if(!(it>=100000&&it<=5000000)||!f.cipher||!f.data)return Promise.reject(new Error("fmt"));
+  return bkKey(pw,b64d(f.kdf.salt),it).then(function(k){return crypto.subtle.decrypt({name:"AES-GCM",iv:b64d(f.cipher.iv)},k,b64d(f.data))}).then(function(pt){return JSON.parse(new TextDecoder().decode(pt))})}
+function bkName(){var d=new Date(),p=function(n){return (n<10?"0":"")+n},s=d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate());/* 文件名只用英文字母和数字：实测 Chrome 会把中文文件名换成 “download”（没有 .json 后缀），恢复时可能找不到 */
+  return "emergency-card-backup-"+s+(BK.enc?"-encrypted":"")+".json"}
+function bkSave(obj){var name=bkName(),txt=JSON.stringify(obj,null,1),blob=new Blob([txt],{type:"application/json"}),o=$("bkOut");
+  try{var u=URL.createObjectURL(blob),a=document.createElement("a");a.href=u;a.download=name;a.rel="noopener";document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},60000)}catch(e){}
+  var sh="";try{var f=new File([blob],name,{type:"application/json"});if(navigator.canShare&&navigator.canShare({files:[f]})){BK.file=f;sh='<button class="btn ghost" id="bkShare">'+t("bkShare")+'</button>'}}catch(e){}
+  if(o)o.innerHTML='<div class="status">'+I("check","s")+esc(t("bkDone").replace("{f}",name))+'</div>'+sh}
+function bkExport(){var o=$("bkOut");if(inWx()){if(o)o.textContent=t("bkWx");return}
+  var obj=bkCollect(),pf=null;try{pf=profs()}catch(e){}
+  var empty=!pf||!pf.list.some(function(x){return idHas(x.d||{})});
+  if(!BK.enc){bkSave(obj);if(empty&&o)o.insertAdjacentHTML("afterbegin",'<div class="muted">'+esc(t("bkEmpty"))+'</div>');return}
+  if(!bkCan()){if(o)o.textContent=t("bkNoCrypto");return}
+  var p1=($("bkP1")||{}).value||"",p2=($("bkP2")||{}).value||"";
+  if(p1.length<8){if(o)o.textContent=t("bkPwShort");return}if(p1!==p2){if(o)o.textContent=t("bkPwDiff");return}
+  if(o)o.textContent=t("bkEncing");var b=$("bkExp");if(b)b.disabled=true;
+  bkEnc(obj,p1).then(function(e){if(b)b.disabled=false;bkSave(e);var a=$("bkP1"),c=$("bkP2");if(a)a.value="";if(c)c.value=""},function(){if(b)b.disabled=false;if(o)o.textContent=t("bkNoCrypto")})}
+function bkValid(o){if(!o||o.app!=="emergency-card"||o.type!=="backup"||!o.data||typeof o.data!=="object")return null;var d={};
+  for(var k in o.data){if(BK_KEYS.indexOf(k)<0)continue;var v=o.data[k];if(typeof v!=="string"||v.length>BK_MAX)return null;d[k]=v}
+  if(d.ec_prof){try{var p=JSON.parse(d.ec_prof);if(!p||!Array.isArray(p.list)||!p.list.length||p.list.length>PF_MAX)return null}catch(e){return null}}
+  if(d.ec_tm){try{JSON.parse(d.ec_tm)}catch(e){return null}}
+  return {d:d,at:o.exported,ver:o.version}}
+function bkPreview(v){var o=$("bkOut");if(!o)return;var list=[];
+  try{if(v.d.ec_prof)list=JSON.parse(v.d.ec_prof).list;else if(v.d.ec_id)list=[{n:"",d:JSON.parse(v.d.ec_id)}]}catch(e){}
+  var tm=false;try{tm=!!(v.d.ec_tm&&Object.keys(JSON.parse(v.d.ec_tm)).length)}catch(e){}
+  var st=BK_SET.filter(function(k){return v.d[k]!==undefined}).length,now=profs().list.length,at="";try{at=v.at?new Date(v.at).toLocaleString(lang==="zh"?"zh-CN":"en-GB"):""}catch(e){}
+  BK.pend=v;
+  o.innerHTML='<div class="card bkprev"><div class="kick">'+t("bkPrevT")+'</div><dl>'+
+    (at?'<dt>'+t("bkPrevAt")+'</dt><dd>'+esc(at)+'</dd>':'')+(v.ver?'<dt>'+t("bkPrevVer")+'</dt><dd>'+esc(String(v.ver).slice(0,30))+'</dd>':'')+
+    '<dt>'+t("bkPrevPf")+PL(list.length)+'</dt><dd><ul>'+list.map(function(p){var d=p.d||{},n=(p.n||d.name||"").trim();var c=IDF.filter(function(f){return d[f[0]]}).length+(riskOf(d).length?1:0);
+      return '<li>'+esc(n||t("bkNoName"))+' · '+esc(t("bkPrevF").replace("{n}",c))+'</li>'}).join("")+'</ul></dd>'+
+    '<dt>'+t("bkPrevTm")+'</dt><dd>'+(tm?t("bkYes"):t("bkNo"))+'</dd><dt>'+t("bkPrevSet")+'</dt><dd>'+(st?t("bkYes"):t("bkNo"))+'</dd></dl>'+
+    '<p class="bkwarn">'+t("bkPrevNow").replace("{n}",now)+'</p>'+
+    '<button class="btn red" id="bkApply">'+t("bkApply")+'</button><button class="btn ghost" id="bkCancel">'+t("bkCancel")+'</button></div>';
+  try{o.scrollIntoView({block:"nearest"})}catch(e){}}
+function bkRead(file){var o=$("bkOut");BK.pend=null;if(!file)return;if(file.size>BK_MAX){if(o)o.textContent=t("bkBig");return}
+  var r=new FileReader();r.onload=function(){var j=null;try{j=JSON.parse(String(r.result||""))}catch(e){}
+    if(j&&j.app==="emergency-card"&&j.type==="backup-encrypted"){BK.encFile=j;
+      if(!bkCan()){if(o)o.textContent=t("bkNoCrypto");return}
+      o.innerHTML='<div class="card bkprev"><label for="bkPU">'+I("lock","s")+t("bkLocked")+'</label><input id="bkPU" type="password" autocomplete="current-password"><button class="btn" id="bkUnlock">'+t("bkUnlock")+'</button><div class="muted" id="bkUMsg" role="status"></div></div>';
+      try{$("bkPU").focus()}catch(e){}return}
+    var v=bkValid(j);if(!v){if(o)o.textContent=t("bkBad");return}bkPreview(v)};
+  r.onerror=function(){if(o)o.textContent=t("bkBad")};r.readAsText(file)}
+function bkUnlock(){var m=$("bkUMsg"),pw=($("bkPU")||{}).value||"";if(!BK.encFile||!pw)return;if(m)m.textContent=t("bkDecing");
+  bkDec(BK.encFile,pw).then(function(o){var v=bkValid(o);if(!v){if(m)m.textContent=t("bkBad");return}BK.encFile=null;bkPreview(v)},function(){if(m)m.textContent=t("bkWrongPw")})}
+function bkApply(){var v=BK.pend;if(!v)return;BK_KEYS.forEach(function(k){store(k,null)});Object.keys(v.d).forEach(function(k){store(k,v.d[k])});
+  BK.pend=null;try{sessionStorage.setItem("ec_rst","1")}catch(e){}hush();location.replace(location.pathname+location.search)}
+document.addEventListener("click",function(e){var el=e.target.closest&&e.target.closest("button");if(!el)return;
+  if(el.dataset.bkenc!==undefined){BK.enc=el.dataset.bkenc==="1";document.querySelectorAll("[data-bkenc]").forEach(function(x){x.setAttribute("aria-pressed",x.dataset.bkenc===(BK.enc?"1":"0")?"true":"false")});var p=$("bkPw");if(p)p.hidden=!BK.enc;var o=$("bkOut");if(o)o.textContent="";return}
+  if(el.id==="bkExp"){bkExport();return}
+  if(el.id==="bkShare"){if(BK.file)navigator.share({files:[BK.file]}).catch(function(){});return}
+  if(el.id==="bkImp"){var f=$("bkFile");if(f){f.value="";f.click()}return}
+  if(el.id==="bkUnlock"){bkUnlock();return}
+  if(el.id==="bkCancel"){BK.pend=null;var o2=$("bkOut");if(o2)o2.textContent=t("bkCanceled");return}
+  if(el.id==="bkApply"){if(el.dataset.armed!=="1"){el.dataset.armed="1";el.textContent=t("bkApplyArm");setTimeout(function(){if(document.contains(el)){el.dataset.armed="";el.textContent=t("bkApply")}},6000);return}bkApply();return}
+});
+document.addEventListener("change",function(e){if(e.target&&e.target.id==="bkFile"){bkRead(e.target.files&&e.target.files[0])}});
+document.addEventListener("keydown",function(e){if(e.key==="Enter"&&e.target&&e.target.id==="bkPU"){e.preventDefault();bkUnlock()}},true);
+/* 恢复后重新打开：跳到“我的卡”并提示一次 */
+(function(){var r=null;try{r=sessionStorage.getItem("ec_rst");sessionStorage.removeItem("ec_rst")}catch(e){}
+  if(r)setTimeout(function(){goTab("me");setTimeout(function(){var b=$("idBox");if(b)b.insertAdjacentHTML("beforebegin",'<div class="status" role="status" id="rstMsg">'+I("check","s")+t("bkRestored")+'</div>')},60)},0)})();
 
 applyFs();
 window.addEventListener("pageshow",function(){if(fsMode==="sys")applyFs()});
