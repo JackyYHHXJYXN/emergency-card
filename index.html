@@ -1145,6 +1145,28 @@ details.srcd>summary{max-width:100%;flex-wrap:wrap}
 /* F4 急救卡标题是一个很长的英文单词（如 Anaphylaxis）时，宁可断开也不超出屏幕 */
 #sheetT{min-width:0;overflow-wrap:anywhere}
 .shead{flex-wrap:wrap}
+
+/* ---------- v0.14.2：特大字号下圆圈编号变形、数字跑出圈（英国测试者反馈）---------- */
+/* G1 原来圆圈是固定像素（28–36px），数字却跟着字号放大：特大字号时行高比圆圈高，数字偏离圆心；
+   安卓 / 微信系统字体放大时数字直接跑出圈。改法：圆圈大小用 em（跟自己的数字一起放大），
+   行高 1、不换行、强制正圆（宽 = 高），默认字号下和原来一样大（34 / 28 / 36 / 28px）。 */
+.steps li:before,.say li:before,.stepcard .sn,.hon{
+  box-sizing:border-box;padding:0;line-height:1;white-space:nowrap;letter-spacing:0;text-indent:0;
+  font-variant-numeric:tabular-nums;border-radius:50%;aspect-ratio:1/1;flex:none;text-align:center}
+.steps li:before,.say li:before{align-self:flex-start}
+.steps li:before{width:34px;height:34px;width:1.79em;height:1.79em;min-width:34px;min-height:34px}
+.say li:before{width:28px;height:28px;width:1.65em;height:1.65em;min-width:28px;min-height:28px}
+.stepcard .sn{width:36px;height:36px;width:1.9em;height:1.9em;min-width:36px;min-height:36px}
+.hon{width:28px;height:28px;width:1.65em;height:1.65em;min-width:28px;min-height:28px;vertical-align:middle}
+/* 系统字体放大到 1.7 倍以上（安卓 / 微信最大字体）：圆圈里的数字不必和正文一样大，缩到正文的 0.85 倍，给正文留出宽度 */
+html.maxtext .steps li:before{font-size:calc(16px * var(--fs))}
+html.maxtext .say li:before,html.maxtext .hon{font-size:calc(15px * var(--fs))}
+html.maxtext .stepcard .sn{font-size:calc(16px * var(--fs))}
+/* 同上：最大字体时圆圈放到步骤文字上方，正文用满整行宽度（单词少被拆开） */
+html.maxtext .steps li,html.maxtext .say li{flex-direction:column;gap:8px}
+/* 最窄的屏（≤ 360 宽，如 Galaxy Fold 外屏）+ 大字号：同样把圆圈放到文字上方，正文不因圆圈变大而变窄 */
+@media (max-width:360px){html.bigtext .steps li,html.bigtext .say li{flex-direction:column;gap:8px}}
+/* G2 呼叫栏旁“Unconfirmed”在英文特大字号时被拆成 “Unconfir / med” → 文字里加软连字符，放不下时断成 “Uncon- / firmed”，放得下时不显示连字符 */
 </style>
 </head>
 <body>
@@ -1171,7 +1193,7 @@ var FEEDBACK_GOOGLE = _CFG.google||"";    // Google 表单链接，例如 https:
 var FEEDBACK_TENCENT = _CFG.tencent||"";  // 腾讯问卷链接，例如 https://wj.qq.com/s2/xxxx/xxxx/
 // 可选：Google 表单里"版本/国家/语言"那道简答题的编号（形如 entry.123456789）。填了以后会自动带入，留空也能用。
 var GOOGLE_PREFILL_ENTRY = _CFG.googleEntry||"";
-var VERSION = "MVP v0.14.1";
+var VERSION = "MVP v0.14.2";
 var VERIFIED_ON = "2026-11-17";   // 全部国家号码的统一核实日期；某国单独复核后，在该国数据里加 v:"YYYY-MM-DD"
 // 固定的正式网址：分享、锁屏图片一律用它，不用当前地址栏（避免分享出 file:// 或预览地址）。分享链接里永远不放任何个人信息。
 var SITE_URL = "https://jackyyhhxjyxn.github.io/emergency-card/";
@@ -3145,7 +3167,7 @@ window.addEventListener("afterprint",function(){document.documentElement.classLi
 
 /* ===================== v0.10.0：移植 Pro 设计（只涉及界面，不新增医学内容） ===================== */
 var T10={
-ucf:["未确认","Unconfirmed"],ucfA:["所在国家未确认，点此确认","Country not confirmed — tap to confirm"],
+ucf:["未确认","Uncon\u00ADfirmed"],ucfA:["所在国家未确认，点此确认","Country not confirmed — tap to confirm"],
 ucfHero:["未确认：号码按手机时区推测，请核对国家","Not confirmed: the number is a guess from the phone's time zone. Check the country."],
 ucfHeroX:["未识别所在国家，请点“更换”选择","Country not detected. Tap Change to choose."],
 ucfYes:["是，就在这里","Yes, I am here"],
