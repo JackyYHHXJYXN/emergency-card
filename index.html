@@ -1123,6 +1123,28 @@ details.pp summary{display:flex;align-items:center;gap:8px;font-weight:800;min-h
 .band .b2{font-weight:700}
 .printing .band{break-inside:avoid}
 .pg1{margin:0}
+
+/* ---------- v0.14.1：多机型自动测试后的布局修复（只改界面，不改医学内容和号码） ---------- */
+/* F1 小屏英文：顶栏“Emergency Card”被截成“Emergency Ca…”→ 允许换成两行，并按屏宽限制字号 */
+.brand{white-space:normal;font-size:min(calc(19px * var(--fs)),5.6vw)}
+#brand{white-space:normal;overflow:visible;text-overflow:clip;line-height:1.08;overflow-wrap:normal;word-break:keep-all}
+/* F2 正文里的小按钮（如医疗卡“朗读高危情况”）在大字号时超出屏幕右边 → 允许换行 */
+.mc .chip,.card .chip,.note .chip,.mcf .chip{white-space:normal;max-width:100%;text-align:left;line-height:1.2;padding-top:8px;padding-bottom:8px;height:auto}
+/* F3 自动减为一列时（.fit1）：首页三个小按钮、急救卡片改成横排（图标在左、文字在右），不变成又高又窄的格子 */
+.qa3.fit1 .qa{flex-direction:row;min-height:64px;padding:10px 14px;text-align:left}
+.grid.fit1 .tile:not(.top){flex-direction:row;align-items:center;min-height:0}
+.fit1 .big{padding-left:12px;padding-right:12px}
+.tile.top.fitv{flex-direction:column;align-items:flex-start}
+.tile.top.fitv .chev{display:none}
+.snav .pv.ico1{font-size:0!important;gap:0}
+.snav .pv.ico1 .ic{width:28px;height:28px}
+/* F5 首页分类按钮（全部 / 危及生命 / 心脑 / 外伤与环境）在微信、安卓系统字体放大时不换行，把整页撑宽 → 允许换行 */
+.cat{white-space:normal;max-width:100%;text-align:center;line-height:1.2}
+/* F7 “依据 N 个来源”折叠标题在系统字体放大时比屏幕宽 → 限制在屏幕内并允许换行 */
+details.srcd>summary{max-width:100%;flex-wrap:wrap}
+/* F4 急救卡标题是一个很长的英文单词（如 Anaphylaxis）时，宁可断开也不超出屏幕 */
+#sheetT{min-width:0;overflow-wrap:anywhere}
+.shead{flex-wrap:wrap}
 </style>
 </head>
 <body>
@@ -1149,7 +1171,7 @@ var FEEDBACK_GOOGLE = _CFG.google||"";    // Google 表单链接，例如 https:
 var FEEDBACK_TENCENT = _CFG.tencent||"";  // 腾讯问卷链接，例如 https://wj.qq.com/s2/xxxx/xxxx/
 // 可选：Google 表单里"版本/国家/语言"那道简答题的编号（形如 entry.123456789）。填了以后会自动带入，留空也能用。
 var GOOGLE_PREFILL_ENTRY = _CFG.googleEntry||"";
-var VERSION = "MVP v0.14.0";
+var VERSION = "MVP v0.14.1";
 var VERIFIED_ON = "2026-11-17";   // 全部国家号码的统一核实日期；某国单独复核后，在该国数据里加 v:"YYYY-MM-DD"
 // 固定的正式网址：分享、锁屏图片一律用它，不用当前地址栏（避免分享出 file:// 或预览地址）。分享链接里永远不放任何个人信息。
 var SITE_URL = "https://jackyyhhxjyxn.github.io/emergency-card/";
@@ -1935,6 +1957,8 @@ function staleNote(c){return staleDays(c)?'<div class="note" role="note">'+I("al
 function tzLabel(){return TZNAME||t("tzNone")}
 /* iPhone 不会从网页拨出含 * 或 # 的号码（来源 SRC 50） */
 function isIOS(){return /iPhone|iPad|iPod/.test(navigator.userAgent||"")||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1)}
+/* v0.14.1：华为 / 荣耀，包括纯血鸿蒙（HarmonyOS 5/6）：UA 里只有 OpenHarmony / ArkWeb，没有 HUAWEI（华为开发者文档：用 OpenHarmony 关键字识别） */
+function isHW(){return /HUAWEI|HONOR|OpenHarmony|HarmonyOS|ArkWeb/i.test(navigator.userAgent||"")}
 function noTel(n){return /[*#]/.test(n)&&isIOS()}
 
 /* 新增图标（导航、日夜模式） */
@@ -2131,7 +2155,7 @@ function viewMore(c){var h=aboutHtml(c);
     var and=/Android/.test(navigator.userAgent||"");
     h+='<div id="instSec"><h2 class="secH" style="margin-top:6px"><b>'+t("instT")+'</b></h2><section class="card">'+info(t("instHint")).replace('details class="ifo"','details class="ifo" style="margin-top:0;border-top:0"')+
        '<button class="btn" id="instBtn"'+(dip?'':' hidden')+'>'+I("dl")+t("instBtn")+'</button>'+
-       info((and?'':'<p>'+t("instIOS")+'</p>')+(ios?'':'<p>'+t("instAnd")+'</p>'))+'</section></div>';
+       info(ios?'<p>'+t("instIOS")+'</p>':and?'<p>'+t("instAnd")+'</p>':'<p>'+t("instAnd")+'</p><p>'+t("instIOS")+'</p>')+'</section></div>';
   }
   h+='<h2 class="secH"'+(standalone()?' style="margin-top:6px"':'')+'><b>'+t("offT")+'</b></h2><section class="card"><div>'+t("wallS1")+'</div>'+
      '<button class="btn" id="wallGo">'+I("phone")+t("wallBtn")+'</button>'+info('<p>'+t("wallS")+'</p>')+
@@ -2425,7 +2449,7 @@ function openWall(){
 /* 生成图片：页面显示用 blob 网址（长按保存更可靠），同时留一份 PNG 文件供“保存到相册” */
 var wallBlob=null,wallUrl=null;
 function wallRefresh(){var r=drawWall(cc()),img=$("wallImg");wallBlob=null;
-  if(r.canvas&&r.canvas.toBlob){r.canvas.toBlob(function(b){if(!b){if(img)img.src=r.url;return}wallBlob=b;if(wallUrl)try{URL.revokeObjectURL(wallUrl)}catch(e){}wallUrl=URL.createObjectURL(b);if(img)img.src=wallUrl},"image/png")}
+  if(r.canvas&&r.canvas.toBlob){r.canvas.toBlob(function(b){if(!b){if(img)img.src=r.url;return}wallBlob=b;if(wallUrl)try{URL.revokeObjectURL(wallUrl)}catch(e){}try{wallUrl=URL.createObjectURL(b)}catch(e){wallUrl=null}if(img)img.src=wallUrl||r.url},"image/png")}
   else if(img)img.src=r.url}
 function wallName(){return "emergency-numbers-"+cc()+"-"+wallSz+"-"+todayStr()+".png"}
 function wallDownload(){var a=document.createElement("a");a.href=wallUrl||($("wallImg")||{}).src;a.download=wallName();document.body.appendChild(a);a.click();a.remove()}
@@ -2716,7 +2740,7 @@ function nfApplyLoc(){var ta=$("nfTxt");if(!ta)return;
   nfLocUi();nfRefresh()}
 /* v0.11.6：定位改为两步——先要精确定位（GPS），拿不到再退回网络定位（Wi-Fi / 基站，室内更容易成功）；
    失败时按原因给出具体做法（权限关了 / 信号弱 / 在其他 App 里打开），并显示错误代码，方便测试人员回报 */
-function inApp(){return /FBAN|FBAV|Instagram|WhatsApp|GSA\/|LinkedInApp|Twitter|Line\/|MicroMessenger|; wv\)/i.test(navigator.userAgent||"")}
+function inApp(){return /FBAN|FBAV|FB_IAB|Instagram|WhatsApp|GSA\/|LinkedInApp|Twitter|Line\/|MicroMessenger|AlipayClient|aweme|Weibo|DingTalk|baiduboxapp|NewsArticle|Lark\/|XiaoHongShu|discover\/|\bQQ\/|; wv\)/i.test(navigator.userAgent||"")}
 function getPos(ok,fail){
   if(!navigator.geolocation||!window.isSecureContext){fail(0);return}
   var done=false;function F(c){if(!done){done=true;fail(c)}}function O(p){if(!done){done=true;ok(p)}}
@@ -2812,6 +2836,7 @@ prDate:["打印日期","Printed"],prMore:["另有 {n} 项，见手机或冰箱�
 prEmpty:["还没有填写急救信息。先在“我的卡”填写。","No medical information yet. Fill in My card first."],
 prWho:["打印的是当前档案：{p}。要打印家人的，先在“我的卡”切换档案。","Printing the current profile: {p}. To print a family member’s, switch profile in My card first."],
 prOver:["钱包卡放不下全部文字，打印出来会被截掉。请缩短“我的卡”里的文字，或以冰箱单为准。","Not everything fits on the wallet card and the printout will be cut off. Shorten the text in My card, or rely on the fridge sheet."],
+prOverB:["手环条放不下全部文字，打印出来那一行会以“…”结尾（过敏等内容可能看不全）。请缩短“我的卡”里的文字，或以冰箱单为准。","Not everything fits on the wristband strip: a line that is too long is printed ending in “…” (allergies may be cut off). Shorten the text in My card, or rely on the fridge sheet."],
 prBtn:["打印钱包卡 / 冰箱单","Print wallet card / fridge sheet"],
 canT:["填好后可以：","Once filled in, you can:"],canMc:["给外国医护看（字段名显示成当地语言）","Show medical staff abroad (labels in the local language)"],canHo:["交给医生（一页交接单）","Hand over to the doctor (one-page summary)"],canPr:["打印钱包卡和冰箱单：手机没电、锁着或丢了，急救人员也能看到","Print a wallet card and fridge sheet: responders can read them even if the phone is flat, locked or lost"],
 offT:["离线备份：锁屏图片 + 纸质卡","Offline backup: lock-screen image + paper card"],offPr:["纸质卡：打印随身钱包卡和放在家里的冰箱单。需要先在“我的卡”填写。","Paper card: print a wallet card to carry and a fridge sheet for home. Fill in My card first."],prFill:["去“我的卡”填写","Fill in My card"],prHint:["已保存。现在可以打印钱包卡和冰箱单：手机没电或锁着时，急救人员也能看到。","Saved. You can now print a wallet card and fridge sheet, so responders can read them even if your phone is flat or locked."],prHintGo:["去打印","Print now"],
@@ -3100,10 +3125,13 @@ function openPrint(){
     '<h2 class="secH"><b>'+t("prF")+'</b></h2><div class="prv">'+fridgeHtml(c,d)+'</div>'+
     '<button class="btn" data-print="f">'+I("print")+t("prGo")+'</button>'+prHome(c)+
     '<h2 class="secH"><b>'+t("prB")+'</b></h2><div class="muted">'+t("prBS")+'</div><div class="prv">'+bandHtml(c,d,1)+'</div>'+
+    '<div class="note red" role="alert" id="prOverB" hidden>'+I("alert")+'<div>'+t("prOverB")+'</div></div>'+
     '<button class="btn" data-print="b">'+I("print")+t("prGo")+'</button>'+info(t("prBNfc")+'<div class="src">'+t("srcT")+CO()+srcLine([182])+'</div>')+
     pxPrintNote()+'<p class="muted">'+t("prPriv")+'</p>'+info('<p>'+t("prQr")+'</p><p>'+t("prHow")+'</p><div class="src">'+t("srcT")+CO()+srcLine([100,102])+'</div>');
   showSheet(h,callBtn(c));
   try{var over=[].some.call(document.querySelectorAll("#sheetBody .wface,#sheetBody .wbody,#sheetBody .wal,#sheetBody .wice"),function(x){return x.scrollHeight>x.clientHeight+2});$("prOver").hidden=!over}catch(e){}
+  /* v0.14.1：手环条每行是一行到底、放不下就用“…”结尾 → 有任何一行被截断时提示 */
+  try{var ob=[].some.call(document.querySelectorAll("#sheetBody .band .bt div"),function(x){return x.scrollWidth>x.clientWidth+1});$("prOverB").hidden=!ob}catch(e){}
 }
 function doPrint(k){
   var c=cc(),d=getId(),a=$("printArea");
@@ -3525,7 +3553,7 @@ function openPrep(){
   metroStop();hush();cur=null;var c=cc(),ios=isIOS(),and=/Android/.test(navigator.userAgent||"");
   var h='<div class="shead"><button class="back" id="bk">'+I("chevL")+t("back")+'</button></div><h1 id="sheetT" class="pickh" tabindex="-1">'+t("ppT")+'</h1>'+
     '<section class="card"><p style="margin:0">'+t("ppFirst")+'</p></section>';
-  PREP.forEach(function(p,i){var open=(i===0&&ios)||(i===1&&and&&!/HUAWEI|HONOR/i.test(navigator.userAgent||""))||(i===2&&/HUAWEI|HONOR/i.test(navigator.userAgent||""));
+  PREP.forEach(function(p,i){var open=(i===0&&ios)||(i===1&&and&&!isHW())||(i===2&&isHW());
     h+='<details class="dd pp"'+(open?' open':'')+'><summary>'+I("phone")+t(p[0])+I("chevR","s chev")+'</summary><ol class="steps pps">'+p[1].map(function(x){return '<li><span>'+esc(L(x))+'</span></li>'}).join("")+'</ol><div class="src">'+srcFold(p[2])+'</div></details>'});
   h+='<p class="muted" style="margin-top:12px">'+t("ppNote")+'</p>';
   showSheet(h,callBtn(c));
@@ -3932,6 +3960,76 @@ window.addEventListener("pageshow",function(){if(fsMode==="sys")applyFs()});
 document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible"&&fsMode==="sys")applyFs()});
 render();
 if("serviceWorker" in navigator && (location.protocol==="https:"||location.hostname==="localhost")){try{navigator.serviceWorker.register("sw.js").catch(function(){})}catch(e){}}
+</script>
+<script>
+/* ===================== v0.14.1：按实际屏幕宽度自动减少列数 =====================
+   多机型自动测试发现：窄屏（iPhone SE 放大显示、折叠屏外屏、安卓“显示大小：最大”）或大字号时，
+   两列 / 三列 / 四列的按钮里英文单词被拆成两行（如 “Notif / y”），甚至字跑出按钮。
+   做法：页面画好后量一遍，凡是有单词被拆开或字超出格子的网格，就少一列再量，直到放得下或只剩一列。
+   只改排版，不改任何文字、号码或医学内容。 */
+(function(){
+  var SEL="#app,#sheetBody";
+  function broken(box){
+    var w=document.createTreeWalker(box,NodeFilter.SHOW_TEXT,null,false),n,re=/[A-Za-z][A-Za-z'’]{3,}/g,m;
+    while((n=w.nextNode())){var p=n.parentElement;if(!p||p.closest(".srcs,.src,.urlbox,input,textarea"))continue;
+      re.lastIndex=0;while((m=re.exec(n.nodeValue))){var r=document.createRange();r.setStart(n,m.index);r.setEnd(n,m.index+m[0].length);
+        var rs=r.getClientRects();if(rs.length>1&&Math.abs(rs[0].top-rs[rs.length-1].top)>2)return true}}
+    if(box.scrollWidth>box.clientWidth+1&&getComputedStyle(box).overflowX==="visible")return true;
+    var k=box.children;for(var i=0;i<k.length;i++){if(k[i].scrollWidth>k[i].clientWidth+1&&getComputedStyle(k[i]).overflowX==="visible")return true}
+    return false}
+  function cols(g){var t=getComputedStyle(g).gridTemplateColumns;if(!t||t==="none")return 0;return t.split(/\s+/).filter(function(x){return /px$/.test(x)}).length}
+  function fitOne(g){
+    if(g.hasAttribute("data-fitc")){g.style.gridTemplateColumns="";g.removeAttribute("data-fitc");g.classList.remove("fit1")}
+    if(!g.offsetWidth)return;
+    var c=cols(g),guard=0;
+    while(c>1&&guard++<4&&[].some.call(g.children,function(ch){return ch.offsetWidth&&broken(ch)})){
+      /* 少一列时优先选能整除的列数（4 个按钮 → 2×2，而不是 3+1） */
+      var n=[].filter.call(g.children,function(ch){return ch.offsetWidth}).length,nc=c-1;
+      for(var k=c-1;k>=2;k--){if(n%k===0){nc=k;break}if(k===2)nc=(n%2===0)?2:1}
+      if(c-1<2)nc=1;c=nc;g.style.gridTemplateColumns="repeat("+c+",minmax(0,1fr))";g.setAttribute("data-fitc",String(c));
+      if(c===1)g.classList.add("fit1")}
+  }
+  /* 横排（flex）：有单词被拆开或超出 → 允许换行，把放不下的那一块单独占一整行（如“我的卡”姓名和血型并排时） */
+  function fitFlex(f){
+    if(f.hasAttribute("data-fitf")){f.style.flexWrap="";f.removeAttribute("data-fitf");[].forEach.call(f.children,function(ch){if(ch.hasAttribute("data-fitb")){ch.style.flexBasis="";ch.style.maxWidth="";ch.removeAttribute("data-fitb")}})}
+    if(!f.offsetWidth||f.children.length<2)return;var cs=getComputedStyle(f);if(cs.flexDirection.indexOf("row")!==0)return;
+    var fr=f.getBoundingClientRect(),bad=[].filter.call(f.children,function(ch){var r=ch.getBoundingClientRect();return r.width>0&&((ch.nodeName!=='svg'&&broken(ch))||r.right>fr.right+1)});
+    if(!bad.length)return;f.style.flexWrap="wrap";f.setAttribute("data-fitf","1");
+    bad.forEach(function(ch){if(ch.nodeName!=='svg'&&broken(ch)){ch.style.flexBasis="100%";ch.style.maxWidth="100%";ch.setAttribute("data-fitb","1")}})}
+  /* 急救步骤底部“上一步 / 下一步”：大字号窄屏时“上一步(Previous)”放不下 → 两键等宽 → 再缩小字号 → 最后只留箭头（读屏仍读“上一步”） */
+  function fitSnav(){document.querySelectorAll("#dock .snav").forEach(function(sn){var pv=sn.querySelector(".pv");if(!pv)return;
+    sn.style.gridTemplateColumns="";pv.style.fontSize="";pv.classList.remove("ico1");
+    function over(){return pv.scrollWidth>pv.clientWidth+1}
+    if(!over())return;sn.style.gridTemplateColumns="1fr 1fr";if(!over())return;
+    var f=parseFloat(getComputedStyle(pv).fontSize)||20,g=0;while(over()&&f>15&&g++<10){f-=1;pv.style.fontSize=f+"px"}
+    if(over()){pv.classList.add("ico1");if(!pv.getAttribute("aria-label"))pv.setAttribute("aria-label",(pv.textContent||"").trim())}})}
+  function fitBrand(){var b=document.getElementById("brand");if(!b)return;b.style.fontSize="";
+    var f=parseFloat(getComputedStyle(b).fontSize)||19,g=0;
+    while((b.scrollWidth>b.clientWidth+1||broken(b.parentElement))&&f>12&&g++<12){f-=1;b.style.fontSize=f+"px"}}
+  var q=null;
+  function fitAll(){q=null;try{
+    document.querySelectorAll(SEL).forEach(function(root){
+      root.querySelectorAll("*").forEach(function(g){if(g.children.length<2)return;var d=getComputedStyle(g).display;if(d==="grid")fitOne(g);else if(d==="flex"&&!g.closest(".call,.prv,.wcard,.fsheet .fr"))fitFlex(g)})});
+    fitSnav();
+    /* F6 大按钮（图标 + 几段文字）只有在真的放不下时才允许换行；放得下时保持原样（图标在左） */
+    document.querySelectorAll("#app .btn,#sheetBody .btn").forEach(function(b){if(b.hasAttribute("data-fitw")){b.style.flexWrap="";b.removeAttribute("data-fitw")}
+      if(b.offsetWidth&&b.scrollWidth>b.clientWidth+1){b.style.flexWrap="wrap";b.setAttribute("data-fitw","1")}});
+    /* 没有 ResizeObserver 的旧浏览器：呼叫栏 / 底部按钮高度变了以后，重新量一次，避免最后几行被呼叫栏挡住 */
+    try{if(typeof fitChrome==="function")fitChrome()}catch(e){}
+    /* 红色首卡（没反应、没有正常呼吸）在最窄的屏上：图标放到文字上面，给文字留出整行 */
+    document.querySelectorAll("#app .tile.top").forEach(function(t){t.classList.remove("fitv");if(t.offsetWidth&&broken(t))t.classList.add("fitv")});
+    fitBrand()}catch(e){}}
+  function later(){if(q)return;q=(window.requestAnimationFrame||setTimeout)(fitAll)}
+  window.ecFit=fitAll;
+  /* 只在加了 / 去掉“元素”时重新量（换页、换语言、打开卡片）；计时器每秒改数字这类纯文字变化不触发，省电 */
+  function onMut(recs){for(var i=0;i<recs.length;i++){var a=recs[i].addedNodes,d=recs[i].removedNodes,j;
+    for(j=0;j<a.length;j++)if(a[j].nodeType===1){later();return}for(j=0;j<d.length;j++)if(d[j].nodeType===1){later();return}}}
+  try{var mo=new MutationObserver(onMut);document.querySelectorAll(SEL+",header.top,#dock").forEach(function(r){mo.observe(r,{childList:true,subtree:true})})}catch(e){}
+  window.addEventListener("resize",later);window.addEventListener("orientationchange",later);
+  document.addEventListener("toggle",later,true);
+  try{if(document.fonts&&document.fonts.ready)document.fonts.ready.then(later)}catch(e){}
+  later();
+})();
 </script>
 </body>
 </html>
